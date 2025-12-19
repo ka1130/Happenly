@@ -1,16 +1,11 @@
-// import { useEffect } from 'react';
-import { events } from '@data/events';
+// Fetch w Server Component → SSR, szybkie ładowanie strony, dane są aktualne z backendu.
+// Jeśli chcesz dynamicznie aktualizować liczby bez odświeżania strony, wtedy Client Component + fetch w useEffect.
 import Image from 'next/image';
 
-export default function Home() {
-  // useEffect(() => {
-  //   async function fetchEvents() {
-  //     const res = await fetch('./api/events');
-  //     console.log('RES', res);
-  //   }
+export default async function Home() {
+  const res = await fetch('/api/events');
+  const events = await res.json();
 
-  //   fetchEvents();
-  // }, []);
   console.log('events', events);
 
   return (
