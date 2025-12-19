@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { events, Event } from '@data/events';
+// import { prisma } from '@/app/generated/prisma/client';
 
 export async function GET(req: NextRequest) {
   return NextResponse.json(events);
