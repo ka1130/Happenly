@@ -12,7 +12,7 @@
 ## Tech Stack
 
 - **Frontend:** React + Vite
-- **Backend:** Express.js
+- **Backend:** Node.js
 - **UI:** Responsive design with real-time updates
 
 ## Usage
@@ -24,9 +24,9 @@
 
 ---
 
-<br /> <br />
+<br />
 
-# About Next
+# Next.js
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
