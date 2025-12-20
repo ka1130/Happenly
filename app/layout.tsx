@@ -1,11 +1,18 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { HomeIcon } from '@heroicons/react/24/solid';
+import {
+  BookmarkSquareIcon,
+  PlusIcon,
+  Cog6ToothIcon,
+  PresentationChartLineIcon,
+  GlobeAsiaAustraliaIcon,
+  CalendarIcon,
+} from '@heroicons/react/24/outline';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Happenly',
-  description: 'Admin dashboard',
+  title: 'EventFlow',
+  description: 'Your Events, Your Dashboard — All in One Place',
 };
 
 export default function RootLayout({
@@ -18,32 +25,47 @@ export default function RootLayout({
       <body className="flex min-h-screen bg-gray-50">
         {/* Sidebar */}
         <aside className="w-64 bg-white shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6">Menu</h2>
+          <h2 className="flex items-center space-x-2 text-xl font-semibold mb-6">
+            <span className="bg-blue-600 rounded-md px-1.5 py-1.5 flex items-center justify-center">
+              <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
+            </span>
+            <span>EventFlow</span>
+          </h2>
           <nav className="flex flex-col space-y-3">
             <Link
               href="/dashboard"
               className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
             >
-              <HomeIcon className="h-5 w-5" />
+              <PresentationChartLineIcon className="h-5 w-5" />
               <span>Dashboard</span>
             </Link>
             <Link
               href="/events/new"
-              className="text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
             >
-              Create Event
+              <PlusIcon className="h-5 w-5" />
+              <span>Create Event</span>
             </Link>
-            <Link href="/events" className="text-gray-700 hover:text-blue-600">
-              My Events
+            <Link
+              href="/events"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+            >
+              <BookmarkSquareIcon className="h-5 w-5" />
+              <span>My Events</span>
             </Link>
-            <Link href="/events" className="text-gray-700 hover:text-blue-600">
-              Browse Events
+            <Link
+              href="/events"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+            >
+              <GlobeAsiaAustraliaIcon className="h-5 w-5" />
+              <span>Browse Events</span>
             </Link>
             <Link
               href="/settings"
-              className="text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
             >
-              Settings
+              <Cog6ToothIcon className="h-5 w-5" />
+              <span>Settings</span>
             </Link>
           </nav>
         </aside>
