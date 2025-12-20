@@ -10,7 +10,7 @@ export type Event = {
   active: boolean;
 };
 
-export let events: Event[] = [
+export const events: Event[] = [
   {
     id: '1',
     title: 'VR Art Exhibition',

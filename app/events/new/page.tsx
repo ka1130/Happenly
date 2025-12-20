@@ -1,9 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // App Router
 
 export default function NewEventPage() {
-  const [form, setForm] = useState({
+  const router = useRouter();
+
+  const initialForm = {
     title: '',
     description: '',
     date: '',
@@ -12,11 +15,31 @@ export default function NewEventPage() {
     registrations: 0,
     category: '',
     active: false,
-  });
+  };
+
+  const [form, setForm] = useState(initialForm);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const res = await
+    const res = await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+
+    if (!res.ok) {
+      console.error('Failed to create event');
+      return;
+    }
+
+    const data = await res.json();
+    console.log('Created event:', data);
+
+    // 1️⃣ Reset form
+    setForm(initialForm);
+
+    // 2️⃣ Redirect to events list page
+    router.push('/events');
   };
 
   return (
