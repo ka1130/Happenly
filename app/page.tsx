@@ -1,10 +1,16 @@
-// Fetch w Server Component → SSR, szybkie ładowanie strony, dane są aktualne z backendu.
-// Jeśli chcesz dynamicznie aktualizować liczby bez odświeżania strony, wtedy Client Component + fetch w useEffect.
+'use client';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import type { Event } from '@/app/dashboard/page.tsx';
 
-export default async function Home() {
-  const res = await fetch('/api/events');
-  const events = await res.json();
+export default function Home() {
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    fetch('/api/events')
+      .then((res) => res.json())
+      .then((data) => setEvents(data));
+  }, []);
 
   console.log('events', events);
 

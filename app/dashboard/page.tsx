@@ -1,12 +1,12 @@
+export type Event = {
+  active: boolean;
+  registrations: number;
+  [key: string]: string | number | boolean;
+};
+
 export default async function Dashboard() {
   const res = await fetch('http://localhost:3000/api/events');
   const events = await res.json();
-
-  type Event = {
-    active: boolean;
-    registrations: number;
-    [key: string]: any;
-  };
 
   const totalEvents = (events as Event[]).length;
   const activeEvents = (events as Event[]).filter(
