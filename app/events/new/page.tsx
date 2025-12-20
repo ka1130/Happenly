@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'; // App Router
 export default function NewEventPage() {
   const router = useRouter();
 
+  // TODO check Event type for duplicates
   const initialForm = {
     title: '',
     description: '',
@@ -20,6 +21,7 @@ export default function NewEventPage() {
 
   const [form, setForm] = useState(initialForm);
 
+  // TODO make one custom hook to fetch events?
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch('/api/events', {
