@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { HomeIcon } from '@heroicons/react/24/solid';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Happenly',
   description: 'Admin dashboard',
 };
-import './globals.css';
 
 export default function RootLayout({
   children,
@@ -21,9 +22,10 @@ export default function RootLayout({
           <nav className="flex flex-col space-y-3">
             <Link
               href="/dashboard"
-              className="text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
             >
-              Dashboard
+              <HomeIcon className="h-5 w-5" />
+              <span>Dashboard</span>
             </Link>
             <Link
               href="/events/new"
