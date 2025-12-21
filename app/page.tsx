@@ -1,31 +1,42 @@
 'use client';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import type { Event } from '@/app/pages/dashboard/page';
+import { useEvents } from '@/hooks/useEvents';
+import { EventCards } from '@/components/EventCards';
 
 export default function Home() {
-  const [events, setEvents] = useState<Event[]>([]);
-
-  useEffect(() => {
-    fetch('/api/events')
-      .then((res) => res.json())
-      .then((data) => setEvents(data));
-  }, []);
+  const { events = [], loading, error } = useEvents();
 
   console.log('events', events);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <p className="text-gray-500">Loading events...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center py-12">
+        <p className="text-red-500">Error: {error.message}</p>
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500 text-lg">No events found.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-      </main>
-    </div>
+    <>
+      <h2 className="text-2xl font-medium text-gray-700 mb-8">Recent Events</h2>
+      <div className="grid grid-cols-1 gap-6">
+        <EventCards events={events} />
+      </div>
+    </>
   );
 }

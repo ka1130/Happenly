@@ -1,18 +1,19 @@
 # Happenly
 
-**Discover, create, and manage events effortlessly.**
+** Event management website **
 
 ## Features
 
-- **Dashboard:** Overview of total events, active events, registrations, and average capacity.
-- **Create Event:** Add new events with details, date, and capacity.
-- **Search:** Quickly find events by keyword, category, or location.
-- **Analytics:** Track growth trends and attendee statistics in real time.
+- **Dashboard:** Event listing dashboard with card-based layout and filtering options.
+- **Create Event:** Add new events with fields for title, date, time, location, and description.
+- **Single Event View:** Event detail view with registration interface and event information
+- **Browse:** Quickly find events by keyword, category, or location.
+- Event update/edit interface with pre-filled forms
 
 ## Tech Stack
 
-- **Frontend:** React + Vite
-- **Backend:** Node.js
+- **Frontend:** React + TypeScript + Vite + Tailwind CSS
+- **Backend:** Next.js
 - **UI:** Responsive design with real-time updates
 
 ## Usage

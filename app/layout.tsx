@@ -22,15 +22,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen bg-gray-50">
+      <body className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-white shadow-md p-6">
-          <h2 className="flex items-center space-x-2 text-xl font-semibold mb-6">
-            <span className="bg-blue-600 rounded-md px-1.5 py-1.5 flex items-center justify-center">
-              <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
-            </span>
-            <span>EventFlow</span>
-          </h2>
+        <aside className="w-64 bg-gray-50 shadow-md p-6">
+          <Link href="/">
+            <h2 className="flex items-center space-x-2 text-xl font-semibold mb-6">
+              <span className="bg-blue-600 rounded-md px-1.5 py-1.5 flex items-center justify-center">
+                <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
+              </span>
+              <span className="hover:text-gray-600">EventFlow</span>
+            </h2>
+          </Link>
           <nav className="flex flex-col space-y-3">
             <Link
               href="/dashboard"
@@ -71,7 +73,7 @@ export default function RootLayout({
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="mx-auto pt-10 px-4">{children}</main>
       </body>
     </html>
   );

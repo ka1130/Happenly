@@ -21,7 +21,7 @@
     "paths": {
       "@/*": ["./*"],
       "@data/*": ["./data/*"],
-      "@hooks/*": ["./app/hooks/*"],
+      "@hooks/*": ["./hooks/*"],
       "@apptypes/*": ["./types/*"]
     }
   },

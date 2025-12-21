@@ -1,14 +1,4 @@
-export type Event = {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  location: string;
-  capacity: number;
-  registrations: number;
-  category: string;
-  active: boolean;
-};
+import { Event } from '@/types/event';
 
 export const events: Event[] = [
   {
