@@ -1,42 +1,35 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
-
-interface Event {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  location: string;
-}
+import { Event } from '@apptypes/event';
+import { useEvents } from '@hooks/useEvents';
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch('/api/events');
-        const data = await res.json();
-        setEvents(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+  const { events = [], loading, error } = useEvents();
 
   console.log('events', events);
 
-  // useEffect(() => {
-  //   // TODO: Fetch events from API
-  //
-  // }, []);
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <p className="text-gray-500">Loading events...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center py-12">
+        <p className="text-red-500">Error: {error.message}</p>
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500 text-lg">No events found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -49,7 +42,7 @@ export default function EventsPage() {
           </div>
         ) : events.length > 0 ? (
           <div className="grid grid-cols-1 gap-6">
-            {events.map((event) => (
+            {events.map((event: Event) => (
               <div key={event.id} className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-2">
                   {event.title}

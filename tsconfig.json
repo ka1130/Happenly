@@ -20,7 +20,9 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@data/*": ["./data/*"]
+      "@data/*": ["./data/*"],
+      "@hooks/*": ["./app/hooks/*"],
+      "@apptypes/*": ["./types/*"]
     }
   },
   "include": [
