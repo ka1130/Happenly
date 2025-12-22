@@ -1,5 +1,5 @@
 import { Event } from '@apptypes/event';
-import { CalendarIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 
 type EventCardProps = {
   event: Event;
@@ -33,14 +33,15 @@ export default function EventCard({ event }: EventCardProps) {
 
         <p className="text-sm text-gray-500 flex gap-2">
           <CalendarIcon
-            className="h-4.5 w-4.5 relative top-[-1px]"
+            className="h-4.5 w-4.5 relative top-[-px]"
             strokeWidth={2}
           />
           <span>{event.date}</span>
         </p>
 
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-lg transition-colors">
-          Add to Cart
+        <button className="text-xs px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 flex gap-2">
+          <PencilSquareIcon className="h-4 w-4 relative top-[-2px]" />
+          <span>Edit</span>
         </button>
       </div>
     </div>
