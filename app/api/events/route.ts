@@ -1,14 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { events, Event } from '@data/events';
-// import { prisma } from '@/app/generated/prisma/client';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-export async function GET(req: NextRequest) {
-  return NextResponse.json(events);
+const filePath = path.join(process.cwd(), 'data', 'events.json');
+
+export async function GET() {
+  const data = await fs.readFile(filePath, 'utf-8');
+  const events = JSON.parse(data);
+  return new Response(JSON.stringify(events), { status: 200 });
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const body = await req.json();
-  const newEvent: Event = { ...body, id: Date.now().toString() };
+
+  const data = await fs.readFile(filePath, 'utf-8');
+  const events = JSON.parse(data);
+
+  const newEvent = { ...body, id: Date.now().toString() };
   events.push(newEvent);
-  return NextResponse.json(newEvent, { status: 201 });
+
+  await fs.writeFile(filePath, JSON.stringify(events, null, 2));
+
+  return new Response(JSON.stringify(newEvent), { status: 201 });
 }

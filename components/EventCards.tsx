@@ -11,16 +11,17 @@ export function EventCards({ events }: EventCardsProps) {
     );
   }
 
+  // TODO fix form visually
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {events.map((event) => (
         <div
-          className="max-w-sm w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
           key={event.id}
+          className="max-w-sm w-full bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
         >
           <div className="relative">
             <img
-              src="https://placehold.co/400x300"
+              src={event.image}
               alt="Product"
               className="w-full h-52 object-cover"
             />

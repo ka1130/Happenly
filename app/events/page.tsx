@@ -31,11 +31,11 @@ export default function EventsPage() {
     );
   }
 
+  // TODO add images, use EventCard
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Events</h1>
-
         <div className="grid grid-cols-1 gap-6">
           {events.map((event: Event) => (
             <div key={event.id} className="bg-white rounded-lg shadow-md p-6">
@@ -48,10 +48,13 @@ export default function EventsPage() {
                   <span className="font-semibold">Date:</span> {event.date}
                 </div>
                 <div>
-                  <span className="font-semibold">Time:</span> {event.time}
+                  <span className="font-semibold">Time:</span> {event.startAt}
+                </div>
+                <div>
+                  <span className="font-semibold">Time:</span> {event.endAt}
                 </div>
                 <div className="col-span-2">
-                  <span className="font-semibold">Location:</span>{' '}
+                  <span className="font-semibold">Location:</span>
                   {event.location}
                 </div>
               </div>

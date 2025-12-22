@@ -6,22 +6,23 @@ import { useRouter } from 'next/navigation'; // App Router
 export default function NewEventPage() {
   const router = useRouter();
 
-  // TODO check Event type for duplicates
+  // TODO add image, enable upload
   const initialForm = {
     title: '',
     description: '',
     date: '',
-    time: '',
+    startAt: '',
+    endAt: '',
     location: '',
     capacity: 0,
     registrations: 0,
     category: '',
-    active: false,
+    published: false,
+    image: '',
   };
 
   const [form, setForm] = useState(initialForm);
 
-  // TODO make one custom hook to fetch events?
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch('/api/events', {
@@ -77,11 +78,20 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, date: e.target.value })}
           className="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <label className="block text-sm font-medium text-gray-700">Time</label>
+        <label className="block text-sm font-medium text-gray-700">
+          startAt
+        </label>
         <input
           type="time"
-          value={form.time}
-          onChange={(e) => setForm({ ...form, time: e.target.value })}
+          value={form.startAt}
+          onChange={(e) => setForm({ ...form, startAt: e.target.value })}
+          className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+        />
+        <label className="block text-sm font-medium text-gray-700">endAt</label>
+        <input
+          type="time"
+          value={form.endAt}
+          onChange={(e) => setForm({ ...form, endAt: e.target.value })}
           className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
         />
         <label className="block text-sm font-medium text-gray-700">
@@ -127,11 +137,11 @@ export default function NewEventPage() {
         <label className="mt-2 inline-flex items-center space-x-2 text-sm font-medium text-gray-700">
           <input
             type="checkbox"
-            checked={form.active}
-            onChange={(e) => setForm({ ...form, active: e.target.checked })}
+            checked={form.published}
+            onChange={(e) => setForm({ ...form, published: e.target.checked })}
             className="h-5 w-5 text-blue-600 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 appearance-none checked:bg-blue-600 checked:border-blue-600"
           />
-          <span>Active</span>
+          <span>published</span>
         </label>
         <button
           type="submit"

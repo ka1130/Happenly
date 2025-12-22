@@ -9,19 +9,29 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 
-
 model Event {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   title         String
   description   String
-  date          String
+  date          DateTime      // tylko data (godzina ustawiona np. na 00:00)
+  startAt       DateTime
+  endAt         DateTime
   location      String
   capacity      Int
   registrations Int
-  category      String
-  active        Boolean
+  category      EventCategory
+  published     Boolean       @default(false)
+}
+
+enum EventCategory {
+  CONCERT
+  WORKSHOP
+  MEETUP
+  CONFERENCE
+  TECH
+  CULTURE_TECH
 }
