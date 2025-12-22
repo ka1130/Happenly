@@ -22,7 +22,8 @@
       "@/*": ["./*"],
       "@data/*": ["./data/*"],
       "@hooks/*": ["./hooks/*"],
-      "@apptypes/*": ["./types/*"]
+      "@apptypes/*": ["./types/*"],
+      "@components/*": ["./components/*"]
     }
   },
   "include": [
