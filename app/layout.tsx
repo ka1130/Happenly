@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import {
   BookmarkSquareIcon,
   PlusIcon,
@@ -9,6 +10,11 @@ import {
   CalendarIcon,
 } from '@heroicons/react/24/outline';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter', // optional CSS variable
+});
 
 export const metadata: Metadata = {
   title: 'EventFlow',
@@ -21,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen">
         {/* Sidebar */}
         <aside className="w-64 bg-gray-50 shadow-md p-6">

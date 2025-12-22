@@ -70,7 +70,9 @@ export default function EventCard({ event }: EventCardProps) {
       <div className="p-5 flex flex-col min-h-72">
         <div className="flex-1 flex flex-col space-y-4">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">{event.title}</h3>
+            <h3 className="text-xl font-bold text-gray-900 font-sans">
+              {event.title}
+            </h3>
             <p className="text-gray-500 mt-1">{event.description}</p>
           </div>
 

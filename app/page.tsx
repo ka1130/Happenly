@@ -33,7 +33,11 @@ export default function Home() {
 
   return (
     <>
-      <h2 className="text-2xl font-medium text-gray-700 mb-8">Recent Events</h2>
+      <h2 className="text-3xl font-semibold text-gray-700 mb-2">Dashboard</h2>
+      <p className="mb-8 text-gray-500">
+        Manage your events and track registrations
+      </p>
+      <h3 className="text-2xl font-medium text-gray-700 mb-8">Recent Events</h3>
       <div className="grid grid-cols-1 gap-6">
         <EventCards events={events} />
       </div>
