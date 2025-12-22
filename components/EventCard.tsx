@@ -7,6 +7,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { formatCategory } from '@utils/formatCategory';
+import { formatTimeRange } from '@utils/formatTimeRange';
 
 // TODO RWD! mobile-first?
 
@@ -86,7 +87,7 @@ export default function EventCard({ event }: EventCardProps) {
               className="h-4.5 w-4.5 relative top-[px]"
               strokeWidth={2}
             />
-            <span>{event.startAt}</span>
+            <span>{formatTimeRange(event.startAt, event.endAt)}</span>
           </p>
 
           <p className="text-sm text-gray-500 flex gap-2">
