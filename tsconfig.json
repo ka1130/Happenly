@@ -23,7 +23,8 @@
       "@data/*": ["./data/*"],
       "@hooks/*": ["./hooks/*"],
       "@apptypes/*": ["./types/*"],
-      "@components/*": ["./components/*"]
+      "@components/*": ["./components/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": [
