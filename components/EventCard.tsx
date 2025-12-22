@@ -1,9 +1,17 @@
 import { Event } from '@apptypes/event';
-import { CalendarIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import {
+  CalendarIcon,
+  PencilSquareIcon,
+  ClockIcon,
+  MapPinIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 
 type EventCardProps = {
   event: Event;
 };
+
+// TODO add tailwind extension for prettier to order classNames
 
 export default function EventCard({ event }: EventCardProps) {
   return (
@@ -17,6 +25,7 @@ export default function EventCard({ event }: EventCardProps) {
           alt="Product"
           className="w-full h-52 object-cover"
         />
+        {/* TODO styles */}
         <span className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
           {event.category}
         </span>
@@ -39,10 +48,46 @@ export default function EventCard({ event }: EventCardProps) {
           <span>{event.date}</span>
         </p>
 
-        <button className="text-xs px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 flex gap-2">
-          <PencilSquareIcon className="h-4 w-4 relative top-[-2px]" />
-          <span>Edit</span>
-        </button>
+        <p className="text-sm text-gray-500 flex gap-2">
+          <ClockIcon
+            className="h-4.5 w-4.5 relative top-[-px]"
+            strokeWidth={2}
+          />
+          <span>{event.startAt}</span>
+          {/* TODO format time, add end time */}
+        </p>
+
+        <p className="text-sm text-gray-500 flex gap-2">
+          <MapPinIcon
+            className="h-4.5 w-4.5 relative top-[-px]"
+            strokeWidth={2}
+          />
+          <span>{event.location}</span>
+          {/* TODO format time, add end time */}
+        </p>
+
+        <p className="text-sm text-gray-500 flex gap-2">
+          <MapPinIcon
+            className="h-4.5 w-4.5 relative top-[-px]"
+            strokeWidth={2}
+          />
+          <span>
+            {event.registrations} / {event.capacity} attendees
+          </span>
+          {/* TODO format time, add end time */}
+        </p>
+        {/* TODO enable edit/patch */}
+        <div className="flex justify-between gap-4">
+          <button className="text-xs px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 flex gap-2 flex-1 justify-center">
+            <PencilSquareIcon className="h-4 w-4 relative top-[-2px]" />
+            <span>Edit</span>
+          </button>
+          <button>
+            <TrashIcon className="h-4 w-4 text-red-700" />
+          </button>
+        </div>
+
+        {/* TODO add trash  endpoint */}
       </div>
     </div>
   );
