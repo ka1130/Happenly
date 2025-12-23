@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import Link from "next/link";
+import { Metadata } from "next";
+import { Inter } from "next/font/google";
 import {
   BookmarkSquareIcon,
   PlusIcon,
@@ -8,17 +8,17 @@ import {
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
   CalendarIcon,
-} from '@heroicons/react/24/outline';
-import './globals.css';
+} from "@heroicons/react/24/outline";
+import "./globals.css";
 
 const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter', // optional CSS variable
+  subsets: ["latin"],
+  variable: "--font-inter", // optional CSS variable
 });
 
 export const metadata: Metadata = {
-  title: 'EventFlow',
-  description: 'Your Events, Your Dashboard — All in One Place',
+  title: "EventFlow",
+  description: "Your Events, Your Dashboard — All in One Place",
 };
 
 export default function RootLayout({
@@ -30,10 +30,10 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-50 shadow-md p-6">
+        <aside className="w-64 bg-gray-50 p-6 shadow-md">
           <Link href="/">
-            <h2 className="flex items-center space-x-2 text-xl font-semibold mb-6">
-              <span className="bg-blue-600 rounded-md px-1.5 py-1.5 flex items-center justify-center">
+            <h2 className="mb-6 flex items-center space-x-2 text-xl font-semibold">
+              <span className="flex items-center justify-center rounded-md bg-blue-600 px-1.5 py-1.5">
                 <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
               </span>
               <span className="hover:text-gray-600">EventFlow</span>
@@ -79,7 +79,7 @@ export default function RootLayout({
         </aside>
 
         {/* Main content */}
-        <main className="mx-auto pt-10 px-4">{children}</main>
+        <main className="mx-auto px-4 pt-10">{children}</main>
       </body>
     </html>
   );
