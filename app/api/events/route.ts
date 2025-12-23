@@ -1,24 +1,25 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
-const filePath = path.join(process.cwd(), 'data', 'events.json');
+export const runtime = "nodejs";
 
-export async function GET() {
-  const data = await fs.readFile(filePath, 'utf-8');
-  const events = JSON.parse(data);
-  return new Response(JSON.stringify(events), { status: 200 });
+// GET all events
+export async function GET(_req: NextRequest) {
+  const { data, error } = await supabase.from("events").select("*");
+
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json(data);
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const data = await fs.readFile(filePath, 'utf-8');
-  const events = JSON.parse(data);
+  const { data, error } = await supabase.from("events").insert([body]).select(); // <- ważne
 
-  const newEvent = { ...body, id: Date.now().toString() };
-  events.push(newEvent);
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
-  await fs.writeFile(filePath, JSON.stringify(events, null, 2));
-
-  return new Response(JSON.stringify(newEvent), { status: 201 });
+  return NextResponse.json(data[0]);
 }
