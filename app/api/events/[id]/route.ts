@@ -1,44 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
-import { events } from "@data/events";
+import { supabase } from "@/lib/supabase";
 
-type Params = {
-  id: string;
-};
+type Params = { id: string };
 
-export async function GET(_req: NextRequest, { params }: { params: Params }) {
-  const { id } = params;
+export async function GET(
+  _req: NextRequest,
+  context: { params: Promise<Params> },
+) {
+  const { id } = await context.params;
 
-  // TU docelowo będzie baza / serwis
-  // const event = await db.event.findById(id)
+  const { data: event, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  return NextResponse.json({
-    id,
-    status: "TODO: fetch from database",
-  });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 404 });
+  return NextResponse.json(event);
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: Params }) {
-  const { id } = params;
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<Params> },
+) {
+  const { id } = await context.params;
   const data = await req.json();
 
-  // TODO: update event by id with partial data
+  const { error } = await supabase.from("events").update(data).eq("id", id);
 
-  return NextResponse.json({
-    id,
-    updated: data,
-  });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ updated: true });
 }
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Params },
+  context: { params: Promise<Params> },
 ) {
-  const { id } = params;
-  const index = events.findIndex((event) => event.id === params.id);
-  if (index === -1)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const { id } = await context.params;
 
-  events.splice(index, 1);
+  const { error } = await supabase.from("events").delete().eq("id", id);
 
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json(null, { status: 204 });
 }

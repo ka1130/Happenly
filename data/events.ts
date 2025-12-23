@@ -1,36 +1,35 @@
-import { Event } from '@apptypes/event';
+import { Event } from "@apptypes/event";
 
-// TODO pozbyć się sqlite i prisma na razie
 export const events: Event[] = [
   {
-    id: '1',
-    title: 'VR Art Exhibition',
-    description: 'Immersive digital art.',
-    date: '2026-01-10T00:00:00Z',
-    startAt: '2026-01-10T10:00:00Z',
-    endAt: '2026-01-10T18:00:00Z',
-    location: 'Warsaw',
+    id: "1",
+    title: "VR Art Exhibition",
+    description: "Immersive digital art.",
+    date: "2026-01-10T00:00:00Z",
+    startAt: "2026-01-10T10:00:00Z",
+    endAt: "2026-01-10T18:00:00Z",
+    location: "Warsaw",
     capacity: 100,
     registrations: 45,
-    category: 'CULTURE_TECH',
+    category: "CULTURE_TECH",
     published: true,
     image:
-      'https://images.stockcake.com/public/0/6/0/060467c1-2440-4b8a-bcde-802f6f0259f0/vr-art-experience-stockcake.jpg',
+      "https://images.stockcake.com/public/0/6/0/060467c1-2440-4b8a-bcde-802f6f0259f0/vr-art-experience-stockcake.jpg",
   },
   {
-    id: '2',
-    title: 'React Workshop',
-    description: 'React + Next.js workshop.',
-    date: '2026-01-15T00:00:00Z',
-    startAt: '2026-01-15T14:00:00Z',
-    endAt: '2026-01-15T17:00:00Z',
-    location: 'Online',
+    id: "2",
+    title: "React Workshop",
+    description: "React + Next.js workshop.",
+    date: "2026-01-15T00:00:00Z",
+    startAt: "2026-01-15T14:00:00Z",
+    endAt: "2026-01-15T17:00:00Z",
+    location: "Online",
     capacity: 50,
     registrations: 20,
-    category: 'TECH',
+    category: "TECH",
     published: false,
     image:
-      'https://images.stockcake.com/public/f/8/c/f8cd7c02-92ee-4ad9-8109-ed7b920d4f4e_large/code-in-focus-stockcake.jpg',
+      "https://images.stockcake.com/public/f/8/c/f8cd7c02-92ee-4ad9-8109-ed7b920d4f4e_large/code-in-focus-stockcake.jpg",
   },
 ];
 
