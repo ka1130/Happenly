@@ -93,7 +93,14 @@ export default function NewEventPage() {
         <div className="flex justify-between">
           <h6>Create Event</h6>
           <label className="inline-flex cursor-pointer items-center gap-3">
-            <input type="checkbox" className="peer sr-only" />
+            <input
+              type="checkbox"
+              className="peer sr-only"
+              checked={form.published}
+              onChange={(e) =>
+                setForm({ ...form, published: e.target.checked })
+              }
+            />
 
             <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
 
@@ -185,15 +192,7 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, category: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="mt-2 inline-flex items-center space-x-2 text-sm font-medium text-stone-700">
-          <input
-            type="checkbox"
-            checked={form.published}
-            onChange={(e) => setForm({ ...form, published: e.target.checked })}
-            className="h-5 w-5 appearance-none rounded border border-stone-300 text-blue-600 checked:border-blue-600 checked:bg-blue-600 focus:ring-2 focus:ring-blue-500"
-          />
-          <span>published</span>
-        </label>
+
         <label className="block text-sm font-medium text-stone-700">
           Image
         </label>
