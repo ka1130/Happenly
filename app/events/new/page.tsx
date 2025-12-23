@@ -95,11 +95,11 @@ export default function NewEventPage() {
           <label className="inline-flex cursor-pointer items-center gap-3">
             <input type="checkbox" className="peer sr-only" />
 
-            <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500">
-              <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ease-in-out peer-checked:translate-x-5" />
-            </div>
+            <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
 
-            <span className="text-sm font-medium text-stone-700">Draft</span>
+            <span className="text-sm font-medium text-stone-700">
+              Published
+            </span>
           </label>
         </div>
         <label className="block text-sm font-medium text-stone-700">
