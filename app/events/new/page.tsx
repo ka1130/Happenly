@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // App Router
+import { useRouter } from "next/navigation";
 
 export default function NewEventPage() {
   const router = useRouter();
 
-  // TODO add image, enable upload
   const initialForm = {
     title: "",
     description: "",
@@ -22,30 +21,65 @@ export default function NewEventPage() {
   };
 
   const [form, setForm] = useState(initialForm);
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/events", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    setLoading(true);
+    setError("");
 
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(text);
-      return;
+    try {
+      let imageUrl = form.image;
+
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        imageUrl = data.url;
+      }
+
+      const startTimestamp = `${form.date} ${form.startAt}:00`;
+      const endTimestamp = `${form.date} ${form.endAt}:00`;
+
+      const payload = {
+        ...form,
+        startAt: startTimestamp,
+        endAt: endTimestamp,
+        image: imageUrl,
+      };
+
+      const res = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error(text);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Created event:", data);
+
+      // 1️⃣ Reset form
+      setForm(initialForm);
+      setFile(null);
+
+      // 2️⃣ Redirect to events list page
+      router.push("/events");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    // TODO check why event isn't created
-    const data = await res.json();
-    console.log("Created event:", data);
-
-    // 1️⃣ Reset form
-    setForm(initialForm);
-
-    // 2️⃣ Redirect to events list page
-    router.push("/events");
   };
 
   return (
@@ -53,7 +87,7 @@ export default function NewEventPage() {
       <h1>Create a new event</h1>
       <form
         onSubmit={handleSubmit}
-        className="mx-auto max-w-md space-y-4 rounded bg-white p-4 shadow"
+        className="mx-auto max-w-4xl space-y-4 rounded bg-white p-4 shadow"
       >
         <label className="block text-sm font-medium text-gray-700">Title</label>
         <input
@@ -143,11 +177,56 @@ export default function NewEventPage() {
           />
           <span>published</span>
         </label>
+        <label className="block text-sm font-medium text-gray-700">Image</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
+        <div className="mt-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Image
+          </label>
+          <div
+            onDrop={(e) => {
+              e.preventDefault();
+              if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                setFile(e.dataTransfer.files[0]);
+              }
+            }}
+            onDragOver={(e) => e.preventDefault()}
+            className="mt-1 flex h-32 w-full cursor-pointer items-center justify-center rounded border-2 border-dashed border-gray-300 bg-gray-50 text-gray-500 transition hover:border-blue-500 hover:bg-blue-50"
+            onClick={() => document.getElementById("fileInput")?.click()}
+          >
+            {file ? file.name : "Drag & drop an image here or click to select"}
+          </div>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            className="hidden"
+          />
+
+          {file && (
+            <img
+              src={URL.createObjectURL(file)}
+              alt="preview"
+              className="mt-2 w-32 rounded border"
+            />
+          )}
+        </div>
+
+        {error && <p className="text-red-500">{error}</p>}
+
         <button
           type="submit"
-          className="mt-2 w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600"
+          disabled={loading}
+          className={`mt-2 w-full rounded py-2 text-white transition ${
+            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+          }`}
         >
-          Create Event
+          {loading ? "Submitting..." : "Create Event"}
         </button>
       </form>
     </>
