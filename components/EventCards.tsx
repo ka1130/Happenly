@@ -8,7 +8,7 @@ type EventCardsProps = {
 export function EventCards({ events }: EventCardsProps) {
   if (events.length === 0) {
     return (
-      <div className="py-12 text-center text-gray-500">No events found.</div>
+      <div className="py-12 text-center text-stone-500">No events found.</div>
     );
   }
 

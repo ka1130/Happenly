@@ -10,7 +10,7 @@ export default function EventsPage() {
   if (loading) {
     return (
       <div className="flex justify-center py-12">
-        <p className="text-gray-500">Loading events...</p>
+        <p className="text-stone-500">Loading events...</p>
       </div>
     );
   }
@@ -26,24 +26,24 @@ export default function EventsPage() {
   if (events.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-lg text-gray-500">No events found.</p>
+        <p className="text-lg text-stone-500">No events found.</p>
       </div>
     );
   }
 
   // TODO add images, use EventCard
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="mb-8 text-4xl font-bold text-gray-900">Events</h1>
+        <h1 className="mb-8 text-4xl font-bold text-stone-900">Events</h1>
         <div className="grid grid-cols-1 gap-6">
           {events.map((event: Event) => (
             <div key={event.id} className="rounded-lg bg-white p-6 shadow-md">
-              <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+              <h2 className="mb-2 text-2xl font-semibold text-stone-900">
                 {event.title}
               </h2>
-              <p className="mb-4 text-gray-600">{event.description}</p>
-              <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+              <p className="mb-4 text-stone-600">{event.description}</p>
+              <div className="grid grid-cols-2 gap-4 text-sm text-stone-700">
                 <div>
                   <span className="font-semibold">Date:</span> {event.date}
                 </div>

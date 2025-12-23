@@ -30,47 +30,47 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-50 p-6 shadow-md">
+        <aside className="w-64 bg-stone-50 p-6 shadow-md">
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 text-xl font-semibold">
               <span className="flex items-center justify-center rounded-md bg-blue-600 px-1.5 py-1.5">
                 <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
               </span>
-              <span className="hover:text-gray-600">EventFlow</span>
+              <span className="hover:text-stone-600">EventFlow</span>
             </h2>
           </Link>
           <nav className="flex flex-col space-y-3">
             <Link
               href="/dashboard"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <PresentationChartLineIcon className="h-5 w-5" />
               <span>Dashboard</span>
             </Link>
             <Link
               href="/events/new"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <PlusIcon className="h-5 w-5" />
               <span>Create Event</span>
             </Link>
             <Link
               href="/events"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <BookmarkSquareIcon className="h-5 w-5" />
               <span>My Events</span>
             </Link>
             <Link
               href="/events"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <GlobeAsiaAustraliaIcon className="h-5 w-5" />
               <span>Browse Events</span>
             </Link>
             <Link
               href="/settings"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <Cog6ToothIcon className="h-5 w-5" />
               <span>Settings</span>
@@ -79,7 +79,7 @@ export default function RootLayout({
         </aside>
 
         {/* Main content */}
-        <main className="mx-auto px-4 pt-10">{children}</main>
+        <main className="w-full max-w-none px-4 pt-10">{children}</main>
       </body>
     </html>
   );
