@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   CalendarIcon,
   PencilSquareIcon,
@@ -47,8 +46,6 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
-  const router = useRouter();
-
   const handleDelete = async () => {
     setConfirmDeleteOpen(false);
     // TODO when loading, display loading... or loader on button
@@ -61,8 +58,8 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
       });
 
       if (!res.ok) {
-        const text = await res.text();
-        console.error(text);
+        const data = await res.json(); // Supabase zwraca JSON z { error: "..." }
+        setDeleteError(data.error || "There was a problem deleting the event");
         return;
       }
 
@@ -102,7 +99,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
         </div>
       </div>
       {/* TODO block registrations when full */}
-      <div className="flex min-h-72 flex-col p-5">
+      <div className="flex min-h-82 flex-col p-5">
         <div className="flex flex-1 flex-col space-y-4">
           <div>
             <h3 className="font-sans text-xl font-bold text-stone-900">
@@ -165,6 +162,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             onConfirmAction={handleDelete}
           />
         </div>
+        {deleteError && <p className="text-sm text-red-500">{deleteError}</p>}
       </div>
     </div>
   );
