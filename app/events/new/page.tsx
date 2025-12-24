@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  DocumentPlusIcon,
+  CalendarIcon,
+  ClockIcon,
+  MapPinIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
 
 const EVENT_CATEGORIES = [
   { value: "CONCERT", label: "Concert" },
@@ -94,13 +101,13 @@ export default function NewEventPage() {
   return (
     <div className="w-full">
       <h3 className="mb-2 text-2xl font-semibold">Create Event</h3>
-      <p className="mb-6">Fill in the details to create a new event</p>
+      <p className="mb-10">Fill in the details to create a new event</p>
       <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-xl space-y-4 rounded-md border-stone-100 bg-stone-50 p-4 shadow"
       >
         <div className="flex justify-between">
-          <h6>Create Event</h6>
+          <h6 className="mb-4 text-xl">Create New Event</h6>
           <label className="inline-flex cursor-pointer items-center gap-3">
             <input
               type="checkbox"
@@ -117,7 +124,7 @@ export default function NewEventPage() {
           </label>
         </div>
         <label className="mb-0 block text-sm font-medium text-stone-700">
-          Title
+          Event Title
         </label>
         <input
           type="text"
@@ -136,8 +143,9 @@ export default function NewEventPage() {
         />
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-stone-700">
-              Date
+            <label className="flex gap-2 text-sm font-medium text-stone-700">
+              <CalendarIcon className="h-5 w-5" />
+              <span>Date</span>
             </label>
             <input
               type="date"
@@ -168,8 +176,9 @@ export default function NewEventPage() {
         </div>
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-stone-700">
-              Start Time
+            <label className="flex gap-2 text-sm font-medium text-stone-700">
+              <ClockIcon className="h-5 w-5" />
+              <span>Start Time</span>
             </label>
             <input
               type="time"
@@ -179,8 +188,9 @@ export default function NewEventPage() {
             />
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-stone-700">
-              End Time
+            <label className="flex gap-2 text-sm font-medium text-stone-700">
+              <ClockIcon className="h-5 w-5" />
+              <span>End Time</span>
             </label>
             <input
               type="time"
@@ -190,8 +200,9 @@ export default function NewEventPage() {
             />
           </div>
         </div>
-        <label className="mb-0 block text-sm font-medium text-stone-700">
-          Location
+        <label className="mb-0 flex gap-2 text-sm font-medium text-stone-700">
+          <MapPinIcon className="h-5 w-5" />
+          <span>Location</span>
         </label>
         <input
           type="text"
@@ -199,8 +210,9 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, location: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="mb-0 block text-sm font-medium text-stone-700">
-          Capacity
+        <label className="mb-0 flex gap-2 text-sm font-medium text-stone-700">
+          <UsersIcon className="h-5 w-5" />
+          <span>Maximum Attendees</span>
         </label>
         <input
           type="number"
@@ -210,7 +222,7 @@ export default function NewEventPage() {
           }
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="mb-0 block text-sm font-medium text-stone-700">
+        {/* <label className="mb-0 block text-sm font-medium text-stone-700">
           Registrations
         </label>
         <input
@@ -220,7 +232,7 @@ export default function NewEventPage() {
             setForm({ ...form, registrations: Number(e.target.value) })
           }
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
+        /> */}
         <div className="mt-2">
           <label className="block text-sm font-medium text-stone-700">
             Image
@@ -256,16 +268,39 @@ export default function NewEventPage() {
         </div>
 
         {error && <p className="text-red-500">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`mt-2 w-full rounded py-2 text-white transition ${
-            loading ? "bg-stone-400" : "bg-blue-500 hover:bg-blue-600"
-          }`}
-        >
-          {loading ? "Submitting..." : "Create Event"}
-        </button>
+        <div className="mt-1 flex gap-2">
+          <button
+            type="submit"
+            disabled={loading}
+            className={`mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded py-2 text-white transition ${
+              loading ? "bg-stone-400" : "bg-blue-500 hover:bg-blue-600"
+            }`}
+          >
+            <DocumentPlusIcon className="h-4 w-4 shrink-0" />
+            <span>{loading ? "Submitting..." : "Create Event"}</span>
+          </button>
+          <button
+            type="button"
+            className="mt-2 inline-flex min-w-30 cursor-pointer items-center justify-center gap-2 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:ring-2 focus:ring-gray-400 focus:outline-none"
+            onClick={() => router.push("/")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
