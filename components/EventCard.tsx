@@ -1,4 +1,6 @@
-import { Event } from "@apptypes/event";
+"use client";
+
+import { useState } from "react";
 import {
   CalendarIcon,
   PencilSquareIcon,
@@ -6,10 +8,10 @@ import {
   MapPinIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { Event } from "@apptypes/event";
+import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
 import { formatTimeRange } from "@utils/formatTimeRange";
-
-// TODO RWD! mobile-first?
 
 const status = (event: Event) => {
   if (!event) return "DRAFT";
@@ -37,10 +39,8 @@ type EventCardProps = {
   event: Event;
 };
 
-// TODO add tailwind extension for prettier to order classNames
-// TODO on card click move to event's page (create [id] endpoint/route
-// TODO change fonts: set them up properly
 export default function EventCard({ event }: EventCardProps) {
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   return (
     <div
       key={event.id}
@@ -52,7 +52,6 @@ export default function EventCard({ event }: EventCardProps) {
           alt="Product"
           className="h-52 w-full object-cover"
         />
-        {/* TODO styles */}
         <div className="absolute top-3 left-3">
           <span
             className={`mr-3 rounded-md bg-stone-100/20 px-3 py-1 text-sm font-medium ${
@@ -116,9 +115,23 @@ export default function EventCard({ event }: EventCardProps) {
             <PencilSquareIcon className="relative top-[px] h-4 w-4" />
             <span>Edit</span>
           </button>
-          <button className="cursor-pointer rounded-md p-2 hover:bg-stone-100">
+          <button
+            className="cursor-pointer rounded-md p-2 hover:bg-stone-100"
+            onClick={() => setConfirmDeleteOpen(true)}
+          >
             <TrashIcon className="h-4 w-4 text-red-700" />
           </button>
+          <ConfirmDialog
+            open={confirmDeleteOpen}
+            title="Delete Event"
+            message="Are you sure you want to delete this event? This action cannot be undone and all registration data will be lost."
+            onCancelAction={() => setConfirmDeleteOpen(false)}
+            onConfirmAction={() => {
+              setConfirmDeleteOpen(false);
+              // TODO delete logic here
+              console.log("confirm");
+            }}
+          />
         </div>
       </div>
     </div>
