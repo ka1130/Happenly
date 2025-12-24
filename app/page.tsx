@@ -43,15 +43,15 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
       <h2 className="mb-2 text-3xl font-semibold text-stone-700">Dashboard</h2>
-      <p className="mb-8 text-stone-500">
+      <p className="mb-12 text-stone-500">
         Manage your events and track registrations
       </p>
-      <h3 className="mb-8 text-2xl font-medium text-stone-700">
+      <h3 className="mb-4 text-2xl font-medium text-stone-700">
         Recent Events
       </h3>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="flex flex-wrap gap-6">
         {events.map((event) => (
           <EventCard
             key={event.id}
@@ -60,6 +60,6 @@ export default function Home() {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }
