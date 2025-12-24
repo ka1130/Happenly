@@ -116,7 +116,7 @@ export default function NewEventPage() {
             <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
           </label>
         </div>
-        <label className="block text-sm font-medium text-stone-700">
+        <label className="mb-0 block text-sm font-medium text-stone-700">
           Title
         </label>
         <input
@@ -125,7 +125,7 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, title: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="block text-sm font-medium text-stone-700">
+        <label className="mb-0 block text-sm font-medium text-stone-700">
           Description
         </label>
         <input
@@ -134,32 +134,63 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="block text-sm font-medium text-stone-700">Date</label>
-        <input
-          type="date"
-          value={form.date}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
-          className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-        <label className="block text-sm font-medium text-stone-700">
-          Start Time
-        </label>
-        <input
-          type="time"
-          value={form.startAt}
-          onChange={(e) => setForm({ ...form, startAt: e.target.value })}
-          className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
-        />
-        <label className="block text-sm font-medium text-stone-700">
-          End Time
-        </label>
-        <input
-          type="time"
-          value={form.endAt}
-          onChange={(e) => setForm({ ...form, endAt: e.target.value })}
-          className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
-        />
-        <label className="block text-sm font-medium text-stone-700">
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-stone-700">
+              Date
+            </label>
+            <input
+              type="date"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-stone-700">
+              Category
+            </label>
+            <select
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            >
+              <option value="" disabled>
+                Select category
+              </option>
+              {EVENT_CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-stone-700">
+              Start Time
+            </label>
+            <input
+              type="time"
+              value={form.startAt}
+              onChange={(e) => setForm({ ...form, startAt: e.target.value })}
+              className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-stone-700">
+              End Time
+            </label>
+            <input
+              type="time"
+              value={form.endAt}
+              onChange={(e) => setForm({ ...form, endAt: e.target.value })}
+              className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
+            />
+          </div>
+        </div>
+        <label className="mb-0 block text-sm font-medium text-stone-700">
           Location
         </label>
         <input
@@ -168,7 +199,7 @@ export default function NewEventPage() {
           onChange={(e) => setForm({ ...form, location: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="block text-sm font-medium text-stone-700">
+        <label className="mb-0 block text-sm font-medium text-stone-700">
           Capacity
         </label>
         <input
@@ -179,7 +210,7 @@ export default function NewEventPage() {
           }
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="block text-sm font-medium text-stone-700">
+        <label className="mb-0 block text-sm font-medium text-stone-700">
           Registrations
         </label>
         <input
@@ -190,31 +221,15 @@ export default function NewEventPage() {
           }
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        <label className="block text-sm font-medium text-stone-700">
-          Category
-        </label>
-        <select
-          value={form.category}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-          className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        >
-          <option value="" disabled>
-            Select category
-          </option>
-          {EVENT_CATEGORIES.map((cat) => (
-            <option key={cat.value} value={cat.value}>
-              {cat.label}
-            </option>
-          ))}
-        </select>
-        <label className="block text-sm font-medium text-stone-700">
+
+        {/* <label className="block text-sm font-medium text-stone-700">
           Image
         </label>
         <input
           type="file"
           accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
-        />
+        /> */}
         <div className="mt-2">
           <label className="block text-sm font-medium text-stone-700">
             Image
