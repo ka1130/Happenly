@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useEvents } from "@/hooks/useEvents";
-import { EventCards } from "@/components/EventCards";
+import EventCard from "@/components/EventCard";
 import { Event as AppEvent } from "@apptypes/event";
 
 export default function Home() {
@@ -51,8 +51,14 @@ export default function Home() {
       <h3 className="mb-8 text-2xl font-medium text-stone-700">
         Recent Events
       </h3>
-      <div className="grid grid-cols-1 gap-6">
-        <EventCards events={events} onDeleteAction={handleDeleteEvent} />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {events.map((event) => (
+          <EventCard
+            key={event.id}
+            event={event}
+            onDeleteAction={handleDeleteEvent}
+          />
+        ))}
       </div>
     </>
   );

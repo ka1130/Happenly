@@ -1,11 +1,22 @@
 "use client";
-import { Event } from "@apptypes/event";
+import { useState, useEffect } from "react";
 import { useEvents } from "@/hooks/useEvents";
+import EventCard from "@/components/EventCard";
+import { Event as AppEvent } from "@apptypes/event";
 
 export default function EventsPage() {
-  const { events = [], loading, error } = useEvents();
+  // TODO display only per-user events, check if the logic is not unnecessarily repeated with Home
+  const { events: initialEvents = [], loading, error } = useEvents();
+  const [events, setEvents] = useState<AppEvent[]>([]);
 
-  console.log("events", events);
+  // initial events after fetch
+  useEffect(() => {
+    setEvents(initialEvents);
+  }, [initialEvents]);
+
+  const handleDeleteEvent = (id: string) => {
+    setEvents((prev) => prev.filter((event) => event.id !== id));
+  };
 
   if (loading) {
     return (
@@ -31,12 +42,22 @@ export default function EventsPage() {
     );
   }
 
-  // TODO add images, use EventCard
   return (
     <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="max-w-7xl">
         <h1 className="mb-8 text-4xl font-bold text-stone-900">Events</h1>
         <div className="grid grid-cols-1 gap-6">
+          <div className="flex gap-6">
+            {events.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onDeleteAction={handleDeleteEvent}
+              />
+            ))}
+          </div>
+        </div>
+        {/* <div className="grid grid-cols-1 gap-6">
           {events.map((event: Event) => (
             <div key={event.id} className="rounded-lg bg-white p-6 shadow-md">
               <h2 className="mb-2 text-2xl font-semibold text-stone-900">
@@ -60,7 +81,7 @@ export default function EventsPage() {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

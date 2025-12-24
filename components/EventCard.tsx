@@ -99,7 +99,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
         </div>
       </div>
       {/* TODO block registrations when full */}
-      <div className="flex min-h-82 flex-col p-5">
+      <div className="flex min-h-82 w-76 flex-col p-5">
         <div className="flex flex-1 flex-col space-y-4">
           <div>
             <h3 className="font-sans text-xl font-bold text-stone-900">

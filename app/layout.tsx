@@ -52,7 +52,7 @@ export default function RootLayout({
               <span>Create Event</span>
             </Link>
             <Link
-              href="/events"
+              href="/my-events"
               className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <BookmarkSquareIcon className="h-5 w-5" />
