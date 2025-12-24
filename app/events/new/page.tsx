@@ -3,6 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const EVENT_CATEGORIES = [
+  { value: "CONCERT", label: "Concert" },
+  { value: "WORKSHOP", label: "Workshop" },
+  { value: "MEETUP", label: "Meetup" },
+  { value: "CONFERENCE", label: "Conference" },
+  { value: "TECH", label: "Tech" },
+  { value: "CULTURE_TECH", label: "Culture-tech" },
+] as const;
+
 export default function NewEventPage() {
   const router = useRouter();
 
@@ -101,12 +110,10 @@ export default function NewEventPage() {
                 setForm({ ...form, published: e.target.checked })
               }
             />
-
-            <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
-
             <span className="text-sm font-medium text-stone-700">
-              Published
+              {form.published ? "Published" : "Draft"}
             </span>
+            <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
           </label>
         </div>
         <label className="block text-sm font-medium text-stone-700">
@@ -135,7 +142,7 @@ export default function NewEventPage() {
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
         <label className="block text-sm font-medium text-stone-700">
-          startAt
+          Start Time
         </label>
         <input
           type="time"
@@ -144,7 +151,7 @@ export default function NewEventPage() {
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
         />
         <label className="block text-sm font-medium text-stone-700">
-          endAt
+          End Time
         </label>
         <input
           type="time"
@@ -186,13 +193,20 @@ export default function NewEventPage() {
         <label className="block text-sm font-medium text-stone-700">
           Category
         </label>
-        <input
-          type="text"
+        <select
           value={form.category}
           onChange={(e) => setForm({ ...form, category: e.target.value })}
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-
+        >
+          <option value="" disabled>
+            Select category
+          </option>
+          {EVENT_CATEGORIES.map((cat) => (
+            <option key={cat.value} value={cat.value}>
+              {cat.label}
+            </option>
+          ))}
+        </select>
         <label className="block text-sm font-medium text-stone-700">
           Image
         </label>
