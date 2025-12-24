@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   CalendarIcon,
   PencilSquareIcon,
@@ -37,10 +38,45 @@ const STATUS_CONFIG = {
 
 type EventCardProps = {
   event: Event;
+  onDeleteAction?: (id: string) => void;
 };
 
-export default function EventCard({ event }: EventCardProps) {
+export default function EventCard({ event, onDeleteAction }: EventCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  // TODO what should happen upon error deleting?
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    setConfirmDeleteOpen(false);
+    // TODO when loading, display loading... or loader on button
+    setLoadingDelete(true);
+    setDeleteError("");
+
+    try {
+      const res = await fetch(`/api/events/${event.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error(text);
+        return;
+      }
+
+      console.log("Removed event:", event.title);
+      if (onDeleteAction) onDeleteAction(event.id);
+    } catch (err: any) {
+      setDeleteError(
+        err.message || "There was a problem with removing this event",
+      );
+    } finally {
+      setLoadingDelete(false);
+    }
+  };
+
   return (
     <div
       key={event.id}
@@ -126,11 +162,7 @@ export default function EventCard({ event }: EventCardProps) {
             title="Delete Event"
             message="Are you sure you want to delete this event? This action cannot be undone and all registration data will be lost."
             onCancelAction={() => setConfirmDeleteOpen(false)}
-            onConfirmAction={() => {
-              setConfirmDeleteOpen(false);
-              // TODO delete logic here
-              console.log("confirm");
-            }}
+            onConfirmAction={handleDelete}
           />
         </div>
       </div>

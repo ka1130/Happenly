@@ -1,11 +1,22 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import { useEvents } from "@/hooks/useEvents";
 import { EventCards } from "@/components/EventCards";
+import { Event as AppEvent } from "@apptypes/event";
 
 export default function Home() {
-  const { events = [], loading, error } = useEvents();
+  const { events: initialEvents = [], loading, error } = useEvents();
+  const [events, setEvents] = useState<AppEvent[]>([]);
 
-  console.log("events", events);
+  // initial events after fetch
+  useEffect(() => {
+    setEvents(initialEvents);
+  }, [initialEvents]);
+
+  const handleDeleteEvent = (id: string) => {
+    setEvents((prev) => prev.filter((event) => event.id !== id));
+  };
 
   if (loading) {
     return (
@@ -41,7 +52,7 @@ export default function Home() {
         Recent Events
       </h3>
       <div className="grid grid-cols-1 gap-6">
-        <EventCards events={events} />
+        <EventCards events={events} onDeleteAction={handleDeleteEvent} />
       </div>
     </>
   );

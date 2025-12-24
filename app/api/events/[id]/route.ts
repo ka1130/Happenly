@@ -44,5 +44,5 @@ export async function DELETE(
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json(null, { status: 204 });
+  return new NextResponse(null, { status: 204 });
 }
