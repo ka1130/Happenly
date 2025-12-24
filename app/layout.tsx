@@ -7,7 +7,6 @@ import {
   Cog6ToothIcon,
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
-  CalendarIcon,
 } from "@heroicons/react/24/outline";
 import "./globals.css";
 
@@ -33,9 +32,7 @@ export default function RootLayout({
         <aside className="w-64 bg-stone-50 p-6 shadow-md">
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 text-xl font-semibold">
-              <span className="flex items-center justify-center rounded-md bg-blue-600 px-1.5 py-1.5">
-                <CalendarIcon className="h-5 w-5 text-white" strokeWidth={2} />
-              </span>
+              <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
               <span className="hover:text-stone-600">EventFlow</span>
             </h2>
           </Link>
