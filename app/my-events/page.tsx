@@ -46,16 +46,14 @@ export default function EventsPage() {
     <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-7xl">
         <h1 className="mb-8 text-4xl font-bold text-stone-900">Events</h1>
-        <div className="grid grid-cols-1 gap-6">
-          <div className="flex gap-6">
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onDeleteAction={handleDeleteEvent}
-              />
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-6">
+          {events.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onDeleteAction={handleDeleteEvent}
+            />
+          ))}
         </div>
         {/* <div className="grid grid-cols-1 gap-6">
           {events.map((event: Event) => (

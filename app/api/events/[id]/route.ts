@@ -38,8 +38,7 @@ export async function DELETE(
   _req: NextRequest,
   context: { params: Promise<Params> },
 ) {
-  // const { id } = await context.params;
-  const { id } = await Promise.resolve({ id: "7" });
+  const { id } = await context.params;
 
   const { count, error } = await supabase
     .from("events")

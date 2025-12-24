@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CalendarIcon,
   PencilSquareIcon,
   ClockIcon,
   MapPinIcon,
   TrashIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
@@ -46,6 +47,16 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
+  useEffect(() => {
+    if (!deleteError) return;
+
+    const timer = setTimeout(() => {
+      setDeleteError("");
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [deleteError]);
+
   const handleDelete = async () => {
     setConfirmDeleteOpen(false);
     // TODO when loading, display loading... or loader on button
@@ -77,7 +88,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
   return (
     <div
       key={event.id}
-      className="w-full max-w-sm cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
+      className="cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
         <img
@@ -143,13 +154,25 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
           </p>
         </div>
 
+        {deleteError && (
+          <div
+            onClick={() => setDeleteError("")}
+            className="mb-2 flex cursor-pointer items-center justify-between gap-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 hover:bg-red-100"
+          >
+            <span className="min-w-0 truncate">{deleteError}</span>
+
+            <XCircleIcon className="h-5 w-5 shrink-0 text-red-400" />
+          </div>
+        )}
+
         <div className="mt-auto flex justify-between gap-4">
           <button className="flex flex-1 cursor-pointer justify-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-xs text-stone-700 hover:bg-stone-50 focus:ring-2 focus:ring-stone-400 focus:outline-none">
             <PencilSquareIcon className="relative top-[px] h-4 w-4" />
             <span>Edit</span>
           </button>
           <button
-            className="cursor-pointer rounded-md p-2 hover:bg-stone-100"
+            disabled={!!deleteError}
+            className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
             onClick={() => setConfirmDeleteOpen(true)}
           >
             <TrashIcon className="h-4 w-4 text-red-700" />
@@ -162,7 +185,6 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             onConfirmAction={handleDelete}
           />
         </div>
-        {deleteError && <p className="text-sm text-red-500">{deleteError}</p>}
       </div>
     </div>
   );
