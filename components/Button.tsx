@@ -9,7 +9,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       type="submit"
-      className={`mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded py-2 transition ${className || ""}`}
+      className={`mt-2 flex cursor-pointer items-center justify-center gap-2 rounded py-2 transition ${className || ""}`}
       {...rest}
     >
       {children}

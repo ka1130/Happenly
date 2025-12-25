@@ -68,7 +68,6 @@ export default function EditEventPage({}: EditPageProps) {
 
   return (
     <div>
-      page
       <EventForm
         submitLabel="Update Event"
         initialData={form}

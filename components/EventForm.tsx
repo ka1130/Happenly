@@ -145,8 +145,6 @@ export default function EventForm({
         </div>
       </div>
 
-      {/* ... */}
-
       <div className="flex items-center gap-4">
         <div className="flex-1">
           <label className="flex gap-2 text-sm font-medium text-stone-700">
@@ -233,7 +231,7 @@ export default function EventForm({
         <Button
           type="submit"
           disabled={loading}
-          className={`text-white transition ${
+          className={`w-full text-white transition ${
             loading ? "bg-stone-400" : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
