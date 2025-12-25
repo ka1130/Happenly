@@ -1,6 +1,6 @@
-# Happenly
+# Happenly 🚧 WIP
 
-** Event management website **
+**Event management website**
 
 ## Features
 
@@ -12,16 +12,17 @@
 
 ## Tech Stack
 
-- **Frontend:** React + TypeScript + Vite + Tailwind CSS
+- **Frontend:** React + TypeScript + Vite + Tailwind CSS + Supabase
 - **Backend:** Next.js
 - **UI:** Responsive design with real-time updates
 
 ## Usage
 
-1. Sign up / log in
-2. Create or search for events
-3. Track registrations and analytics
-4. Manage active events
+1. Browse events
+2. Create, update and remove or search for events
+3. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
+
+(To Do:) 4. Search events 5. Filter events 6. Sign up / log in 7. Register for an event 8. Track registrations and analytics
 
 ---
 
