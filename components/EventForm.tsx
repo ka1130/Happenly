@@ -9,6 +9,7 @@ import {
   MapPinIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import Button from "@components/Button";
 
 const EVENT_CATEGORIES = [
   { value: "CONCERT", label: "Concert" },
@@ -229,19 +230,19 @@ export default function EventForm({
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="mt-1 flex gap-2">
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          className={`mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded py-2 text-white transition ${
+          className={`text-white transition ${
             loading ? "bg-stone-400" : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
           <DocumentPlusIcon className="h-4 w-4" />
           {loading ? "Saving..." : submitLabel}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="mt-2 inline-flex min-w-30 cursor-pointer items-center justify-center gap-2 rounded-md border border-gray-300 px-2 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:ring-2 focus:ring-gray-400 focus:outline-none"
+          className="inline-flex min-w-30 border border-gray-300 px-2 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-800 focus:ring-2 focus:ring-gray-400 focus:outline-none"
           onClick={() => router.push("/")}
         >
           <svg
@@ -259,7 +260,7 @@ export default function EventForm({
             />
           </svg>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );
