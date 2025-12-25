@@ -12,9 +12,8 @@
 
 ## Tech Stack
 
-- **Frontend:** React + TypeScript + Vite + Tailwind CSS + Supabase
-- **Backend:** Next.js
-- **UI:** Responsive design with real-time updates
+- **Frontend:** React + TypeScript + Vite + Tailwind CSS
+- **Backend:** Next.js + Supabase
 
 ## Usage
 
