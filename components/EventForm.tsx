@@ -33,7 +33,7 @@ export type EventFormData = {
   image: string;
 };
 
-type Props = {
+type EventFormProps = {
   initialData: EventFormData;
   submitLabel: string;
   onSubmitAction: (data: EventFormData, file: File | null) => Promise<void>;
@@ -43,7 +43,7 @@ export default function EventForm({
   initialData,
   submitLabel,
   onSubmitAction,
-}: Props) {
+}: EventFormProps) {
   const [form, setForm] = useState(initialData);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);

@@ -9,6 +9,7 @@ import {
   MapPinIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import EventForm, { type EventFormData } from "@components/EventForm";
 
 const EVENT_CATEGORIES = [
   { value: "CONCERT", label: "Concert" },
@@ -38,71 +39,61 @@ export default function NewEventPage() {
 
   const [form, setForm] = useState(initialForm);
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  const handleSubmitAction = async (form: EventFormData, file: File | null) => {
+    let imageUrl = form.image;
 
-    try {
-      let imageUrl = form.image;
-
-      if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-        imageUrl = data.url;
-      }
-
-      const startTimestamp = `${form.date} ${form.startAt}:00`;
-      const endTimestamp = `${form.date} ${form.endAt}:00`;
-
-      const payload = {
-        ...form,
-        startAt: startTimestamp,
-        endAt: endTimestamp,
-        image: imageUrl,
-      };
-
-      const res = await fetch("/api/events", {
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch("/api/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: formData,
       });
-
-      if (!res.ok) {
-        const text = await res.text();
-        console.error(text);
-        return;
-      }
-
       const data = await res.json();
-      console.log("Created event:", data);
-
-      // 1️⃣ Reset form
-      setForm(initialForm);
-      setFile(null);
-
-      // 2️⃣ Redirect to events list page
-      router.push("/events");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+      imageUrl = data.url;
     }
+
+    const startTimestamp = `${form.date} ${form.startAt}:00`;
+    const endTimestamp = `${form.date} ${form.endAt}:00`;
+
+    const payload = {
+      ...form,
+      startAt: startTimestamp,
+      endAt: endTimestamp,
+      image: imageUrl,
+    };
+
+    const res = await fetch("/api/events", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(text);
+      return;
+    }
+
+    const data = await res.json();
+    console.log("Created event:", data);
+
+    // 1️⃣ Reset form
+    setForm(initialForm);
+    setFile(null);
   };
 
   return (
     <div className="w-full">
       <h3 className="mb-2 text-2xl font-semibold">Create Event</h3>
       <p className="mb-10">Fill in the details to create a new event</p>
-      <form
+      <EventForm
+        submitLabel="Create Event"
+        initialData={form}
+        onSubmitAction={handleSubmitAction}
+      />
+      {/* <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-xl space-y-4 rounded-md border-stone-100 bg-stone-50 p-4 shadow"
       >
@@ -291,7 +282,7 @@ export default function NewEventPage() {
             Cancel
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 }

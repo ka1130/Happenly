@@ -4,20 +4,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import EventForm, { type EventFormData } from "@components/EventForm";
 
-const EMPTY_FORM: EventFormData = {
-  title: "",
-  description: "",
-  date: "",
-  startAt: "",
-  endAt: "",
-  location: "",
-  capacity: 0,
-  registrations: 0,
-  category: "",
-  published: false,
-  image: "",
-};
-
 type EditPageProps = {};
 
 export default function EditEventPage({}: EditPageProps) {
