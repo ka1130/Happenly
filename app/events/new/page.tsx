@@ -2,23 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  DocumentPlusIcon,
-  CalendarIcon,
-  ClockIcon,
-  MapPinIcon,
-  UsersIcon,
-} from "@heroicons/react/24/outline";
 import EventForm, { type EventFormData } from "@components/EventForm";
-
-const EVENT_CATEGORIES = [
-  { value: "CONCERT", label: "Concert" },
-  { value: "WORKSHOP", label: "Workshop" },
-  { value: "MEETUP", label: "Meetup" },
-  { value: "CONFERENCE", label: "Conference" },
-  { value: "TECH", label: "Tech" },
-  { value: "CULTURE_TECH", label: "Culture-tech" },
-] as const;
 
 export default function NewEventPage() {
   const router = useRouter();

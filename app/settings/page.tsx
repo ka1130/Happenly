@@ -1,7 +1,3 @@
-import React from "react";
-
-type SettingsProps = {};
-
-export default function Settings({}: SettingsProps) {
+export default function Settings() {
   return <div>Settings</div>;
 }

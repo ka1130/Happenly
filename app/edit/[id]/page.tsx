@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import EventForm, { type EventFormData } from "@components/EventForm";
 
-type EditPageProps = {};
-
-export default function EditEventPage({}: EditPageProps) {
+export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);
 
   const { id } = useParams<{ id: string }>();
