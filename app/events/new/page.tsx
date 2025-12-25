@@ -79,7 +79,6 @@ export default function NewEventPage() {
     const data = await res.json();
     console.log("Created event:", data);
 
-    // 1️⃣ Reset form
     setForm(initialForm);
     setFile(null);
   };
