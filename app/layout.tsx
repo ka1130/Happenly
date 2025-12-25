@@ -8,6 +8,7 @@ import {
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
 } from "@heroicons/react/24/outline";
+import MobileMenu from "@components/MobileMenu";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="w-64 bg-stone-50 p-6 shadow-md">
+        <aside className="hidden w-64 bg-stone-50 p-6 shadow-md md:block">
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
@@ -75,8 +76,17 @@ export default function RootLayout({
           </nav>
         </aside>
 
-        {/* Main content */}
-        <main className="w-full max-w-none px-4 pt-10">{children}</main>
+        <div className="flex-1">
+          {/* Mobile header + drawer */}
+          <div className="md:hidden">
+            <MobileMenu />
+          </div>
+
+          {/* Main content */}
+          <main>{children}</main>
+        </div>
+
+        {/* <main className="w-full max-w-none px-4 pt-10">{children}</main> */}
       </body>
     </html>
   );

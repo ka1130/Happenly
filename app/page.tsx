@@ -43,7 +43,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <h2 className="mb-2 text-3xl font-semibold text-stone-700">Dashboard</h2>
       <p className="mb-12 text-stone-500">
         Manage your events and track registrations
