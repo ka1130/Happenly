@@ -46,7 +46,7 @@ export default function MobileMenu() {
           <Link href="/">
             <h2 className="flex items-center space-x-2 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
-              <span className="hover:text-stone-600">EventFlow</span>
+              <span className="hover:text-stone-600">Happenly</span>
             </h2>
           </Link>
           <button

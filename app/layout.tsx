@@ -18,7 +18,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "EventFlow",
+  title: "Happenly",
   description: "Your Events, Your Dashboard — All in One Place",
 };
 
@@ -35,7 +35,7 @@ export default function RootLayout({
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 p-6 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
-              <span className="hover:text-stone-600">EventFlow</span>
+              <span className="hover:text-stone-600">Happenly</span>
             </h2>
           </Link>
           <nav className="flex flex-col space-y-3 p-6">
