@@ -5,8 +5,10 @@ export const runtime = "nodejs";
 
 // GET all events
 export async function GET(_req: NextRequest) {
-  const { data, error } = await supabase.from("events").select("*");
-  // .order("createdAt", { ascending: false });
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .order("date", { ascending: true });
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });

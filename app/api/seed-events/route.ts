@@ -47,13 +47,16 @@ export async function GET(_req: NextRequest) {
     },
   ];
 
+  // Insert events, let Supabase handle created_at automatically
   const { data, error } = await supabase
     .from("events")
     .insert(sampleEvents)
-    .select();
+    .select("*"); // select everything including created_at
 
-  if (error)
+  if (error) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
   return NextResponse.json({ message: "Seeded events", data });
 }
