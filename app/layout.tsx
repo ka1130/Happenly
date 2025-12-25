@@ -9,6 +9,7 @@ import {
   GlobeAsiaAustraliaIcon,
 } from "@heroicons/react/24/outline";
 import MobileMenu from "@components/MobileMenu";
+import UserFooter from "@components/UserFooter";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,14 +31,14 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="flex min-h-screen">
         {/* Sidebar */}
-        <aside className="hidden w-64 bg-stone-50 p-6 shadow-md md:block">
+        <aside className="hidden w-64 flex-col bg-stone-50 shadow-md md:flex">
           <Link href="/">
-            <h2 className="mb-6 flex items-center space-x-2 text-xl font-semibold">
+            <h2 className="mb-6 flex items-center space-x-2 p-6 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
               <span className="hover:text-stone-600">EventFlow</span>
             </h2>
           </Link>
-          <nav className="flex flex-col space-y-3">
+          <nav className="flex flex-col space-y-3 p-6">
             <Link
               href="/dashboard"
               className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
@@ -60,7 +61,7 @@ export default function RootLayout({
               <span>My Events</span>
             </Link>
             <Link
-              href="/events"
+              href="/"
               className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
             >
               <GlobeAsiaAustraliaIcon className="h-5 w-5" />
@@ -74,19 +75,16 @@ export default function RootLayout({
               <span>Settings</span>
             </Link>
           </nav>
+          <UserFooter />
         </aside>
-
         <div className="flex-1">
           {/* Mobile header + drawer */}
           <div className="md:hidden">
             <MobileMenu />
           </div>
-
           {/* Main content */}
-          <main>{children}</main>
+          <main className="bg-white">{children}</main>
         </div>
-
-        {/* <main className="w-full max-w-none px-4 pt-10">{children}</main> */}
       </body>
     </html>
   );

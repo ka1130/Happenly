@@ -11,6 +11,7 @@ import {
   GlobeAsiaAustraliaIcon,
   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
+import UserFooter from "@components/UserFooter";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +38,7 @@ export default function MobileMenu() {
 
       {/* Drawer menu */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 transform bg-white pl-4 shadow-lg transition-transform duration-300 ${
+        className={`fixed top-0 left-0 z-50 flex h-full w-64 transform flex-col bg-white pl-4 shadow-lg transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -78,7 +79,7 @@ export default function MobileMenu() {
             <span>My Events</span>
           </Link>
           <Link
-            href="/events"
+            href="/"
             className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
           >
             <GlobeAsiaAustraliaIcon className="h-5 w-5" />
@@ -92,6 +93,7 @@ export default function MobileMenu() {
             <span>Settings</span>
           </Link>
         </nav>
+        <UserFooter />
       </aside>
     </>
   );
