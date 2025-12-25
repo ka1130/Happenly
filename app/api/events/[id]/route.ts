@@ -27,11 +27,15 @@ export async function PATCH(
   const { id } = await context.params;
   const data = await req.json();
 
-  const { error } = await supabase.from("events").update(data).eq("id", id);
+  const { data: updated, error } = await supabase
+    .from("events")
+    .update(data)
+    .eq("id", id)
+    .select();
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json({ updated: true });
+  return NextResponse.json({ updated });
 }
 
 export async function DELETE(

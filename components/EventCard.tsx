@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   CalendarIcon,
   PencilSquareIcon,
@@ -166,10 +167,13 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
         )}
 
         <div className="mt-auto flex justify-between gap-4">
-          <button className="flex flex-1 cursor-pointer justify-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-xs text-stone-700 hover:bg-stone-50 focus:ring-2 focus:ring-stone-400 focus:outline-none">
+          <Link
+            href={`/edit/${event.id}`}
+            className="flex flex-1 cursor-pointer justify-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-xs text-stone-700 hover:bg-stone-50 focus:ring-2 focus:ring-stone-400 focus:outline-none"
+          >
             <PencilSquareIcon className="relative top-[px] h-4 w-4" />
             <span>Edit</span>
-          </button>
+          </Link>
           <button
             disabled={!!deleteError}
             className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
