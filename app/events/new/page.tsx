@@ -174,6 +174,7 @@ export default function NewEventPage() {
             </select>
           </div>
         </div>
+
         <div className="flex items-center gap-4">
           <div className="flex-1">
             <label className="flex gap-2 text-sm font-medium text-stone-700">
@@ -222,17 +223,6 @@ export default function NewEventPage() {
           }
           className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        {/* <label className="mb-0 block text-sm font-medium text-stone-700">
-          Registrations
-        </label>
-        <input
-          type="number"
-          value={form.registrations}
-          onChange={(e) =>
-            setForm({ ...form, registrations: Number(e.target.value) })
-          }
-          className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        /> */}
         <div className="mt-2">
           <label className="block text-sm font-medium text-stone-700">
             Image
