@@ -83,7 +83,9 @@ export default function RootLayout({
             <MobileMenu />
           </div>
           {/* Main content */}
-          <main className="bg-white">{children}</main>
+          <main className="min-h-screen bg-white px-4 py-12 sm:px-6 lg:px-8">
+            {children}
+          </main>
         </div>
       </body>
     </html>

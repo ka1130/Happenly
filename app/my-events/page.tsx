@@ -43,7 +43,7 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div>
       <h1 className="mb-8 text-4xl font-bold text-stone-900">Events</h1>
       <div className="flex flex-wrap gap-6">
         {events.map((event) => (
