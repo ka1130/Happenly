@@ -89,7 +89,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
   return (
     <div
       key={event.id}
-      className="cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
+      className="w-80 shrink-0 cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
         <img
@@ -111,13 +111,13 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
         </div>
       </div>
       {/* TODO block registrations when full */}
-      <div className="flex min-h-82 w-76 flex-col p-5">
-        <div className="flex flex-1 flex-col space-y-4">
+      <div className="flex flex-col p-5">
+        <div className="mb-10 flex flex-1 flex-col space-y-2">
           <div>
             <h3 className="font-sans text-xl font-bold text-stone-900">
               {event.title}
             </h3>
-            <p className="mt-1 text-stone-500">{event.description}</p>
+            <p className="mt-1 mb-4 text-stone-500">{event.description}</p>
           </div>
 
           <p className="flex gap-2 text-sm text-stone-500">

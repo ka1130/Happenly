@@ -51,7 +51,7 @@ export default function Home() {
       <h3 className="mb-4 text-2xl font-medium text-stone-700">
         Recent Events
       </h3>
-      <div className="flex flex-wrap gap-6">
+      <div className="grid grid-cols-[repeat(auto-fill,20rem)] justify-start gap-6">
         {events.map((event) => (
           <EventCard
             key={event.id}
