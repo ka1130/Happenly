@@ -21,7 +21,7 @@
 ## Usage
 
 1. Browse events
-2. Create, update and remove or search for events
+2. Create, update and remove events
 3. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
 
 (In Progress): 4. Sign up / sign in (currently user can sign up with their email address)
