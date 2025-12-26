@@ -25,6 +25,7 @@ export default function AuthPage() {
   }, []);
 
   const handleSignUp = async () => {
+    setError(null);
     if (password !== passwordConfirm) {
       setError("Passwords don't match");
       return;
@@ -41,6 +42,7 @@ export default function AuthPage() {
   };
 
   const handleSignIn = async () => {
+    setError(null);
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -61,11 +63,19 @@ export default function AuthPage() {
           Welcome
         </h1>
 
-        <div className="flex flex-col space-y-4">
+        <form
+          className="flex flex-col space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSignUp(); // or handleSignIn depending on which button triggered it
+          }}
+        >
           <input
             type="text"
             placeholder="Full Name"
             value={fullName}
+            autoComplete="name"
+            required
             onChange={(e) => setFullName(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
@@ -73,24 +83,32 @@ export default function AuthPage() {
             type="email"
             placeholder="Email"
             value={email}
+            autoComplete="email"
+            required
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
           <input
             type="password"
             placeholder="Password"
+            minLength={8}
             value={password}
+            autoComplete="new-password"
+            required
             onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
           <input
             type="password"
             placeholder="Confirm Password"
+            minLength={8}
+            autoComplete="new-password"
             value={passwordConfirm}
+            required
             onChange={(e) => setPasswordConfirm(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
-        </div>
+        </form>
 
         {error && (
           <p className="mt-3 text-center text-sm text-red-500">{error}</p>
@@ -98,6 +116,7 @@ export default function AuthPage() {
 
         <div className="mt-6 flex flex-col gap-3">
           <button
+            type="button"
             onClick={handleSignUp}
             className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600"
             disabled={loading}
@@ -105,6 +124,7 @@ export default function AuthPage() {
             Sign Up
           </button>
           <button
+            type="button"
             onClick={handleSignIn}
             className="w-full rounded-md border border-blue-500 py-2 text-blue-500 transition hover:bg-blue-50"
             disabled={loading}
