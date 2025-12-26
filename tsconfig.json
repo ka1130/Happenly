@@ -25,7 +25,8 @@
       "@hooks/*": ["./hooks/*"],
       "@apptypes/*": ["./types/*"],
       "@components/*": ["./components/*"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@lib/*": ["./lib/*"]
     }
   },
   "include": [

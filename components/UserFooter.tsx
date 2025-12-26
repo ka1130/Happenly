@@ -1,22 +1,57 @@
+"use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "@lib/supabase";
 
 export default function UserFooter() {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    fetchUser();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  if (!user) {
+    return (
+      <div className="mt-auto flex items-center justify-center border-t border-gray-200 p-4 md:pr-0">
+        <Link href="/auth" className="text-blue-600 hover:underline">
+          Log in
+        </Link>
+      </div>
+    );
+  }
+
+  const { full_name, avatar_url } = user.user_metadata || {};
+
   return (
     <div className="mt-auto flex items-center justify-between border-t border-gray-200 p-4 md:pr-0">
       {/* Left: avatar + text */}
       <div className="flex items-center space-x-3">
-        {/* Avatar container */}
         <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-          <img
-            src="https://aeb64540-f3fa-4b3d-83da-19f135f24963-00-n847jmzuxjv1.riker.replit.dev/@fs/home/runner/workspace/attached_assets/stock_images/professional_headsho_8a7e57ae.jpg"
-            alt="User Avatar"
-            className="h-full w-full object-cover"
-          />
+          {avatar_url ? (
+            <img
+              src={avatar_url}
+              alt="User Avatar"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full bg-gray-300" />
+          )}
         </div>
-        {/* Name + email */}
         <div className="flex flex-col">
-          <span className="font-medium">Jane Doe</span>
-          <span className="text-sm text-gray-500">j.doe@example.com</span>
+          <span className="font-medium">{full_name || "No name"}</span>
+          <span className="text-sm text-gray-500">{user.email}</span>
         </div>
       </div>
 
