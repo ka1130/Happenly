@@ -21,7 +21,9 @@
 2. Create, update and remove or search for events
 3. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
 
-(To Do:) 4. Search events 5. Filter events 6. Sign up / log in 7. Register for an event 8. Track registrations and analytics
+(In Progress): 4. Sign up / sign in (currently user can sign up with their email address)
+
+(To Do:) 5. Search events 6. Filter events 6. Register for an event 7. Track registrations and analytics
 
 ---
 
