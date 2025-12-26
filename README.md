@@ -6,9 +6,12 @@
 
 - **Dashboard:** Event listing dashboard with card-based layout and filtering options.
 - **Create Event:** Add new events with fields for title, description, date, time, location, and image.
+- **Authentication** With e-mail address (managed by Supabase)
 - **Single Event View:** Event detail view with registration interface and event information
 - **Browse:** Quickly find events by keyword, category, or location.
-- Event update/edit interface with pre-filled forms
+- **Event registration**
+- **Event update/edit** interface with pre-filled forms
+- **Event removal**
 
 ## Tech Stack
 
