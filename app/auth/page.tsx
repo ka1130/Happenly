@@ -1,14 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@lib/supabase";
 
 export default function AuthPage() {
-  const [email, setEmail] = useState("");
+  const router = useRouter();
+
   const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  // Track auth state
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      },
+    );
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   const handleSignUp = async () => {
     if (password !== passwordConfirm) {
@@ -19,9 +33,7 @@ export default function AuthPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: { full_name: fullName },
-      },
+      options: { data: { full_name: fullName } },
     });
     setLoading(false);
     if (error) setError(error.message);
@@ -36,16 +48,11 @@ export default function AuthPage() {
     });
     setLoading(false);
     if (error) setError(error.message);
-    else alert("Logged in!");
+    else router.push("/dashboard"); // redirect after login
   };
 
-  const handleOAuthLogin = async (provider: "google") => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: "http://localhost:3000" },
-    });
-    if (error) console.log("OAuth error:", error.message);
-  };
+  if (user)
+    return <p>Logged in as {user.user_metadata?.full_name || user.email}</p>;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -56,17 +63,17 @@ export default function AuthPage() {
 
         <div className="flex flex-col space-y-4">
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
-          />
-          <input
             type="text"
             placeholder="Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
           <input
@@ -92,26 +99,17 @@ export default function AuthPage() {
         <div className="mt-6 flex flex-col gap-3">
           <button
             onClick={handleSignUp}
+            className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600"
             disabled={loading}
-            className="w-full rounded-md bg-blue-500 py-2 text-white transition hover:bg-blue-600 disabled:opacity-50"
           >
             Sign Up
           </button>
           <button
             onClick={handleSignIn}
+            className="w-full rounded-md border border-blue-500 py-2 text-blue-500 transition hover:bg-blue-50"
             disabled={loading}
-            className="w-full rounded-md border border-blue-500 py-2 text-blue-500 transition hover:bg-blue-50 disabled:opacity-50"
           >
             Sign In
-          </button>
-        </div>
-
-        <div className="mt-4 flex flex-col gap-2">
-          <button
-            onClick={() => handleOAuthLogin("google")}
-            className="w-full rounded-md bg-red-500 py-2 text-white transition hover:bg-red-600"
-          >
-            Sign in with Google
           </button>
         </div>
       </div>
