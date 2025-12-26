@@ -9,7 +9,7 @@ import {
   Cog6ToothIcon,
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
-  ArrowLeftEndOnRectangleIcon,
+  ChevronDoubleLeftIcon,
 } from "@heroicons/react/24/outline";
 import UserFooter from "@components/UserFooter";
 
@@ -62,7 +62,7 @@ export default function MobileMenu() {
             onClick={() => setIsOpen(false)}
             className="absolute top-9 right-4"
           >
-            <ArrowLeftEndOnRectangleIcon className="h-6 w-6 text-stone-500" />
+            <ChevronDoubleLeftIcon className="h-6 w-6 text-stone-500" />
           </button>
         </div>
         <nav className="flex flex-col space-y-6">
