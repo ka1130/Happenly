@@ -78,7 +78,7 @@ export default function MobileMenu() {
             </Link>
           ))}
         </nav>
-        <UserFooter />
+        <UserFooter onLinkClickAction={close} />
       </aside>
     </>
   );

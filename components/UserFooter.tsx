@@ -1,10 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
 
-export default function UserFooter() {
+export default function UserFooter({
+  onLinkClickAction,
+}: {
+  onLinkClickAction?: () => void;
+}) {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -28,9 +32,10 @@ export default function UserFooter() {
       <div className="mt-auto border-t border-gray-200 p-4">
         <Link
           href="/auth"
+          onClick={onLinkClickAction}
           className="flex items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
         >
-          <ArrowRightOnRectangleIcon className="h-5 w-5" />
+          <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
           Log in
         </Link>
       </div>
@@ -65,6 +70,7 @@ export default function UserFooter() {
       {/* Right: settings link */}
       <Link
         href="/settings"
+        onClick={onLinkClickAction}
         className="flex items-center rounded-full p-2 hover:bg-gray-100"
       >
         <svg
