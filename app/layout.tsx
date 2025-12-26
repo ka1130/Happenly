@@ -31,7 +31,7 @@ export default function RootLayout({
     <html lang="en" className={inter.variable}>
       <body className="relative min-h-screen bg-gray-50">
         {/* Sidebar */}
-        <aside className="fixed top-0 left-0 hidden h-screen w-64 flex-col bg-stone-50 shadow-md md:flex">
+        <aside className="fixed top-0 left-0 hidden h-dvh w-64 flex-col overflow-y-auto bg-stone-50 shadow-md md:flex">
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 p-6 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />

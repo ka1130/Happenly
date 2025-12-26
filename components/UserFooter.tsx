@@ -35,7 +35,7 @@ export default function UserFooter() {
   const { full_name, avatar_url } = user.user_metadata || {};
 
   return (
-    <div className="mt-auto flex items-center justify-between border-t border-gray-200 p-4 md:pr-0">
+    <div className="mt-auto flex items-center justify-between border-t border-gray-200 px-0 py-4 md:py-6 md:pr-0 md:pl-4">
       {/* Left: avatar + text */}
       <div className="flex items-center space-x-3">
         <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
@@ -51,7 +51,9 @@ export default function UserFooter() {
         </div>
         <div className="flex flex-col">
           <span className="font-medium">{full_name || "No name"}</span>
-          <span className="text-sm text-gray-500">{user.email}</span>
+          <span className="max-w-[140px] truncate text-sm text-gray-500">
+            {user.email}
+          </span>
         </div>
       </div>
 
