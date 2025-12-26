@@ -13,8 +13,17 @@ import {
 } from "@heroicons/react/24/outline";
 import UserFooter from "@components/UserFooter";
 
+const links = [
+  { href: "/dashboard", label: "Dashboard", Icon: PresentationChartLineIcon },
+  { href: "/events/new", label: "Create Event", Icon: PlusIcon },
+  { href: "/my-events", label: "My Events", Icon: BookmarkSquareIcon },
+  { href: "/", label: "Browse Events", Icon: GlobeAsiaAustraliaIcon },
+  { href: "/settings", label: "Settings", Icon: Cog6ToothIcon },
+];
+
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
 
   return (
     <>
@@ -43,7 +52,7 @@ export default function MobileMenu() {
         }`}
       >
         <div className="relative mb-10 flex items-center justify-between pt-8">
-          <Link href="/">
+          <Link href="/" onClick={close}>
             <h2 className="flex items-center space-x-2 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
               <span className="hover:text-stone-600">Happenly</span>
@@ -57,41 +66,17 @@ export default function MobileMenu() {
           </button>
         </div>
         <nav className="flex flex-col space-y-6">
-          <Link
-            href="/dashboard"
-            className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
-          >
-            <PresentationChartLineIcon className="h-5 w-5" />
-            <span>Dashboard</span>
-          </Link>
-          <Link
-            href="/events/new"
-            className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
-          >
-            <PlusIcon className="h-5 w-5" />
-            <span>Create Event</span>
-          </Link>
-          <Link
-            href="/my-events"
-            className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
-          >
-            <BookmarkSquareIcon className="h-5 w-5" />
-            <span>My Events</span>
-          </Link>
-          <Link
-            href="/"
-            className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
-          >
-            <GlobeAsiaAustraliaIcon className="h-5 w-5" />
-            <span>Browse Events</span>
-          </Link>
-          <Link
-            href="/settings"
-            className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
-          >
-            <Cog6ToothIcon className="h-5 w-5" />
-            <span>Settings</span>
-          </Link>
+          {links.map(({ href, label, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={close}
+              className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
+            >
+              <Icon className="h-5 w-5" />
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
         <UserFooter />
       </aside>
