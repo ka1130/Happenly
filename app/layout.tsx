@@ -29,16 +29,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="flex min-h-screen">
+      <body className="relative min-h-screen bg-gray-50">
         {/* Sidebar */}
-        <aside className="hidden w-64 flex-col bg-stone-50 shadow-md md:flex">
+        <aside className="fixed top-0 left-0 hidden h-screen w-64 flex-col bg-stone-50 shadow-md md:flex">
           <Link href="/">
             <h2 className="mb-6 flex items-center space-x-2 p-6 text-xl font-semibold">
               <img src="/images/logo.svg" className="h-7 w-7" alt="Logo" />
               <span className="hover:text-stone-600">Happenly</span>
             </h2>
           </Link>
-          <nav className="flex flex-col space-y-3 p-6">
+          <nav className="flex flex-1 flex-col space-y-3 p-6">
             <Link
               href="/dashboard"
               className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
@@ -77,13 +77,14 @@ export default function RootLayout({
           </nav>
           <UserFooter />
         </aside>
-        <div className="flex-1">
+
+        {/* Main content */}
+        <div className="ml-0 flex min-h-screen flex-col md:ml-64">
           {/* Mobile header + drawer */}
           <div className="md:hidden">
             <MobileMenu />
           </div>
-          {/* Main content */}
-          <main className="min-h-screen bg-white px-4 py-12 sm:px-6 lg:px-8">
+          <main className="flex-1 overflow-auto bg-white px-4 py-12 sm:px-6 lg:px-8">
             {children}
           </main>
         </div>
