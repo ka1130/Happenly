@@ -24,8 +24,9 @@
 2. Create, update and remove events
 3. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
 4. Sign up / sign in (with Supabase)
+5. Register to an event (from a single event view)
 
-(To Do:) 5. Search events 6. Filter events 6. Register for an event 7. Track registrations and analytics
+(To Do:) 5. Search events 6. Filter events 6. Track registrations and analytics
 
 ---
 
