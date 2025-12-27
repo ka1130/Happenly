@@ -116,7 +116,7 @@ export default function UserFooter({
         onClick={handleLogout}
         disabled={loading}
         aria-label="Log out"
-        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+        className={`mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
           loading ? "cursor-not-allowed opacity-60" : ""
         }`}
       >
