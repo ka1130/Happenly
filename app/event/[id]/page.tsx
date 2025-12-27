@@ -53,10 +53,8 @@ export default function EventPage() {
         >
           <ArrowLeftIcon className="h-4 w-4 text-white" strokeWidth={2.5} />
         </button>
-        {/* <div className="absolute top-5 left-5 rounded-md border border-white/40 bg-white/60 p-2 backdrop-blur-sm">
-          <ArrowLeftIcon className="h-4 w-4 text-white" strokeWidth={2.5} />
-        </div> */}
-        <div className="absolute bottom-5 left-5">
+
+        <div className="absolute bottom-18 left-5">
           <span
             className={`mr-3 rounded-md bg-stone-100/20 px-3 py-1 text-sm font-medium ${
               STATUS_CONFIG[status(event)].className
@@ -68,6 +66,10 @@ export default function EventPage() {
             {formatCategory(event.category)}
           </span>
         </div>
+
+        <h3 className="absolute bottom-6 left-5 text-2xl font-semibold tracking-wider text-white">
+          {event.title}
+        </h3>
       </div>
 
       {/* Flex container: tabs left, info right */}
