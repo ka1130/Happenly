@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { supabase } from "@lib/supabase";
-import { useEvents } from "@/hooks/useEvents";
-import EventCard from "@/components/EventCard";
+import { useEvents } from "@hooks/useEvents";
+import EventCard from "@components/EventCard";
 import { Event as AppEvent } from "@apptypes/event";
 
 export default function EventsPage() {
@@ -64,13 +65,14 @@ export default function EventsPage() {
       <h1 className="mb-8 text-4xl font-bold text-stone-900">Events</h1>
       <div className="flex flex-wrap gap-6">
         {events.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            onDeleteAction={(id) =>
-              setEvents((prev) => prev.filter((e) => e.id !== id))
-            }
-          />
+          <Link href={`/event/${event.id}`} key={event.id}>
+            <EventCard
+              event={event}
+              onDeleteAction={(id) =>
+                setEvents((prev) => prev.filter((e) => e.id !== id))
+              }
+            />
+          </Link>
         ))}
       </div>
     </div>

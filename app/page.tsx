@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useEvents } from "@/hooks/useEvents";
 import EventCard from "@/components/EventCard";
 import { Event as AppEvent } from "@apptypes/event";
@@ -53,11 +54,9 @@ export default function Home() {
       </h3>
       <div className="grid grid-cols-[repeat(auto-fill,20rem)] justify-start gap-6">
         {events.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            onDeleteAction={handleDeleteEvent}
-          />
+          <Link href={`/event/${event.id}`} key={event.id}>
+            <EventCard event={event} onDeleteAction={handleDeleteEvent} />
+          </Link>
         ))}
       </div>
     </div>

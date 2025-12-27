@@ -15,14 +15,14 @@ import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
 import { formatTimeRange } from "@utils/formatTimeRange";
 
-const status = (event: Event) => {
+export const status = (event: Event) => {
   if (!event) return "DRAFT";
   if (event.registrations >= event.capacity) return "FULL";
   if (event.published) return "PUBLISHED";
   return "DRAFT";
 };
 
-const STATUS_CONFIG = {
+export const STATUS_CONFIG = {
   FULL: {
     label: "Full",
     className: "text-red-600",

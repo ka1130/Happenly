@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useEvents } from "@hooks/useEvents";
 import { Event } from "@apptypes/event";
+import { status, STATUS_CONFIG } from "@components/EventCard";
+import { formatCategory } from "@utils/formatCategory";
+import { formatTimeRange } from "@utils/formatTimeRange";
 
 export default function EventPage() {
   const { events } = useEvents();
@@ -19,12 +22,26 @@ export default function EventPage() {
   const progress = Math.min((event.registrations / event.capacity) * 100, 100);
 
   return (
-    <div className="w-full p-4">
-      <img
-        src={event.image}
-        alt={event.title}
-        className="max-h-64 w-full rounded-lg object-cover"
-      />
+    <div className="relative w-full p-4">
+      <div className="relative">
+        <img
+          src={event.image}
+          alt={event.title}
+          className="max-h-84 w-full rounded-lg object-cover"
+        />
+        <div className="absolute top-3 left-3">
+          <span
+            className={`mr-3 rounded-md bg-stone-100/20 px-3 py-1 text-sm font-medium ${
+              STATUS_CONFIG[status(event)].className
+            }`}
+          >
+            {STATUS_CONFIG[status(event)].label}
+          </span>
+          <span className="rounded-md bg-stone-200 px-3 py-1 text-sm font-medium">
+            {formatCategory(event.category)}
+          </span>
+        </div>
+      </div>
 
       {/* Flex container: tabs left, info right */}
       <div className="mt-4 flex w-full flex-col gap-4 lg:flex-row">
