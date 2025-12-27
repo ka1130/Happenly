@@ -8,6 +8,7 @@ import {
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
 } from "@heroicons/react/24/outline";
+import { Toaster } from "react-hot-toast";
 import MobileMenu from "@components/MobileMenu";
 import UserFooter from "@components/UserFooter";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="relative min-h-screen bg-gray-50">
+        <Toaster position="top-right" />
         {/* Sidebar */}
         <aside className="fixed top-0 left-0 hidden h-dvh w-64 flex-col overflow-y-auto bg-stone-50 shadow-md md:flex">
           <Link href="/">
