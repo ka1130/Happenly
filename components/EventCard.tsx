@@ -9,6 +9,7 @@ import {
   MapPinIcon,
   TrashIcon,
   XCircleIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
@@ -147,7 +148,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
           </p>
 
           <p className="flex gap-2 text-sm text-stone-500">
-            <MapPinIcon
+            <UsersIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
             />
