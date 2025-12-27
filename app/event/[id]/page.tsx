@@ -72,30 +72,8 @@ export default function EventPage() {
         </h3>
       </div>
 
-      {/* Flex container: tabs left, info right */}
       <div className="mt-4 flex w-full flex-col gap-4 lg:flex-row">
-        {/* Left: Tabs + content */}
         <div className="flex-1">
-          {/* <div className="flex border-b border-gray-300">
-            <button
-              onClick={() => setActiveTab("overview")}
-              className={`px-4 py-2 ${activeTab === "overview" ? "border-b-2 border-blue-500 text-blue-600" : ""}`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setActiveTab("attendees")}
-              className={`px-4 py-2 ${activeTab === "attendees" ? "border-b-2 border-blue-500 text-blue-600" : ""}`}
-            >
-              Attendees
-            </button>
-            <button
-              onClick={() => setActiveTab("schedule")}
-              className={`px-4 py-2 ${activeTab === "schedule" ? "border-b-2 border-blue-500 text-blue-600" : ""}`}
-            >
-              Schedule
-            </button>
-          </div> */}
           <div className="flex gap-2 rounded bg-stone-200 p-1 text-sm">
             {["overview", "attendees", "schedule"].map((tab) => (
               <button
@@ -111,7 +89,6 @@ export default function EventPage() {
               </button>
             ))}
           </div>
-
           <div className="mt-4 rounded-lg bg-gray-50 p-4">
             {activeTab === "overview" && (
               <div>
