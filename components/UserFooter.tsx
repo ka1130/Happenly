@@ -1,7 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   ArrowLeftEndOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
@@ -42,12 +43,12 @@ export default function UserFooter({
 
     if (error) {
       console.error("Logout failed:", error.message);
-      // tu możesz dodać toast np. z react-hot-toast
+      toast.error("Failed to log out. Please try again.");
       return;
     }
 
     setUser(null);
-    // opcjonalnie: router.push("/") jeśli chcesz przekierowanie
+    router.push("/");
   };
 
   if (!user) {
