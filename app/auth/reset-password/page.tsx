@@ -60,16 +60,22 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setLoading(false);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
 
-    if (error) {
-      toast.error(error?.message || String(error));
-      return;
+      if (error) {
+        toast.error(error.message || "Failed to update password");
+        return;
+      }
+
+      toast.success("Password successfully updated");
+      router.replace("/auth?mode=signIn");
+    } catch (err) {
+      toast.error("Network or unexpected error occurred");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Password successfully updated");
-    router.replace("/auth?mode=signIn");
   };
 
   return (
