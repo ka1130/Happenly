@@ -12,17 +12,30 @@ export default function ResetPasswordPage() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Odczyt hash fragmentu z URL (Supabase v2 reset link)
+  // Read hash fragment from URL (#access_token=…) and extract access_token
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const hash = window.location.hash; // np. #access_token=xxx&expires_in=3600
+    const hash = window.location.hash; // e.g., #access_token=xxx&expires_in=3600
     const params = new URLSearchParams(hash.replace(/^#/, ""));
     const token = params.get("access_token");
+    const refreshToken = params.get("refresh_token"); // optional
+
     if (!token) {
       toast.error("Invalid reset link");
       return;
     }
+
+    // Set session so updateUser works
+    supabase.auth
+      .setSession({
+        access_token: token,
+        refresh_token: refreshToken ?? undefined,
+      })
+      .then(({ error }) => {
+        if (error) toast.error("Failed to set session: " + error.message);
+      });
+
     setAccessToken(token);
   }, []);
 
@@ -39,13 +52,12 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
 
-    // Supabase automatycznie używa access_token z hash fragmentu
+    // updateUser now works because session has been set
     const { error } = await supabase.auth.updateUser({ password });
-
     setLoading(false);
 
     if (error) {
-      toast.error(error.message);
+      toast.error(error?.message || String(error));
       return;
     }
 
