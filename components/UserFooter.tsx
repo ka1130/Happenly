@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -33,7 +33,7 @@ export default function UserFooter({
       },
     );
 
-    return () => listener?.subscription?.unsubscribe?.();
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
@@ -44,7 +44,7 @@ export default function UserFooter({
     setLoading(false);
 
     if (error) {
-      console.error("Logout failed:", error?.message || String(error));
+      console.error("Logout failed:", error.message);
       toast.error("Failed to log out. Please try again.");
       return;
     }
@@ -56,21 +56,20 @@ export default function UserFooter({
 
   if (!user) {
     return (
-      <div className="mt-auto flex flex-col gap-2 border-t border-gray-200 p-4">
+      <div className="mt-auto border-t border-gray-200 p-4">
         <Link
           href="/auth?mode=signIn"
-          onClick={onLinkClickAction}
-          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+          onClick={onLinkClickAction} // **added**
+          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
         >
           <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
           Log in
         </Link>
         <Link
           href="/auth?mode=signUp"
-          onClick={onLinkClickAction}
-          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          onClick={onLinkClickAction} // **added**
+          className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
         >
-          <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
           Sign up
         </Link>
       </div>
@@ -112,8 +111,8 @@ export default function UserFooter({
         onClick={handleLogout}
         disabled={loading}
         aria-label="Log out"
-        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
-          loading ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+        className={`mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+          loading ? "cursor-not-allowed opacity-60" : ""
         }`}
       >
         <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />

@@ -15,25 +15,6 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!accessToken || !refreshToken) return;
-
-    const setSess = async () => {
-      const { error } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken, // guaranteed string
-      });
-      if (error) {
-        toast.error(
-          "Failed to set session: " + (error?.message || String(error)),
-        );
-        return;
-      }
-      setSessionReady(true);
-    };
-    setSess();
-  }, [accessToken, refreshToken]);
-
-  useEffect(() => {
     if (typeof window === "undefined") return;
 
     const hash = window.location.hash;
@@ -48,11 +29,15 @@ export default function ResetPasswordPage() {
 
     setAccessToken(token);
     setRefreshToken(refresh);
+  }, []);
 
-    const setSess = async () => {
+  useEffect(() => {
+    if (!accessToken || !refreshToken) return;
+
+    (async () => {
       const { error } = await supabase.auth.setSession({
-        access_token: token,
-        refresh_token: refresh, // guaranteed string
+        access_token: accessToken,
+        refresh_token: refreshToken,
       });
       if (error) {
         toast.error(
@@ -61,9 +46,8 @@ export default function ResetPasswordPage() {
         return;
       }
       setSessionReady(true);
-    };
-    setSess();
-  }, []);
+    })();
+  }, [accessToken, refreshToken]);
 
   const handleResetPassword = async () => {
     if (!sessionReady) {
