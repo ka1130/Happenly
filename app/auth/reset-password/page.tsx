@@ -6,53 +6,57 @@ import { supabase } from "@lib/supabase";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [sessionReady, setSessionReady] = useState(false);
+
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Read hash fragment from URL (#access_token=…) and extract access_token
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const hash = window.location.hash; // e.g., #access_token=xxx&expires_in=3600
+    const hash = window.location.hash;
     const params = new URLSearchParams(hash.replace(/^#/, ""));
     const token = params.get("access_token");
-    const refreshToken = params.get("refresh_token"); // optional
+    const refresh = params.get("refresh_token");
 
-    if (!token) {
+    if (!token || !refresh) {
       toast.error("Invalid reset link");
       return;
     }
 
-    // Set session so updateUser works
-    supabase.auth
-      .setSession({
-        access_token: token,
-        refresh_token: refreshToken ?? undefined,
-      })
-      .then(({ error }) => {
-        if (error) toast.error("Failed to set session: " + error.message);
-      });
-
     setAccessToken(token);
+    setRefreshToken(refresh);
+
+    const setSess = async () => {
+      const { error } = await supabase.auth.setSession({
+        access_token: token,
+        refresh_token: refresh, // guaranteed string
+      });
+      if (error) {
+        toast.error(
+          "Failed to set session: " + (error?.message || String(error)),
+        );
+        return;
+      }
+      setSessionReady(true);
+    };
+    setSess();
   }, []);
 
   const handleResetPassword = async () => {
-    if (!accessToken) {
-      toast.error("Invalid reset link");
+    if (!sessionReady) {
+      toast.error("Session not ready. Please wait a moment.");
       return;
     }
-
     if (password !== passwordConfirm) {
       toast.error("Passwords do not match");
       return;
     }
 
     setLoading(true);
-
-    // updateUser now works because session has been set
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
 
@@ -92,7 +96,7 @@ export default function ResetPasswordPage() {
           <button
             type="button"
             onClick={handleResetPassword}
-            disabled={loading}
+            disabled={loading || !sessionReady}
             className="w-full cursor-pointer rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 disabled:opacity-60"
           >
             {loading ? "Updating..." : "Update Password"}

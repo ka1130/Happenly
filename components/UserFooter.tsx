@@ -4,10 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
-  ArrowLeftEndOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
   ChevronRightIcon,
-  PlusIcon,
 } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -24,7 +23,7 @@ export default function UserFooter({
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      setUser(data.user ?? null);
     };
     fetchUser();
 
@@ -34,7 +33,7 @@ export default function UserFooter({
       },
     );
 
-    return () => listener.subscription.unsubscribe();
+    return () => listener?.subscription?.unsubscribe?.();
   }, []);
 
   const handleLogout = async () => {
@@ -45,7 +44,7 @@ export default function UserFooter({
     setLoading(false);
 
     if (error) {
-      console.error("Logout failed:", error.message);
+      console.error("Logout failed:", error?.message || String(error));
       toast.error("Failed to log out. Please try again.");
       return;
     }
@@ -55,40 +54,37 @@ export default function UserFooter({
     router.replace("/");
   };
 
-  // --- Niezalogowany użytkownik ---
   if (!user) {
     return (
       <div className="mt-auto flex flex-col gap-2 border-t border-gray-200 p-4">
         <Link
           href="/auth?mode=signIn"
           onClick={onLinkClickAction}
-          className="flex items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
+          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
         >
           <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
-          Sign In
+          Log in
         </Link>
-
         <Link
           href="/auth?mode=signUp"
-          className="flex items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50"
+          onClick={onLinkClickAction}
+          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
         >
-          <PlusIcon className="h-5 w-5" />
-          Sign Up
+          <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+          Sign up
         </Link>
       </div>
     );
   }
 
-  // --- User logged in ---
   const { full_name, avatar_url } = user.user_metadata || {};
 
   return (
     <div className="mt-auto border-t border-gray-200 px-4 py-4">
-      {/* User panel → settings */}
       <Link
         href="/settings"
         onClick={onLinkClickAction}
-        className="flex items-center justify-between rounded-md p-2 hover:bg-gray-100"
+        className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
       >
         <div className="flex items-center space-x-3">
           <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
@@ -116,8 +112,8 @@ export default function UserFooter({
         onClick={handleLogout}
         disabled={loading}
         aria-label="Log out"
-        className={`mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
-          loading ? "cursor-not-allowed opacity-60" : ""
+        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+          loading ? "cursor-not-allowed opacity-60" : "cursor-pointer"
         }`}
       >
         <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />

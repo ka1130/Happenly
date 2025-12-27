@@ -1,14 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
 export default function AuthPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const modeParam = searchParams.get("mode") || "signIn"; // signIn or signUp
+  const [mode, setMode] = useState<"signIn" | "signUp">(modeParam as any);
 
-  const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,17 +20,24 @@ export default function AuthPage() {
 
   // Track auth state
   useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user ?? null);
+    };
+    fetchUser();
+
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
       },
     );
-    return () => listener.subscription.unsubscribe();
+
+    return () => listener?.subscription?.unsubscribe?.();
   }, []);
 
   const handleSignUp = async () => {
     if (password !== passwordConfirm) {
-      toast.error("Passwords don't match");
+      toast.error("Passwords do not match");
       return;
     }
     setLoading(true);
@@ -38,11 +47,14 @@ export default function AuthPage() {
       options: { data: { full_name: fullName } },
     });
     setLoading(false);
+
     if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Check your email for confirmation link!");
+      toast.error(error?.message || String(error));
+      return;
     }
+
+    toast.success("Check your email for confirmation link!");
+    setMode("signIn");
   };
 
   const handleSignIn = async () => {
@@ -52,37 +64,21 @@ export default function AuthPage() {
       password,
     });
     setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      router.replace("/dashboard");
-    }
-  };
 
-  const handleForgotPassword = async () => {
-    if (!email) {
-      toast.error("Enter your email first");
+    if (error) {
+      toast.error(error?.message || String(error));
       return;
     }
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
-    });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Check your email for the reset link");
-    }
+
+    router.replace("/dashboard");
   };
 
-  if (user) {
+  if (user)
     return (
-      <p className="mt-20 text-center">
+      <p className="mt-8 text-center">
         Logged in as {user.user_metadata?.full_name || user.email}
       </p>
     );
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -91,13 +87,7 @@ export default function AuthPage() {
           {mode === "signIn" ? "Sign In" : "Sign Up"}
         </h1>
 
-        <form
-          className="flex flex-col space-y-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            mode === "signIn" ? handleSignIn() : handleSignUp();
-          }}
-        >
+        <div className="flex flex-col space-y-4">
           {mode === "signUp" && (
             <input
               type="text"
@@ -135,60 +125,43 @@ export default function AuthPage() {
               type="password"
               placeholder="Confirm Password"
               minLength={8}
+              autoComplete="new-password"
               value={passwordConfirm}
               required
               onChange={(e) => setPasswordConfirm(e.target.value)}
               className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
             />
           )}
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full cursor-pointer rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 disabled:opacity-60"
-          >
-            {loading
-              ? "Processing..."
-              : mode === "signIn"
-                ? "Sign In"
-                : "Sign Up"}
-          </button>
-        </form>
-
-        {mode === "signIn" && (
+        <div className="mt-6 flex flex-col gap-3">
+          {mode === "signUp" ? (
+            <button
+              type="button"
+              onClick={handleSignUp}
+              disabled={loading}
+              className="w-full cursor-pointer rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 disabled:opacity-60"
+            >
+              Sign Up
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSignIn}
+              disabled={loading}
+              className="w-full cursor-pointer rounded-md bg-gray-100 py-2 text-gray-700 hover:bg-gray-200 disabled:opacity-60"
+            >
+              Sign In
+            </button>
+          )}
           <button
             type="button"
-            onClick={handleForgotPassword}
-            className="mt-2 w-full cursor-pointer rounded-md bg-gray-100 py-2 text-gray-700 hover:bg-gray-200"
+            onClick={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
+            disabled={loading}
+            className="w-full cursor-pointer rounded-md bg-gray-50 py-2 text-blue-500 hover:bg-gray-100 disabled:opacity-60"
           >
-            Forgot password?
+            {mode === "signIn" ? "Switch to Sign Up" : "Switch to Sign In"}
           </button>
-        )}
-
-        <div className="mt-4 text-center text-sm text-gray-500">
-          {mode === "signIn" ? (
-            <>
-              Don't have an account?{" "}
-              <button
-                type="button"
-                className="cursor-pointer text-blue-500 hover:underline"
-                onClick={() => setMode("signUp")}
-              >
-                Sign Up
-              </button>
-            </>
-          ) : (
-            <>
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="cursor-pointer text-blue-500 hover:underline"
-                onClick={() => setMode("signIn")}
-              >
-                Sign In
-              </button>
-            </>
-          )}
         </div>
       </div>
     </div>
