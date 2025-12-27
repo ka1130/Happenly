@@ -27,7 +27,7 @@ export default function EventPage() {
         <img
           src={event.image}
           alt={event.title}
-          className="max-h-84 w-full rounded-lg object-cover"
+          className="h-[30vh] w-full rounded-lg object-cover"
         />
         <div className="absolute top-3 left-3">
           <span
@@ -69,9 +69,14 @@ export default function EventPage() {
           </div>
 
           <div className="mt-4 rounded-lg bg-gray-50 p-4">
-            {activeTab === "overview" && <p>{event.description}</p>}
+            {activeTab === "overview" && (
+              <div>
+                <h4 className="mb-4 font-semibold">About this event</h4>
+                <p>{event.description}</p>
+              </div>
+            )}
             {activeTab === "attendees" && (
-              <p>{event.registrations} people registered</p>
+              <p>{event.registrations} People registered</p>
             )}
             {activeTab === "schedule" && (
               <p>

@@ -117,7 +117,9 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             <h3 className="font-sans text-xl font-bold text-stone-900">
               {event.title}
             </h3>
-            <p className="mt-1 mb-4 text-stone-500">{event.description}</p>
+            <p className="mt-1 mb-4 truncate text-stone-500">
+              {event.description}
+            </p>
           </div>
 
           <p className="flex gap-2 text-sm text-stone-500">
