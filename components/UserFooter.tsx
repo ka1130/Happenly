@@ -79,7 +79,7 @@ export default function UserFooter({
     );
   }
 
-  // --- Zalogowany użytkownik ---
+  // --- User logged in ---
   const { full_name, avatar_url } = user.user_metadata || {};
 
   return (
