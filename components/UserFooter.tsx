@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
   ArrowRightEndOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
@@ -108,7 +109,7 @@ export default function UserFooter({
           loading ? "cursor-not-allowed opacity-60" : ""
         }`}
       >
-        <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+        <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
         Log out
       </button>
     </div>
