@@ -4,17 +4,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
-  ArrowLeftEndOnRectangleIcon,
   ArrowRightEndOnRectangleIcon,
+  ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 export default function UserFooter({
   onLinkClickAction,
 }: {
   onLinkClickAction?: () => void;
 }) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -47,8 +48,9 @@ export default function UserFooter({
       return;
     }
 
+    toast.success("Successfully logged out");
     setUser(null);
-    router.push("/");
+    router.replace("/");
   };
 
   if (!user) {
@@ -94,30 +96,19 @@ export default function UserFooter({
           </div>
         </div>
 
-        {/* Right arrow */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <ChevronRightIcon className="h-5 w-5" />
       </Link>
 
       <button
+        type="button"
         onClick={handleLogout}
         disabled={loading}
         aria-label="Log out"
-        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${loading ? "cursor-not-allowed opacity-60" : "bg-gray-100"}`}
+        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+          loading ? "cursor-not-allowed opacity-60" : ""
+        }`}
       >
-        <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
+        <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
         Log out
       </button>
     </div>
