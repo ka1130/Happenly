@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
   ArrowRightEndOnRectangleIcon,
+  ArrowLeftEndOnRectangleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
@@ -22,7 +23,7 @@ export default function UserFooter({
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+      setUser(data.user ?? null);
     };
     fetchUser();
 
@@ -57,12 +58,19 @@ export default function UserFooter({
     return (
       <div className="mt-auto border-t border-gray-200 p-4">
         <Link
-          href="/auth"
-          onClick={onLinkClickAction}
-          className="flex items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
+          href="/auth?mode=signIn"
+          onClick={onLinkClickAction} // **added**
+          className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
         >
           <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
           Log in
+        </Link>
+        <Link
+          href="/auth?mode=signUp"
+          onClick={onLinkClickAction} // **added**
+          className="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+        >
+          Sign up
         </Link>
       </div>
     );
@@ -72,11 +80,10 @@ export default function UserFooter({
 
   return (
     <div className="mt-auto border-t border-gray-200 px-4 py-4">
-      {/* User panel → settings */}
       <Link
         href="/settings"
         onClick={onLinkClickAction}
-        className="flex items-center justify-between rounded-md p-2 hover:bg-gray-100"
+        className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
       >
         <div className="flex items-center space-x-3">
           <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
@@ -104,11 +111,11 @@ export default function UserFooter({
         onClick={handleLogout}
         disabled={loading}
         aria-label="Log out"
-        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+        className={`mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
           loading ? "cursor-not-allowed opacity-60" : ""
         }`}
       >
-        <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+        <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
         Log out
       </button>
     </div>
