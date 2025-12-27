@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useEvents } from "@/hooks/useEvents";
 import EventCard from "@/components/EventCard";
 import { Event as AppEvent } from "@apptypes/event";
@@ -8,6 +9,7 @@ import { Event as AppEvent } from "@apptypes/event";
 export default function Home() {
   const { events: initialEvents = [], loading, error } = useEvents();
   const [events, setEvents] = useState<AppEvent[]>([]);
+  const router = useRouter();
 
   // initial events after fetch
   useEffect(() => {
@@ -53,11 +55,9 @@ export default function Home() {
       </h3>
       <div className="grid grid-cols-[repeat(auto-fill,20rem)] justify-start gap-6">
         {events.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            onDeleteAction={handleDeleteEvent}
-          />
+          <div onClick={() => router.push(`/event/${event.id}`)} key={event.id}>
+            <EventCard event={event} onDeleteAction={handleDeleteEvent} />
+          </div>
         ))}
       </div>
     </div>

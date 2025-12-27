@@ -9,20 +9,21 @@ import {
   MapPinIcon,
   TrashIcon,
   XCircleIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
 import { formatTimeRange } from "@utils/formatTimeRange";
 
-const status = (event: Event) => {
+export const status = (event: Event) => {
   if (!event) return "DRAFT";
   if (event.registrations >= event.capacity) return "FULL";
   if (event.published) return "PUBLISHED";
   return "DRAFT";
 };
 
-const STATUS_CONFIG = {
+export const STATUS_CONFIG = {
   FULL: {
     label: "Full",
     className: "text-red-600",
@@ -117,7 +118,9 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             <h3 className="font-sans text-xl font-bold text-stone-900">
               {event.title}
             </h3>
-            <p className="mt-1 mb-4 text-stone-500">{event.description}</p>
+            <p className="mt-1 mb-4 truncate text-stone-500">
+              {event.description}
+            </p>
           </div>
 
           <p className="flex gap-2 text-sm text-stone-500">
@@ -145,7 +148,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
           </p>
 
           <p className="flex gap-2 text-sm text-stone-500">
-            <MapPinIcon
+            <UsersIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
             />
