@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
-  ArrowRightEndOnRectangleIcon,
   ArrowLeftEndOnRectangleIcon,
+  ArrowRightEndOnRectangleIcon,
   ChevronRightIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -54,21 +55,31 @@ export default function UserFooter({
     router.replace("/");
   };
 
+  // --- Niezalogowany użytkownik ---
   if (!user) {
     return (
-      <div className="mt-auto border-t border-gray-200 p-4">
+      <div className="mt-auto flex flex-col gap-2 border-t border-gray-200 p-4">
         <Link
-          href="/auth"
+          href="/auth?mode=signIn"
           onClick={onLinkClickAction}
           className="flex items-center justify-center gap-2 rounded-md bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-200 hover:text-blue-600"
         >
           <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
-          Log in
+          Sign In
+        </Link>
+
+        <Link
+          href="/auth?mode=signUp"
+          className="flex items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50"
+        >
+          <PlusIcon className="h-5 w-5" />
+          Sign Up
         </Link>
       </div>
     );
   }
 
+  // --- Zalogowany użytkownik ---
   const { full_name, avatar_url } = user.user_metadata || {};
 
   return (
