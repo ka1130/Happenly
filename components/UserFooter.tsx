@@ -2,7 +2,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftEndOnRectangleIcon,
+  ArrowRightEndOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 import { supabase } from "@lib/supabase";
 
 export default function UserFooter({
@@ -11,6 +14,7 @@ export default function UserFooter({
   onLinkClickAction?: () => void;
 }) {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,9 +34,20 @@ export default function UserFooter({
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    setLoading(true);
+    if (onLinkClickAction) onLinkClickAction();
+
+    const { error } = await supabase.auth.signOut();
+    setLoading(false);
+
+    if (error) {
+      console.error("Logout failed:", error.message);
+      // tu możesz dodać toast np. z react-hot-toast
+      return;
+    }
+
     setUser(null);
-    router.push("/");
+    // opcjonalnie: router.push("/") jeśli chcesz przekierowanie
   };
 
   if (!user) {
@@ -97,9 +112,11 @@ export default function UserFooter({
 
       <button
         onClick={handleLogout}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+        disabled={loading}
+        aria-label="Log out"
+        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 ${loading ? "cursor-not-allowed opacity-60" : "bg-gray-100"}`}
       >
-        <ArrowRightEndOnRectangleIcon className="h-5 w-5" />
+        <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />
         Log out
       </button>
     </div>
