@@ -15,6 +15,25 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!accessToken || !refreshToken) return;
+
+    const setSess = async () => {
+      const { error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken, // guaranteed string
+      });
+      if (error) {
+        toast.error(
+          "Failed to set session: " + (error?.message || String(error)),
+        );
+        return;
+      }
+      setSessionReady(true);
+    };
+    setSess();
+  }, [accessToken, refreshToken]);
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
     const hash = window.location.hash;
@@ -94,9 +113,9 @@ export default function ResetPasswordPage() {
             className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
           <button
-            type="button"
+            type="submit"
             onClick={handleResetPassword}
-            disabled={loading || !sessionReady}
+            disabled={!sessionReady || loading}
             className="w-full cursor-pointer rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 disabled:opacity-60"
           >
             {loading ? "Updating..." : "Update Password"}
