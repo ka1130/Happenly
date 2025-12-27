@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeftIcon,
@@ -9,6 +9,7 @@ import {
   MapPinIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import { supabase } from "@lib/supabase";
 import { useEvents } from "@hooks/useEvents";
 import { Event } from "@apptypes/event";
 import { status, STATUS_CONFIG } from "@components/EventCard";
@@ -25,19 +26,54 @@ const mockSchedule = [
   { time: "12:00 PM", title: "Networking Lunch", location: "Garden Terrace" },
 ];
 
+interface RegisterEventResult {
+  registrations: number;
+}
+
 export default function EventPage() {
   const { events } = useEvents();
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState<
     "overview" | "attendees" | "schedule"
   >("overview");
+  const [registrations, setRegistrations] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const event: Event | undefined = events.find((e) => e.id === id);
+
+  useEffect(() => {
+    if (event) setRegistrations(event.registrations);
+  }, [event]);
+
   if (!event) return <p>Event not found</p>;
 
-  const spotsRemaining = event.capacity - event.registrations;
-  const progress = Math.min((event.registrations / event.capacity) * 100, 100);
+  const spotsRemaining = event.capacity - registrations;
+  const progress = Math.min((registrations / event.capacity) * 100, 100);
+
+  const handleRegister = async () => {
+    if (spotsRemaining <= 0) return;
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .rpc("register_event", { event_id: event.id })
+        .single<{ registrations: number }>();
+
+      if (error) throw error;
+      if (!data) {
+        alert("Event is full!");
+        return;
+      }
+
+      setRegistrations(data.registrations);
+    } catch (err) {
+      console.error("Registration failed", err);
+      alert("Failed to register. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="relative w-full p-4 text-stone-600">
@@ -73,6 +109,7 @@ export default function EventPage() {
       </div>
 
       <div className="mt-4 flex w-full flex-col gap-4 lg:flex-row">
+        {/* Tabs & Content */}
         <div className="flex-1">
           <div className="flex gap-2 rounded bg-stone-200 p-1 text-sm">
             {["overview", "attendees", "schedule"].map((tab) => (
@@ -89,6 +126,7 @@ export default function EventPage() {
               </button>
             ))}
           </div>
+
           <div className="mt-4 rounded-lg bg-gray-50 p-4">
             {activeTab === "overview" && (
               <div>
@@ -97,9 +135,8 @@ export default function EventPage() {
               </div>
             )}
             {activeTab === "attendees" && (
-              <p>{event.registrations} People registered</p>
+              <p>{registrations} People registered</p>
             )}
-            {/* TODO this schedule will go away */}
             {activeTab === "schedule" && (
               <div className="space-y-6 text-sm">
                 {mockSchedule.map((item, index) => (
@@ -122,7 +159,7 @@ export default function EventPage() {
           </div>
         </div>
 
-        {/* Right: Info block */}
+        {/* Right Info Panel */}
         <div className="flex w-full flex-col gap-3 rounded-lg bg-gray-50 p-4 text-sm lg:w-64">
           <div className="flex items-center gap-2">
             <CalendarIcon
@@ -161,15 +198,27 @@ export default function EventPage() {
               />
             </div>
             <span>
-              {event.registrations}/{event.capacity}
+              {registrations}/{event.capacity}
             </span>
           </div>
           <p className="text-xs text-gray-500">
             {spotsRemaining} spots remaining
           </p>
 
-          <button className="mt-4 w-full cursor-pointer rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600">
-            Register Now
+          <button
+            onClick={handleRegister}
+            disabled={spotsRemaining <= 0 || loading}
+            className={`mt-4 w-full rounded-md py-2 text-white ${
+              spotsRemaining > 0 && !loading
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "cursor-not-allowed bg-gray-400"
+            }`}
+          >
+            {loading
+              ? "Registering..."
+              : spotsRemaining > 0
+                ? "Register Now"
+                : "Full"}
           </button>
         </div>
       </div>
