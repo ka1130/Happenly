@@ -178,9 +178,12 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             <span>Edit</span>
           </Link>
           <button
-            disabled={!!deleteError}
+            disabled={loadingDelete}
             className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-            onClick={() => setConfirmDeleteOpen(true)}
+            onClick={(e) => {
+              e.stopPropagation(); // <- prevents the card click
+              setConfirmDeleteOpen(true);
+            }}
           >
             <TrashIcon className="h-4 w-4 text-red-700" />
           </button>

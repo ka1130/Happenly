@@ -2,25 +2,33 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEvents } from "@/hooks/useEvents";
-import EventCard from "@/components/EventCard";
+import { useEvents } from "@hooks/useEvents";
+import EventCard from "@components/EventCard";
+import { supabase } from "@lib/supabase";
 import { Event as AppEvent } from "@apptypes/event";
 
 export default function Home() {
-  const { events: initialEvents = [], loading, error } = useEvents();
-  const [events, setEvents] = useState<AppEvent[]>([]);
+  const { events: fetchedEvents, loading, error } = useEvents();
+  const [events, setEvents] = useState<AppEvent[] | null>(null); // start as null
   const router = useRouter();
 
-  // initial events after fetch
+  // Sync local state with fetched events
   useEffect(() => {
-    setEvents(initialEvents);
-  }, [initialEvents]);
+    if (!loading) {
+      setEvents(fetchedEvents);
+    }
+  }, [fetchedEvents, loading]);
 
-  const handleDeleteEvent = (id: string) => {
-    setEvents((prev) => prev.filter((event) => event.id !== id));
+  const handleDeleteEvent = async (id: string) => {
+    const { error } = await supabase.from("events").delete().eq("id", id);
+    if (error) {
+      console.error("Failed to delete event:", error);
+      return;
+    }
+    setEvents((prev) => prev?.filter((event) => event.id !== id) || []);
   };
 
-  if (loading) {
+  if (loading || events === null) {
     return (
       <div className="flex justify-center py-12">
         <p className="text-stone-500">Loading events...</p>
@@ -56,7 +64,10 @@ export default function Home() {
       <div className="grid grid-cols-[repeat(auto-fill,20rem)] justify-start gap-6">
         {events.map((event) => (
           <div onClick={() => router.push(`/event/${event.id}`)} key={event.id}>
-            <EventCard event={event} onDeleteAction={handleDeleteEvent} />
+            <EventCard
+              event={event}
+              onDeleteAction={() => handleDeleteEvent(event.id)}
+            />
           </div>
         ))}
       </div>
