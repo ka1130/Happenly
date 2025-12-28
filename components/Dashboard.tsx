@@ -9,6 +9,8 @@ import {
   TicketIcon,
   UsersIcon,
   PlusIcon,
+  MagnifyingGlassIcon,
+  AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/outline";
 import Button from "@components/Button";
 
@@ -127,13 +129,19 @@ export default function Dashboard() {
       <div className="space-y-4">
         <h2 className="font-heading text-xl font-semibold">Recent Events</h2>
         <div className="flex gap-3">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search events..."
-            className="flex-1 rounded-md border px-3 py-2"
-          />
-          <button className="rounded-md border px-4 py-2">Filters</button>
+          <div className="relative flex-1">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search events..."
+              className="w-full rounded-md border border-stone-400 px-10 py-2"
+            />
+            <MagnifyingGlassIcon className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-stone-400" />
+          </div>
+          <button className="flex items-center gap-2 rounded-md border border-stone-400 px-4 py-2 text-sm text-stone-600">
+            <AdjustmentsHorizontalIcon className="h-5 w-5 text-stone-400" />{" "}
+            Filters
+          </button>
         </div>
       </div>
     </div>
