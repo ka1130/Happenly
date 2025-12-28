@@ -11,7 +11,6 @@
 - **My Events** page with tabs for created and registered events
 - **Browse Events** for discovering public events
 - **Settings** page for profile, notifications, and security preferences
-- **Dark/Light** mode toggle
 - **Collapsible sidebar** navigation
 
 ## Tech Stack
@@ -31,7 +30,7 @@
 8. Filter events by category/status, sort them by date, attendees count or alphabetically
 9. Collapse/reveal sidebar
 
-(Planned): 10. User panel 11. Dedicated dashboard page
+(Planned): 10. User panel/settings 11. Dedicated dashboard page
 
 ---
 
