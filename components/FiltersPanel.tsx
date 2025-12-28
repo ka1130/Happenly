@@ -17,11 +17,11 @@ export default function FiltersPanel(props: FiltersPanelProps) {
         <select
           value={props.selectedCategory}
           onChange={(e) =>
-            props.setSelectedCategory(e.target.value as EventCategory)
+            props.setSelectedCategory(e.target.value as EventCategory | "")
           }
           className="h-9 w-[160px] rounded-md border border-gray-300 bg-white px-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
-          <option value="">Category</option>
+          <option value="">All</option>
           {[
             "CONCERT",
             "WORKSHOP",
