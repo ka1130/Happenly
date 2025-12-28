@@ -46,15 +46,6 @@ export default function Home() {
     setEvents((prev) => prev?.filter((event) => event.id !== id) || []);
   };
 
-  // const filteredEvents = events
-  //   ? events.filter(
-  //       (e) =>
-  //         e.title.toLowerCase().includes(search.toLowerCase()) ||
-  //         (e.description?.toLowerCase().includes(search.toLowerCase()) ??
-  //           false),
-  //     )
-  //   : [];
-
   const filteredEvents = applyFilters(
     events,
     search,
