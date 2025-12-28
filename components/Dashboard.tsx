@@ -1,13 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@lib/supabase";
 import {
   CalendarIcon,
   ArrowTrendingUpIcon,
   TicketIcon,
   UsersIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
+import Button from "@components/Button";
 
 type StatCardProps = {
   title: string;
@@ -17,7 +20,7 @@ type StatCardProps = {
 };
 
 const StatCard = ({ title, value, change, icon }: StatCardProps) => (
-  <div className="rounded-xl border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800">
+  <div className="rounded-xl border border-gray-200 bg-stone-50 p-6 dark:border-gray-700 dark:bg-gray-800">
     <div className="flex items-center justify-between gap-4">
       <div className="space-y-1">
         <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
@@ -41,6 +44,8 @@ export default function Dashboard() {
     totalRegs: 0,
     avgCapacity: 0,
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -85,9 +90,12 @@ export default function Dashboard() {
             Manage your events and track registrations
           </p>
         </div>
-        <button className="bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-md px-4 py-2">
-          Create Event
-        </button>
+        <Button
+          onClick={() => router.push("/events/new")}
+          className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+        >
+          <PlusIcon className="h-4 w-4" /> <span>Create Event</span>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
