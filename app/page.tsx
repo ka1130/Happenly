@@ -14,7 +14,6 @@ import { supabase } from "@lib/supabase";
 import { Event as AppEvent } from "@apptypes/event";
 import { applyFilters } from "@utils/applyFilters";
 import { type EventCategory } from "@apptypes/event";
-import { formatCategory } from "@utils/formatCategory";
 
 export default function Home() {
   const { events: fetchedEvents, loading, error } = useEvents();
