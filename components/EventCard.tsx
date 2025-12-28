@@ -46,7 +46,6 @@ type EventCardProps = {
 
 function EventCard({ event, onDeleteAction }: EventCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  // TODO what should happen upon error deleting?
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
@@ -207,7 +206,7 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
 
 export function EventCardSkeleton() {
   return (
-    <div className="w-80 shrink-0 animate-pulse overflow-hidden rounded-xl bg-white shadow-lg">
+    <div className="w-full animate-pulse overflow-hidden rounded-xl bg-white shadow-lg">
       <div className="h-52 w-full bg-stone-200" />
       <div className="flex flex-col p-5">
         <div className="mb-10 flex flex-1 flex-col space-y-2">
