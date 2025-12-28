@@ -44,17 +44,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchStats = async () => {
-      // All events
       const { data: allEvents } = await supabase
         .from("events")
         .select("id, capacity");
-      // Published events
+
       const { data: publishedEvents } = await supabase
         .from("events")
         .select("id, capacity")
-        .eq("status", "published");
+        .eq("published", true);
 
-      // Registrations
       const { data: regs } = await supabase
         .from("event_registrations")
         .select("event_id");
