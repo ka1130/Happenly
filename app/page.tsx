@@ -77,7 +77,13 @@ export default function Home() {
         </div>
       </div>
 
-      {filtersOpen && <FiltersPanel />}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          filtersOpen ? "max-h-[999px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <FiltersPanel />
+      </div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
         {loading || events === null ? (
