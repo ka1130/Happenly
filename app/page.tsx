@@ -12,12 +12,22 @@ import FiltersPanel from "@components/FiltersPanel";
 import Dashboard from "@components/Dashboard";
 import { supabase } from "@lib/supabase";
 import { Event as AppEvent } from "@apptypes/event";
+import { applyFilters } from "@utils/applyFilters";
+import { type EventCategory } from "@apptypes/event";
+import { formatCategory } from "@utils/formatCategory";
 
 export default function Home() {
   const { events: fetchedEvents, loading, error } = useEvents();
   const [events, setEvents] = useState<AppEvent[] | null>(null);
-  const [search, setSearch] = useState("");
+
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<EventCategory | "">(
+    "",
+  );
+  const [selectedSort, setSelectedSort] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+
   const router = useRouter();
 
   // Sync local state with fetched events
@@ -36,14 +46,22 @@ export default function Home() {
     setEvents((prev) => prev?.filter((event) => event.id !== id) || []);
   };
 
-  const filteredEvents = events
-    ? events.filter(
-        (e) =>
-          e.title.toLowerCase().includes(search.toLowerCase()) ||
-          (e.description?.toLowerCase().includes(search.toLowerCase()) ??
-            false),
-      )
-    : [];
+  // const filteredEvents = events
+  //   ? events.filter(
+  //       (e) =>
+  //         e.title.toLowerCase().includes(search.toLowerCase()) ||
+  //         (e.description?.toLowerCase().includes(search.toLowerCase()) ??
+  //           false),
+  //     )
+  //   : [];
+
+  const filteredEvents = applyFilters(
+    events,
+    search,
+    selectedCategory,
+    selectedStatus,
+    selectedSort,
+  );
 
   return (
     <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
@@ -82,7 +100,14 @@ export default function Home() {
           filtersOpen ? "max-h-[999px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <FiltersPanel />
+        <FiltersPanel
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedSort={selectedSort}
+          setSelectedSort={setSelectedSort}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+        />
       </div>
 
       <div className="mt-10 grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">

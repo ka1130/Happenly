@@ -1,23 +1,24 @@
-"use client";
-
-import { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { type EventCategory } from "@apptypes/event";
 import { formatCategory } from "@utils/formatCategory";
 
-export default function FiltersPanel() {
-  const [selectedCategory, setSelectedCategory] = useState<EventCategory | "">(
-    "",
-  );
-  const [selectedSort, setSelectedSort] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all");
+type FiltersPanelProps = {
+  selectedCategory: string;
+  selectedSort: string;
+  selectedStatus: string;
+  setSelectedCategory: (value: EventCategory | "") => void;
+  setSelectedSort: (value: string) => void;
+  setSelectedStatus: (value: string) => void;
+};
 
+export default function FiltersPanel(props: FiltersPanelProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap gap-3 rounded-md bg-stone-100 p-4">
         <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value as EventCategory)}
+          value={props.selectedCategory}
+          onChange={(e) =>
+            props.setSelectedCategory(e.target.value as EventCategory)
+          }
           className="h-9 w-[160px] rounded-md border border-gray-300 bg-white px-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
           <option value="">Category</option>
@@ -36,8 +37,8 @@ export default function FiltersPanel() {
         </select>
 
         <select
-          value={selectedSort}
-          onChange={(e) => setSelectedSort(e.target.value)}
+          value={props.selectedSort}
+          onChange={(e) => props.setSelectedSort(e.target.value)}
           className="h-9 w-[160px] rounded-md border border-gray-300 bg-white px-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
           <option value="">Sort by</option>
@@ -48,8 +49,8 @@ export default function FiltersPanel() {
         </select>
 
         <select
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
+          value={props.selectedStatus}
+          onChange={(e) => props.setSelectedStatus(e.target.value)}
           className="h-9 w-[140px] rounded-md border border-gray-300 bg-white px-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
           <option value="all">All</option>
