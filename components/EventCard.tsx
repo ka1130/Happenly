@@ -90,7 +90,7 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
   return (
     <div
       key={event.id}
-      className="w-80 shrink-0 cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
+      className="w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
         <Image
