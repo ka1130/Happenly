@@ -63,31 +63,41 @@ export default function FiltersPanel({
   ];
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 text-stone-500">
       <div className="flex flex-wrap gap-3 rounded-md bg-stone-100 p-4">
         {filters.map((f) => (
           <select
             key={f.label}
             value={f.value}
             onChange={(e) => {
-              if (f.label === "Category") {
+              if (f.label === "Category")
                 setSelectedCategory(e.target.value as EventCategory | "");
-              } else if (f.label === "Sort by") {
-                setSelectedSort(e.target.value);
-              } else if (f.label === "Status") {
-                setSelectedStatus(e.target.value);
-              }
+              else if (f.label === "Sort by") setSelectedSort(e.target.value);
+              else if (f.label === "Status") setSelectedStatus(e.target.value);
             }}
             className={`h-9 ${f.width} rounded-md border border-gray-300 bg-white px-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none`}
           >
-            <option value="">{f.label}</option>
             {f.options.map((o) => (
-              <option key={o.value} value={o.value}>
+              <option
+                key={o.value}
+                value={o.value}
+                className={o.value === "" ? "text-gray-400" : "text-gray-900"}
+              >
                 {o.label}
               </option>
             ))}
           </select>
         ))}
+        <button
+          onClick={() => {
+            setSelectedCategory("");
+            setSelectedSort("");
+            setSelectedStatus("all");
+          }}
+          className="h-9 cursor-pointer rounded-md border border-gray-300 bg-white px-3 text-sm hover:bg-stone-50"
+        >
+          Clear
+        </button>
       </div>
     </div>
   );
