@@ -31,6 +31,8 @@
 8. Filter events by category/status, sort them by date, attendees count or alphabetically
 9. Collapse/reveal sidebar
 
+(Planned): 10. User panel 11. Dedicated dashboard page
+
 ---
 
 <br />
