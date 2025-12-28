@@ -80,7 +80,7 @@ export default function Home() {
             No events found.
           </p>
         ) : (
-          events.map((event) => (
+          filteredEvents.map((event) => (
             <div
               key={event.id}
               onClick={() => router.push(`/event/${event.id}`)}

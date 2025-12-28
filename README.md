@@ -4,14 +4,15 @@
 
 ## Features
 
-- **Dashboard:** Event listing dashboard with card-based layout and filtering options.
-- **Create Event:** Add new events with fields for title, description, date, time, location, and image.
-- **Authentication** With e-mail address (managed by Supabase)
-- **Single Event View:** Event detail view with registration interface and event information
-- **Browse:** Quickly find events by keyword, category, or location.
-- **Event registration**
-- **Event update/edit** interface with pre-filled forms
-- **Event removal**
+- **Dashboard** with stats overview and event cards with **search/filter** functionality
+- **Create Event** form with all fields (title, description, date, time, location, capacity, categories, image)
+- **Edit Event** page with pre-filled form data
+- **Event Detail** view with hero image, tabs (Overview, Attendees, Schedule), and registration button
+- **My Events** page with tabs for created and registered events
+- **Browse Events** for discovering public events
+- **Settings** page for profile, notifications, and security preferences
+- **Dark/Light** mode toggle
+- **Collapsible sidebar** navigation
 
 ## Tech Stack
 
@@ -21,12 +22,14 @@
 ## Usage
 
 1. Browse events
-2. Create, update and remove events
-3. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
-4. Sign up / sign in (with Supabase)
-5. Register to an event (from a single event view)
+2. Go to single event page by clicking on an event card
+3. Create, update and remove events
+4. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
+5. Sign up / sign in (with Supabase)
+6. Register for events (from a single event view)
+7. Search events live
 
-(To Do:) 5. Search events 6. Filter events
+(Planned: filters, dark/light mode, collapsible sidebar)
 
 ---
 
