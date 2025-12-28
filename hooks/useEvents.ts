@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Event } from '@/types/event';
+import { useState, useEffect } from "react";
+import { Event } from "@/types/event";
 
 export function useEvents() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -8,16 +8,17 @@ export function useEvents() {
 
   useEffect(() => {
     const controller = new AbortController();
+
     const fetchEvents = async () => {
       try {
-        const res = await fetch('/api/events', { signal: controller.signal });
-        if (!res.ok) throw new Error('Failed to fetch');
+        const res = await fetch("/api/events", { signal: controller.signal });
+        if (!res.ok) throw new Error("Failed to fetch");
 
         const data = await res.json();
         setEvents(data);
       } catch (err: any) {
         // Only set the error state if the error was not caused by the fetch being aborted.
-        if (err.name !== 'AbortError') {
+        if (err.name !== "AbortError") {
           setError(err);
         }
       } finally {

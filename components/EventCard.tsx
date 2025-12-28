@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   CalendarIcon,
@@ -11,6 +11,7 @@ import {
   XCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
@@ -43,7 +44,7 @@ type EventCardProps = {
   onDeleteAction?: (id: string) => void;
 };
 
-export default function EventCard({ event, onDeleteAction }: EventCardProps) {
+function EventCard({ event, onDeleteAction }: EventCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   // TODO what should happen upon error deleting?
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -61,7 +62,6 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
 
   const handleDelete = async () => {
     setConfirmDeleteOpen(false);
-    // TODO when loading, display loading... or loader on button
     setLoadingDelete(true);
     setDeleteError("");
 
@@ -71,7 +71,7 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
       });
 
       if (!res.ok) {
-        const data = await res.json(); // Supabase zwraca JSON z { error: "..." }
+        const data = await res.json();
         setDeleteError(data.error || "There was a problem deleting the event");
         return;
       }
@@ -93,10 +93,15 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
       className="w-80 shrink-0 cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
-        <img
+        <Image
           src={event.image}
-          alt="Product"
-          className="h-52 w-full object-cover"
+          alt={event.title}
+          width={320}
+          height={208}
+          style={{ width: "100%", height: "208px", objectFit: "cover" }}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,..." // tiny placeholder
+          loading="lazy"
         />
         <div className="absolute top-3 left-3">
           <span
@@ -178,9 +183,12 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
             <span>Edit</span>
           </Link>
           <button
-            disabled={!!deleteError}
+            disabled={loadingDelete}
             className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-            onClick={() => setConfirmDeleteOpen(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setConfirmDeleteOpen(true);
+            }}
           >
             <TrashIcon className="h-4 w-4 text-red-700" />
           </button>
@@ -196,3 +204,31 @@ export default function EventCard({ event, onDeleteAction }: EventCardProps) {
     </div>
   );
 }
+
+export function EventCardSkeleton() {
+  return (
+    <div className="w-80 shrink-0 animate-pulse overflow-hidden rounded-xl bg-white shadow-lg">
+      <div className="h-52 w-full bg-stone-200" />
+      <div className="flex flex-col p-5">
+        <div className="mb-10 flex flex-1 flex-col space-y-2">
+          <div>
+            <div className="h-6 w-3/4 rounded bg-stone-300" />
+            <div className="mt-2 h-4 w-full rounded bg-stone-200" />{" "}
+            <div className="mt-1 h-4 w-5/6 rounded bg-stone-200" />{" "}
+          </div>
+          <div className="mt-4 space-y-1">
+            <div className="h-4 w-1/2 rounded bg-stone-200" />
+            <div className="h-4 w-1/3 rounded bg-stone-200" />
+            <div className="h-4 w-2/3 rounded bg-stone-200" />
+            <div className="h-4 w-1/2 rounded bg-stone-200" />
+          </div>
+        </div>
+        <div className="mt-auto flex justify-between gap-4">
+          <div className="h-8 w-1/2 rounded bg-stone-200" />
+          <div className="h-8 w-1/4 rounded bg-stone-200" />
+        </div>
+      </div>
+    </div>
+  );
+}
+export default React.memo(EventCard);
