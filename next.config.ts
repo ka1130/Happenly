@@ -1,8 +1,6 @@
-import type { NextConfig } from "next";
-
 const nextConfig = {
   images: {
-    domains: ["images.stockcake.com"], // add all external image hosts you use
+    domains: ["images.stockcake.com"],
   },
 };
 export default nextConfig;
