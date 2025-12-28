@@ -26,7 +26,7 @@
 4. Sign up / sign in (with Supabase)
 5. Register to an event (from a single event view)
 
-(To Do:) 5. Search events 6. Filter events 6. Track registrations and analytics
+(To Do:) 5. Search events 6. Filter events
 
 ---
 
