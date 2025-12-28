@@ -1,0 +1,149 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@lib/supabase";
+import {
+  CalendarIcon,
+  ArrowTrendingUpIcon,
+  TicketIcon,
+  UsersIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  AdjustmentsHorizontalIcon,
+} from "@heroicons/react/24/outline";
+import Button from "@components/Button";
+
+type StatCardProps = {
+  title: string;
+  value: string | number;
+  change?: string;
+  icon: React.ReactNode;
+};
+
+const StatCard = ({ title, value, change, icon }: StatCardProps) => (
+  <div className="rounded-xl border border-gray-200 bg-stone-50 p-6 dark:border-gray-700 dark:bg-gray-800">
+    <div className="flex items-center justify-between gap-4">
+      <div className="space-y-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
+        <p className="text-2xl font-bold">{value}</p>
+        {change && (
+          <p className="text-xs text-green-600 dark:text-green-400">
+            +12% from last month
+          </p>
+        )}
+      </div>
+      <div className="rounded-md bg-blue-100 p-3 dark:bg-blue-900">{icon}</div>
+    </div>
+  </div>
+);
+
+export default function Dashboard() {
+  const [search, setSearch] = useState("");
+  const [stats, setStats] = useState({
+    totalEvents: 0,
+    publishedEvents: 0,
+    totalRegs: 0,
+    avgCapacity: 0,
+  });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const { data: allEvents } = await supabase
+        .from("events")
+        .select("id, capacity");
+
+      const { data: publishedEvents } = await supabase
+        .from("events")
+        .select("id, capacity")
+        .eq("published", true);
+
+      const { data: regs } = await supabase
+        .from("event_registrations")
+        .select("event_id");
+
+      const totalEvents = allEvents?.length ?? 0;
+      const publishedCount = publishedEvents?.length ?? 0;
+      const totalCapacity =
+        publishedEvents?.reduce((sum, e) => sum + (e.capacity ?? 0), 0) ?? 0;
+      const totalRegs = regs?.length ?? 0;
+      const avgCapacity =
+        totalCapacity > 0 ? Math.round((totalRegs / totalCapacity) * 100) : 0;
+
+      setStats({
+        totalEvents,
+        publishedEvents: publishedCount,
+        totalRegs,
+        avgCapacity,
+      });
+    };
+
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="mb-10 space-y-8">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage your events and track registrations
+          </p>
+        </div>
+        <Button
+          onClick={() => router.push("/events/new")}
+          className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+        >
+          <PlusIcon className="h-4 w-4" /> <span>Create Event</span>
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Total Events"
+          value={stats.totalEvents}
+          change="+12% from last month"
+          icon={<CalendarIcon className="h-6 w-6" />}
+        />
+        <StatCard
+          title="Published Events"
+          value={stats.publishedEvents}
+          change="+5% from last month"
+          icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
+        />
+        <StatCard
+          title="Total Registrations"
+          value={stats.totalRegs}
+          change="+18% from last month"
+          icon={<TicketIcon className="h-6 w-6" />}
+        />
+        <StatCard
+          title="Avg. Capacity"
+          value={`${stats.avgCapacity}%`}
+          icon={<UsersIcon className="h-6 w-6" />}
+        />
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="font-heading text-xl font-semibold">Recent Events</h2>
+        <div className="flex gap-3">
+          <div className="relative flex-1">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search events..."
+              className="w-full rounded-md border border-stone-400 px-10 py-2"
+            />
+            <MagnifyingGlassIcon className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-stone-400" />
+          </div>
+          <button className="flex cursor-pointer items-center gap-2 rounded-md border border-stone-400 px-4 py-2 text-sm text-stone-600 hover:bg-stone-50">
+            <AdjustmentsHorizontalIcon className="h-5 w-5 text-stone-400" />{" "}
+            Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

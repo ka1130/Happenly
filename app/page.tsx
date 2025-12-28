@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useEvents } from "@hooks/useEvents";
 import EventCard, { EventCardSkeleton } from "@components/EventCard";
+import Dashboard from "@components/Dashboard";
 import { supabase } from "@lib/supabase";
 import { Event as AppEvent } from "@apptypes/event";
 
@@ -30,13 +31,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
-      <h2 className="mb-2 text-3xl font-semibold text-stone-700">Dashboard</h2>
-      <p className="mb-12 text-stone-500">
-        Manage your events and track registrations
-      </p>
-      <h3 className="mb-4 text-2xl font-medium text-stone-700">
-        Recent Events
-      </h3>
+      <Dashboard />
 
       {error && (
         <div className="flex justify-center py-12">
