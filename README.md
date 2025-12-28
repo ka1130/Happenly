@@ -28,8 +28,9 @@
 5. Sign up / sign in (with Supabase)
 6. Register for events (from a single event view)
 7. Search events live
+8. Filter events by category/status, sort them by date, attendees count or alphabetically
 
-(Planned: filters, dark/light mode, collapsible sidebar)
+(Planned: dark/light mode, collapsible sidebar)
 
 ---
 
