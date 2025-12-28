@@ -62,7 +62,6 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
 
   const handleDelete = async () => {
     setConfirmDeleteOpen(false);
-    // TODO when loading, display loading... or loader on button
     setLoadingDelete(true);
     setDeleteError("");
 
@@ -94,16 +93,11 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
       className="w-80 shrink-0 cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
-        {/* <img
+        <Image
           src={event.image}
           alt={event.title}
-          className="h-52 w-full object-cover"
-        /> */}
-        <Image
-          src={event.image} // your image URL
-          alt={event.title}
-          width={320} // intrinsic width
-          height={208} // intrinsic height
+          width={320}
+          height={208}
           style={{ width: "100%", height: "208px", objectFit: "cover" }}
           placeholder="blur"
           blurDataURL="data:image/svg+xml;base64,..." // tiny placeholder
