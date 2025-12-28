@@ -29,8 +29,7 @@
 6. Register for events (from a single event view)
 7. Search events live
 8. Filter events by category/status, sort them by date, attendees count or alphabetically
-
-(Planned: dark/light mode, collapsible sidebar)
+9. Collapse/reveal sidebar
 
 ---
 
