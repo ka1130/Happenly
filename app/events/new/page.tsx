@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { toast } from "react-hot-toast";
+import { supabase } from "@lib/supabase";
 import EventForm, { type EventFormData } from "@components/EventForm";
 
 const initialForm = {
@@ -35,46 +36,58 @@ export default function NewEventPage() {
   }, []);
 
   const handleSubmitAction = async (form: EventFormData, file: File | null) => {
-    let imageUrl = form.image;
+    try {
+      let imageUrl = form.image;
 
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      imageUrl = data.url;
+      // Upload pliku jeśli istnieje
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          toast.error(`Image upload failed: ${text}`);
+          return;
+        }
+
+        const data = await res.json();
+        imageUrl = data.url;
+      }
+
+      // Timestampy
+      const startTimestamp = `${form.date} ${form.startAt}:00`;
+      const endTimestamp = `${form.date} ${form.endAt}:00`;
+
+      // Payload z user_id
+      const payload = {
+        ...form,
+        startAt: startTimestamp,
+        endAt: endTimestamp,
+        image: imageUrl,
+        user_id: user.id, // UID zalogowanego użytkownika
+      };
+
+      // Wstawienie bezpośrednio do Supabase JS
+      const { data, error } = await supabase.from("events").insert([payload]);
+
+      if (error) {
+        toast.error(`Cannot create event: ${error.message}`);
+        return;
+      }
+
+      toast.success("Event created successfully!");
+      setForm(initialForm);
+      setFile(null);
+      router.push("/my-events"); // przekierowanie po sukcesie
+    } catch (err: any) {
+      toast.error(`Unexpected error: ${err.message}`);
+      console.error(err);
     }
-
-    const startTimestamp = `${form.date} ${form.startAt}:00`;
-    const endTimestamp = `${form.date} ${form.endAt}:00`;
-
-    const payload = {
-      ...form,
-      startAt: startTimestamp,
-      endAt: endTimestamp,
-      image: imageUrl,
-    };
-
-    const res = await fetch("/api/events", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      console.error(text);
-      return;
-    }
-
-    const data = await res.json();
-    console.log("Created event:", data);
-
-    setForm(initialForm);
-    setFile(null);
   };
 
   if (loading) {
