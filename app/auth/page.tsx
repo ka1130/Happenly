@@ -16,7 +16,7 @@ export default function AuthPage() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const redirectTo = searchParams.get("redirect") || "/";
 
   // Track auth state
   useEffect(() => {

@@ -33,6 +33,7 @@ const StatCard = ({ title, value, trend, icon }: StatCardProps) => (
 );
 
 export default function Dashboard() {
+  const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({
     totalEvents: 0,
     publishedEvents: 0,
@@ -43,6 +44,13 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+
+    fetchUser();
+
     const fetchStats = async () => {
       const { data: allEvents } = await supabase
         .from("events")
@@ -85,12 +93,14 @@ export default function Dashboard() {
             Manage your events and track registrations
           </p>
         </div>
-        <Button
-          onClick={() => router.push("/events/new")}
-          className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
-        >
-          <PlusIcon className="h-4 w-4" /> <span>Create Event</span>
-        </Button>
+        {user && (
+          <Button
+            onClick={() => router.push("/events/new")}
+            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
+          >
+            <PlusIcon className="h-4 w-4" /> <span>Create Event</span>
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
