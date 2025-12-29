@@ -1,28 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import EventForm, { type EventFormData } from "@components/EventForm";
+
+const initialForm = {
+  title: "",
+  description: "",
+  date: "",
+  startAt: "",
+  endAt: "",
+  location: "",
+  capacity: 0,
+  registrations: 0,
+  category: "",
+  published: false,
+  image: "",
+};
 
 export default function NewEventPage() {
   const router = useRouter();
-
-  const initialForm = {
-    title: "",
-    description: "",
-    date: "",
-    startAt: "",
-    endAt: "",
-    location: "",
-    capacity: 0,
-    registrations: 0,
-    category: "",
-    published: false,
-    image: "",
-  };
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   const [form, setForm] = useState(initialForm);
   const [file, setFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setLoading(false);
+    });
+  }, []);
 
   const handleSubmitAction = async (form: EventFormData, file: File | null) => {
     let imageUrl = form.image;
@@ -66,6 +76,25 @@ export default function NewEventPage() {
     setForm(initialForm);
     setFile(null);
   };
+
+  if (loading) {
+    return <p>Loading…</p>;
+  }
+
+  if (!user) {
+    return (
+      <div className="py-10 text-center text-stone-600">
+        <h3 className="mb-2 text-xl font-semibold">Sign in required</h3>
+        <p className="mb-6">You must be logged in to create an event.</p>
+        <button
+          onClick={() => router.push("/auth?mode=signIn")}
+          className="cursor-pointer rounded-md bg-blue-500 px-4 py-1.5 text-white"
+        >
+          Sign in
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

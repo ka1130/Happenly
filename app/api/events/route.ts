@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
-// GET all events
 export async function GET(_req: NextRequest) {
   const { data, error } = await supabase
     .from("events")
@@ -18,11 +17,15 @@ export async function GET(_req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { data, error } = await supabase.from("events").insert([body]).select(); // <- ważne
+  const { data, error } = await supabase
+    .from("events")
+    .insert([body])
+    .select()
+    .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 401 });
   }
 
-  return NextResponse.json(data[0]);
+  return NextResponse.json(data);
 }
