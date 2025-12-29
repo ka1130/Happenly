@@ -15,21 +15,17 @@ import Button from "@components/Button";
 type StatCardProps = {
   title: string;
   value: string | number;
-  change?: string;
+  trend: string;
   icon: React.ReactNode;
 };
 
-const StatCard = ({ title, value, change, icon }: StatCardProps) => (
+const StatCard = ({ title, value, trend, icon }: StatCardProps) => (
   <div className="rounded-xl border border-gray-200 bg-stone-50 p-6 dark:border-gray-700 dark:bg-gray-800">
     <div className="flex items-center justify-between gap-4">
       <div className="space-y-1">
         <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
         <p className="text-2xl font-bold">{value}</p>
-        {change && (
-          <p className="text-xs text-green-600 dark:text-green-400">
-            +12% from last month
-          </p>
-        )}
+        <p className="text-xs text-green-600 dark:text-green-400">{trend}</p>
       </div>
       <div className="rounded-md bg-blue-100 p-3 dark:bg-blue-900">{icon}</div>
     </div>
@@ -100,24 +96,25 @@ export default function Dashboard() {
         <StatCard
           title="Total Events"
           value={stats.totalEvents}
-          change="+12% from last month"
+          trend="All time"
           icon={<CalendarIcon className="h-6 w-6" />}
         />
         <StatCard
           title="Published Events"
           value={stats.publishedEvents}
-          change="+5% from last month"
+          trend="Accepting registrations"
           icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
         />
         <StatCard
           title="Total Registrations"
           value={stats.totalRegs}
-          change="+18% from last month"
+          trend="Across all events"
           icon={<TicketIcon className="h-6 w-6" />}
         />
         <StatCard
           title="Avg. Capacity"
           value={`${stats.avgCapacity}%`}
+          trend="Capacity used"
           icon={<UsersIcon className="h-6 w-6" />}
         />
       </div>
