@@ -1,6 +1,11 @@
 const nextConfig = {
   images: {
-    domains: ["images.stockcake.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.stockcake.com",
+        pathname: "/**", // dopuszcza wszystkie ścieżki
+      },
+    ],
   },
 };
-export default nextConfig;

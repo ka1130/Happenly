@@ -36,14 +36,6 @@ export default function Home() {
     }
   }, [fetchedEvents, loading]);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      console.log("Logged user:", data.user);
-    };
-    checkUser();
-  }, []);
-
   const handleDeleteEvent = async (id: string) => {
     const { error } = await supabase.from("events").delete().eq("id", id);
     if (error) {
