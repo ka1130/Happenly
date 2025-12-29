@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 
 export default function AuthPage() {
-  const router = useRouter();
-
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,6 +13,10 @@ export default function AuthPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
 
   // Track auth state
   useEffect(() => {
@@ -53,13 +55,19 @@ export default function AuthPage() {
   const handleSignIn = async () => {
     setError(null);
     setLoading(true);
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
     setLoading(false);
-    if (error) toast.error(error?.message || String(error));
-    else router.push("/dashboard");
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      router.push(redirectTo);
+    }
   };
 
   const handleForgotPassword = async () => {

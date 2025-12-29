@@ -87,7 +87,7 @@ export default function NewEventPage() {
         <h3 className="mb-2 text-xl font-semibold">Sign in required</h3>
         <p className="mb-6">You must be logged in to create an event.</p>
         <button
-          onClick={() => router.push("/auth?mode=signIn")}
+          onClick={() => router.push("/auth?mode=signIn&redirect=/events/new")}
           className="cursor-pointer rounded-md bg-blue-500 px-4 py-1.5 text-white"
         >
           Sign in
