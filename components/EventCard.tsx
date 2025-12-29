@@ -11,7 +11,6 @@ import {
   XCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
@@ -92,14 +91,10 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
       className="w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
-        <Image
+        <img
           src={event.image}
           alt={event.title}
-          width={320}
-          height={208}
-          style={{ width: "100%", height: "208px", objectFit: "cover" }}
-          placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,..." // tiny placeholder
+          className="h-[208px] w-full object-cover"
           loading="lazy"
         />
         <div className="absolute top-3 left-3">
