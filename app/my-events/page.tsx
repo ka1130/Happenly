@@ -129,6 +129,7 @@ export default function EventsPage() {
               <EventCard
                 event={event}
                 onDeleteAction={() => handleDeleteEvent(event.id)}
+                currentUserId={user?.id || null}
               />
             </div>
           ))

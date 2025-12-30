@@ -1,10 +1,10 @@
 export type EventCategory =
-  | 'CONCERT'
-  | 'WORKSHOP'
-  | 'MEETUP'
-  | 'CONFERENCE'
-  | 'TECH'
-  | 'CULTURE_TECH';
+  | "CONCERT"
+  | "WORKSHOP"
+  | "MEETUP"
+  | "CONFERENCE"
+  | "TECH"
+  | "CULTURE_TECH";
 
 export type Event = {
   id: string;
@@ -19,4 +19,5 @@ export type Event = {
   category: EventCategory;
   published: boolean; // draft: false, published: true
   image: string;
+  user_id: string;
 };
