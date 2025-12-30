@@ -39,7 +39,6 @@ export default function NewEventPage() {
     try {
       let imageUrl = form.image;
 
-      // Upload pliku jeśli istnieje
       if (file) {
         const formData = new FormData();
         formData.append("image", file);
@@ -59,20 +58,17 @@ export default function NewEventPage() {
         imageUrl = data.url;
       }
 
-      // Timestampy
       const startTimestamp = `${form.date} ${form.startAt}:00`;
       const endTimestamp = `${form.date} ${form.endAt}:00`;
 
-      // Payload z user_id
       const payload = {
         ...form,
         startAt: startTimestamp,
         endAt: endTimestamp,
         image: imageUrl,
-        user_id: user.id, // UID zalogowanego użytkownika
+        user_id: user.id,
       };
 
-      // Wstawienie bezpośrednio do Supabase JS
       const { data, error } = await supabase.from("events").insert([payload]);
 
       if (error) {
