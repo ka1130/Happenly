@@ -4,7 +4,7 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "images.stockcake.com",
-        pathname: "/**", // dopuszcza wszystkie ścieżki
+        pathname: "/**",
       },
     ],
   },
