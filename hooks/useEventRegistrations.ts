@@ -1,5 +1,6 @@
+import { supabase } from "@lib/supabase";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { toast } from "react-hot-toast";
 import { Event } from "@apptypes/event";
 
 export function useEventRegistrations(event: Event | null) {
@@ -42,39 +43,38 @@ export function useEventRegistrations(event: Event | null) {
   }, [event, currentUserId]);
 
   const handleRegister = async () => {
-    if (!event || !currentUserId) {
-      alert("You must be logged in");
+    if (!event) {
+      toast.error("Event not loaded");
       return;
     }
-    if (
-      loading ||
-      userRegistered ||
-      event.capacity - (event.registrations + localRegistrationsIncrement) <= 0
-    )
+    if (!currentUserId) {
+      toast.error("You must be logged in");
       return;
+    }
 
+    setUserRegistered(true);
     setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("event_registrations")
-        .insert({ event_id: event.id, user_id: currentUserId })
-        .select()
-        .maybeSingle();
 
-      if (error) {
-        if (error.code === "23505") {
-          // unikalny constraint, czyli już zarejestrowany
-          setUserRegistered(true);
-        } else {
-          throw error;
-        }
-      } else if (data) {
-        setUserRegistered(true);
-        setLocalRegistrationsIncrement((prev) => prev + 1);
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId: event.id, userId: currentUserId }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error?.message || "Registration failed");
       }
-    } catch (err) {
+
+      setLocalRegistrationsIncrement((prev) => prev + 1);
+      toast.success("Registered successfully!");
+    } catch (err: any) {
       console.error("Registration failed:", err);
-      alert("Registration failed. Please try again.");
+      toast.error(err?.message || "Registration failed. Please try again.");
+
+      setUserRegistered(false);
     } finally {
       setLoading(false);
     }
