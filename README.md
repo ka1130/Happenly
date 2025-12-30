@@ -24,7 +24,7 @@
 2. Go to single event page by clicking on an event card
 3. Sign in to enable creating and event (Create Evemt button appears on main page and '/events/new' route shows the form)
 4. Creators can update and remove their events
-5. Seed events: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
+5. Seed events: `npm run seed`
 6. Authenticate (with Supabase)
 7. Register for events (from a single event view)
 8. Search events live

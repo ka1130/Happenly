@@ -80,6 +80,41 @@ export function useEventRegistrations(event: Event | null) {
     }
   };
 
+  const handleUnregister = async () => {
+    if (!event) {
+      toast.error("Event not loaded");
+      return;
+    }
+    if (!currentUserId) {
+      toast.error("You must be logged in");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/unregister", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId: event.id, userId: currentUserId }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok)
+        throw new Error(result.error?.message || "Unregister failed");
+
+      setUserRegistered(false);
+      setLocalRegistrationsIncrement((prev) => prev - 1);
+      toast.success("You have been unregistered!");
+    } catch (err: any) {
+      console.error("Unregister failed:", err);
+      toast.error(err?.message || "Unregister failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const registrations = event
     ? event.registrations + localRegistrationsIncrement
     : 0;
@@ -92,5 +127,6 @@ export function useEventRegistrations(event: Event | null) {
     spotsRemaining,
     loading,
     handleRegister,
+    handleUnregister,
   };
 }

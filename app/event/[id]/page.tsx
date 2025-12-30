@@ -47,6 +47,7 @@ export default function EventPage() {
     spotsRemaining,
     loading,
     handleRegister,
+    handleUnregister,
   } = useEventRegistrations(event);
 
   if (!event) return <p>Loading event...</p>;
@@ -167,20 +168,23 @@ export default function EventPage() {
           <p className="text-xs text-gray-500">
             {spotsRemaining} spots remaining
           </p>
-
           <button
-            onClick={handleRegister}
-            disabled={spotsRemaining <= 0 || loading || userRegistered}
+            onClick={userRegistered ? handleUnregister : handleRegister}
+            disabled={loading}
             className={`mt-4 w-full rounded-md py-2 text-white ${
-              !userRegistered && spotsRemaining > 0 && !loading
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "cursor-not-allowed bg-gray-400"
+              userRegistered
+                ? "bg-red-500 hover:bg-red-600"
+                : spotsRemaining > 0
+                  ? "bg-blue-500 hover:bg-blue-600"
+                  : "cursor-not-allowed bg-gray-400"
             }`}
           >
             {loading
-              ? "Registering..."
+              ? userRegistered
+                ? "Unregistering..."
+                : "Registering..."
               : userRegistered
-                ? "Registered"
+                ? "Unregister"
                 : spotsRemaining > 0
                   ? "Register Now"
                   : "Full"}
