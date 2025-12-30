@@ -11,7 +11,6 @@ import {
   XCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
@@ -42,9 +41,10 @@ export const STATUS_CONFIG = {
 type EventCardProps = {
   event: Event;
   onDeleteAction?: (id: string) => void;
+  currentUserId?: string | null;
 };
 
-function EventCard({ event, onDeleteAction }: EventCardProps) {
+function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -92,14 +92,10 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
       className="w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
     >
       <div className="relative">
-        <Image
+        <img
           src={event.image}
           alt={event.title}
-          width={320}
-          height={208}
-          style={{ width: "100%", height: "208px", objectFit: "cover" }}
-          placeholder="blur"
-          blurDataURL="data:image/svg+xml;base64,..." // tiny placeholder
+          className="h-[208px] w-full object-cover"
           loading="lazy"
         />
         <div className="absolute top-3 left-3">
@@ -172,33 +168,34 @@ function EventCard({ event, onDeleteAction }: EventCardProps) {
             <XCircleIcon className="h-5 w-5 shrink-0 text-red-400" />
           </div>
         )}
-
-        <div className="mt-auto flex justify-between gap-4">
-          <Link
-            href={`/edit/${event.id}`}
-            className="flex flex-1 cursor-pointer justify-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-xs text-stone-700 hover:bg-stone-50 focus:ring-2 focus:ring-stone-400 focus:outline-none"
-          >
-            <PencilSquareIcon className="relative top-[px] h-4 w-4" />
-            <span>Edit</span>
-          </Link>
-          <button
-            disabled={loadingDelete}
-            className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-            onClick={(e) => {
-              e.stopPropagation();
-              setConfirmDeleteOpen(true);
-            }}
-          >
-            <TrashIcon className="h-4 w-4 text-red-700" />
-          </button>
-          <ConfirmDialog
-            open={confirmDeleteOpen}
-            title="Delete Event"
-            message="Are you sure you want to delete this event? This action cannot be undone and all registration data will be lost."
-            onCancelAction={() => setConfirmDeleteOpen(false)}
-            onConfirmAction={handleDelete}
-          />
-        </div>
+        {event.user_id === currentUserId && (
+          <div className="mt-auto flex justify-between gap-4">
+            <Link
+              href={`/edit/${event.id}`}
+              className="flex flex-1 cursor-pointer justify-center gap-2 rounded-md border border-stone-300 bg-white px-4 py-2 text-xs text-stone-700 hover:bg-stone-50 focus:ring-2 focus:ring-stone-400 focus:outline-none"
+            >
+              <PencilSquareIcon className="relative top-[px] h-4 w-4" />
+              <span>Edit</span>
+            </Link>
+            <button
+              disabled={loadingDelete}
+              className="cursor-pointer rounded-md p-2 hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              onClick={(e) => {
+                e.stopPropagation();
+                setConfirmDeleteOpen(true);
+              }}
+            >
+              <TrashIcon className="h-4 w-4 text-red-700" />
+            </button>
+            <ConfirmDialog
+              open={confirmDeleteOpen}
+              title="Delete Event"
+              message="Are you sure you want to delete this event? This action cannot be undone and all registration data will be lost."
+              onCancelAction={() => setConfirmDeleteOpen(false)}
+              onConfirmAction={handleDelete}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

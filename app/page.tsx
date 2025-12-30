@@ -100,7 +100,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {loading || events === null ? (
           Array.from({ length: 3 }).map((_, i) => <EventCardSkeleton key={i} />)
         ) : events.length === 0 ? (
@@ -116,6 +116,7 @@ export default function Home() {
               <EventCard
                 event={event}
                 onDeleteAction={() => handleDeleteEvent(event.id)}
+                // currentUserId={user?.id || null}
               />
             </div>
           ))

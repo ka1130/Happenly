@@ -22,13 +22,14 @@
 
 1. Browse events
 2. Go to single event page by clicking on an event card
-3. Create, update and remove events
-4. Seed data: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
-5. Sign up / sign in (with Supabase)
-6. Register for events (from a single event view)
-7. Search events live
-8. Filter events by category/status, sort them by date, attendees count or alphabetically
-9. Collapse/reveal sidebar
+3. Sign in to enable creating and event (Create Evemt button appears on main page and '/events/new' route shows the form)
+4. Creators can update and remove their events
+5. Seed events: open [http://localhost:3000/api/seed-events](http://localhost:3000/api/seed-events)
+6. Authenticate (with Supabase)
+7. Register for events (from a single event view)
+8. Search events live
+9. Filter events by category/status, sort them by date, attendees count or alphabetically
+10. Collapse/reveal sidebar
 
 (Planned): 10. User panel/settings 11. Dedicated dashboard page
 
