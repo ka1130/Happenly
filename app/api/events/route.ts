@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  // dodajemy user_id do eventu
   const { data, error } = await supabase
     .from("events")
     .insert([{ ...body, user_id: user.id }])

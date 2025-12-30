@@ -11,7 +11,7 @@ export async function GET(_req: NextRequest) {
     {
       title: "VR Art Exhibition",
       description:
-        "Explore the cutting edge of creativity at Digital Art Expo...",
+        "Explore the cutting edge of creativity at Digital Art Expo — a vibrant showcase where technology meets artistic expression. This immersive event brings together digital artists, designers, and creative technologists to present groundbreaking works across interactive media, generative art, 3D design, and immersive experiences. Discover new tools, techniques, and ideas shaping the future of digital art, connect with visionary creators, and get inspired by how innovation is redefining visual culture.",
       date: "2026-01-10T00:00:00Z",
       startAt: "2026-01-10T10:00:00Z",
       endAt: "2026-01-10T18:00:00Z",
@@ -27,7 +27,7 @@ export async function GET(_req: NextRequest) {
     {
       title: "React + Next.js Workshop",
       description:
-        "Join industry leaders for a full day of insights, networking...",
+        "Join industry leaders for a full day of insights, networking, and breakthrough technologies. This premier event brings together innovators, entrepreneurs, and technology enthusiasts to explore the latest trends shaping our digital future. From AI and machine learning to sustainable tech solutions, discover what's next in the world of innovation. Connect with like-minded professionals and gain actionable insights you can apply immediately.",
       date: "2026-01-15T00:00:00Z",
       startAt: "2026-01-15T14:00:00Z",
       endAt: "2026-01-15T17:00:00Z",
@@ -43,7 +43,7 @@ export async function GET(_req: NextRequest) {
     {
       title: "Digital Art Expo",
       description:
-        "Digital Art Expo is a vibrant showcase of contemporary digital creativity...",
+        "Digital Art Expo is a vibrant showcase of contemporary digital creativity, bringing together artists, designers, and technologists from around the world. Explore cutting-edge digital artworks, immersive installations, and innovative visual experiences that blur the line between art and technology. Discover new tools, techniques, and trends shaping the future of digital art, connect with creators and enthusiasts, and get inspired by the next generation of visual storytelling.",
       date: "2026-02-05T00:00:00Z",
       startAt: "2026-02-05T10:00:00Z",
       endAt: "2026-02-05T18:00:00Z",

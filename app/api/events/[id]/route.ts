@@ -48,7 +48,7 @@ export async function DELETE(
     .from("events")
     .delete()
     .eq("id", id)
-    .select(); // .select() potrzebne, żeby count działał
+    .select();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
