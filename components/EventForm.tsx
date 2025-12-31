@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,21 +46,37 @@ export default function EventForm({
     endAt: "",
     location: "",
     capacity: 0,
+    registrations: 0,
     category: "",
     published: false,
     image: "",
   };
 
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  //   setValue,
+  //   watch,
+  // } = useForm<EventFormData>({
+  //   resolver: zodResolver(eventSchema),
+  //   defaultValues,
+  // });
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues,
   });
+
+  useEffect(() => {
+    if (initialData) reset(initialData);
+  }, [initialData, reset]);
 
   const router = useRouter();
 
