@@ -164,6 +164,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
             <XCircleIcon className="h-5 w-5 shrink-0 text-red-400" />
           </div>
         )}
+
         {event.user_id === currentUserId && (
           <div className="mt-auto flex justify-between gap-4">
             <Link
