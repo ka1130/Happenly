@@ -100,7 +100,7 @@ export default function Home() {
         />
       </div>
 
-      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {loading || events === null ? (
           Array.from({ length: 3 }).map((_, i) => <EventCardSkeleton key={i} />)
         ) : events.length === 0 ? (

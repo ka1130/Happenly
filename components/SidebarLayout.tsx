@@ -66,7 +66,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
         <div className="flex items-center gap-2 border-b border-stone-200 px-4 py-2">
           <button
             onClick={() => setSidebarOpen((v) => !v)}
-            className="cursor-pointer rounded-md p-2 text-stone-400 hover:bg-stone-100"
+            className="hidden cursor-pointer rounded-md p-2 text-stone-400 hover:bg-stone-100 md:flex"
           >
             {sidebarOpen ? (
               <ArrowLeftCircleIcon className="h-5 w-5" />
