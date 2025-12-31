@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@lib/supabase";
 import { useEvents } from "@hooks/useEvents";
+import { useCurrentUser } from "@hooks/useCurrentUser";
 import EventCard, { EventCardSkeleton } from "@components/EventCard";
 import { Event as AppEvent } from "@apptypes/event";
 
 export default function EventsPage() {
-  const [user, setUser] = useState<any>(null);
   const { events: initialEvents = [], loading, error } = useEvents();
   const [events, setEvents] = useState<AppEvent[]>([]);
   const [activeTab, setActiveTab] = useState<"attending" | "created">(
@@ -20,22 +20,7 @@ export default function EventsPage() {
 
   const router = useRouter();
 
-  // fetch current user
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    };
-    fetchUser();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-      },
-    );
-
-    return () => listener.subscription.unsubscribe();
-  }, []);
+  const { user } = useCurrentUser();
 
   useEffect(() => {
     setEvents(initialEvents);

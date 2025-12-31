@@ -110,8 +110,8 @@ export default function EventForm({
         className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       />
 
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
+      <div className="items-center gap-4 md:flex">
+        <div className="mb-4 flex-1 md:mb-0">
           <label className="flex gap-2 text-sm font-medium text-stone-700">
             <CalendarIcon className="h-5 w-5" />
             <span>Date</span>
@@ -124,7 +124,7 @@ export default function EventForm({
           />
         </div>
 
-        <div className="flex-1">
+        <div className="mb-4 flex-1 md:mb-0">
           <label className="block text-sm font-medium text-stone-700">
             Category
           </label>
@@ -203,7 +203,7 @@ export default function EventForm({
             }
           }}
           onDragOver={(e) => e.preventDefault()}
-          className="mt-1 flex h-32 w-full cursor-pointer items-center justify-center rounded border-2 border-dashed border-stone-300 bg-stone-50 text-stone-500 transition hover:border-blue-500 hover:bg-blue-50"
+          className="mt-1 flex h-32 w-full cursor-pointer items-center justify-center rounded border-2 border-dashed border-stone-300 bg-stone-50 text-center text-stone-500 transition hover:border-blue-500 hover:bg-blue-50"
           onClick={() => document.getElementById("fileInput")?.click()}
         >
           {file ? file.name : "Drag & drop an image here or click to select"}

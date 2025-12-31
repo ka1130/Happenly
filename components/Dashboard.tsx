@@ -10,6 +10,7 @@ import {
   UsersIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
+import { useCurrentUser } from "@hooks/useCurrentUser";
 import Button from "@components/Button";
 
 type StatCardProps = {
@@ -33,7 +34,6 @@ const StatCard = ({ title, value, trend, icon }: StatCardProps) => (
 );
 
 export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
   const [stats, setStats] = useState({
     totalEvents: 0,
     publishedEvents: 0,
@@ -42,15 +42,9 @@ export default function Dashboard() {
   });
 
   const router = useRouter();
+  const { user } = useCurrentUser();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    };
-
-    fetchUser();
-
     const fetchStats = async () => {
       const { data: allEvents } = await supabase
         .from("events")

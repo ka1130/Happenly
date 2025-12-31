@@ -25,13 +25,6 @@ export default function RootLayout({
       <body className="relative min-h-screen bg-gray-50">
         <SidebarLayout>{children}</SidebarLayout>
         <Toaster position="top-right" />
-
-        <div className="ml-0 flex min-h-screen flex-col md:ml-64">
-          {/* Mobile header + drawer */}
-          <div className="md:hidden">
-            <MobileMenu />
-          </div>
-        </div>
       </body>
     </html>
   );
