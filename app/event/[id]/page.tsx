@@ -32,61 +32,77 @@ export default function EventPage() {
   const [spotsRemaining, setSpotsRemaining] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // find event
   useEffect(() => {
     const found = events.find((e) => e.id === id);
     setEvent(found ?? null);
   }, [events, id]);
 
+  // get user
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
+    supabase.auth.getUser().then(({ data }) => {
       setCurrentUserId(data.user?.id ?? null);
-    };
-    fetchUser();
+    });
   }, []);
 
-  useEffect(() => {
+  // fetch registration status (ONLY source of truth)
+  const fetchStatus = async () => {
     if (!event || !currentUserId) return;
 
-    const fetchRegistrations = async () => {
-      const { data } = await supabase
-        .from("event_registrations")
-        .select("*")
-        .eq("event_id", event.id);
+    const res = await fetch("/api/registration-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
+    });
 
-      setRegistrations(data?.length ?? 0);
-      setSpotsRemaining(event.capacity - (data?.length ?? 0));
+    const data = await res.json();
 
-      const isRegistered = data?.some((r: any) => r.user_id === currentUserId);
-      setUserRegistered(isRegistered ?? false);
-    };
-    fetchRegistrations();
+    setUserRegistered(data.registered);
+    setRegistrations(data.registrations);
+    setSpotsRemaining(event.capacity - data.registrations);
+  };
+
+  // refetch on load / change
+  useEffect(() => {
+    fetchStatus();
   }, [event, currentUserId]);
 
+  // register
   const handleRegister = async () => {
-    if (!currentUserId || !event) return;
+    if (!event || !currentUserId) return;
     setLoading(true);
-    await supabase.from("event_registrations").insert({
-      event_id: event.id,
-      user_id: currentUserId,
+
+    await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
     });
-    setUserRegistered(true);
-    setRegistrations((prev) => prev + 1);
-    setSpotsRemaining((prev) => prev - 1);
+
+    await fetchStatus();
     setLoading(false);
   };
 
+  // unregister
   const handleUnregister = async () => {
-    if (!currentUserId || !event) return;
+    if (!event || !currentUserId) return;
     setLoading(true);
-    await supabase
-      .from("event_registrations")
-      .delete()
-      .eq("event_id", event.id)
-      .eq("user_id", currentUserId);
-    setUserRegistered(false);
-    setRegistrations((prev) => prev - 1);
-    setSpotsRemaining((prev) => prev + 1);
+
+    await fetch("/api/unregister", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
+    });
+
+    await fetchStatus();
     setLoading(false);
   };
 
@@ -135,7 +151,7 @@ export default function EventPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as typeof activeTab)}
-                className={`cursor-pointer rounded px-4 py-1 font-medium text-stone-700 transition-colors ${
+                className={`rounded px-4 py-1 font-medium transition-colors ${
                   activeTab === tab
                     ? "bg-white text-stone-900"
                     : "hover:bg-stone-300"
@@ -159,22 +175,22 @@ export default function EventPage() {
         {/* Right Panel */}
         <div className="flex w-full flex-col gap-3 rounded-lg bg-gray-50 p-4 text-sm lg:w-64">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="h-5 w-5" strokeWidth={2} />
+            <CalendarIcon className="h-5 w-5" />
             <span>{event.date}</span>
           </div>
           <div className="flex items-center gap-2">
-            <ClockIcon className="h-5 w-5" strokeWidth={2} />
+            <ClockIcon className="h-5 w-5" />
             {formatTimeRange(event.startAt, event.endAt)}
           </div>
           <div className="flex items-center gap-2">
-            <MapPinIcon className="h-5 w-5" strokeWidth={2} />
+            <MapPinIcon className="h-5 w-5" />
             <span>{event.location}</span>
           </div>
 
-          <hr className="my-2 border-gray-300" />
+          <hr className="my-2" />
 
           <div className="flex items-center gap-2">
-            <UsersIcon className="h-5 w-5" strokeWidth={2} />
+            <UsersIcon className="h-5 w-5" />
             <span>Capacity</span>
             <div className="h-3 flex-1 overflow-hidden rounded-full bg-gray-200">
               <div
@@ -186,6 +202,7 @@ export default function EventPage() {
               {registrations}/{event.capacity || "N/A"}
             </span>
           </div>
+
           <p className="text-xs text-gray-500">
             {spotsRemaining} spots remaining
           </p>
