@@ -14,17 +14,7 @@ import { Event } from "@apptypes/event";
 import { status, STATUS_CONFIG } from "@components/EventCard";
 import { formatCategory } from "@utils/formatCategory";
 import { formatTimeRange } from "@utils/formatTimeRange";
-import { useEventRegistrations } from "@hooks/useEventRegistrations";
-
-const mockSchedule = [
-  {
-    time: "9:00 AM",
-    title: "Registration & Breakfast",
-    location: "Main Lobby",
-  },
-  { time: "10:00 AM", title: "Opening Keynote", location: "Main Hall" },
-  { time: "12:00 PM", title: "Networking Lunch", location: "Garden Terrace" },
-];
+import { supabase } from "@lib/supabase";
 
 export default function EventPage() {
   const { events } = useEvents();
@@ -36,23 +26,73 @@ export default function EventPage() {
     "overview" | "attendees" | "schedule"
   >("overview");
 
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [userRegistered, setUserRegistered] = useState<boolean | null>(null);
+  const [registrations, setRegistrations] = useState(0);
+  const [spotsRemaining, setSpotsRemaining] = useState(0);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const found = events.find((e) => e.id === id);
     setEvent(found ?? null);
   }, [events, id]);
 
-  const {
-    userRegistered,
-    registrations,
-    spotsRemaining,
-    loading,
-    handleRegister,
-    handleUnregister,
-  } = useEventRegistrations(event);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setCurrentUserId(data.user?.id ?? null);
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (!event || !currentUserId) return;
+
+    const fetchRegistrations = async () => {
+      const { data } = await supabase
+        .from("event_registrations")
+        .select("*")
+        .eq("event_id", event.id);
+
+      setRegistrations(data?.length ?? 0);
+      setSpotsRemaining(event.capacity - (data?.length ?? 0));
+
+      const isRegistered = data?.some((r: any) => r.user_id === currentUserId);
+      setUserRegistered(isRegistered ?? false);
+    };
+    fetchRegistrations();
+  }, [event, currentUserId]);
+
+  const handleRegister = async () => {
+    if (!currentUserId || !event) return;
+    setLoading(true);
+    await supabase.from("event_registrations").insert({
+      event_id: event.id,
+      user_id: currentUserId,
+    });
+    setUserRegistered(true);
+    setRegistrations((prev) => prev + 1);
+    setSpotsRemaining((prev) => prev - 1);
+    setLoading(false);
+  };
+
+  const handleUnregister = async () => {
+    if (!currentUserId || !event) return;
+    setLoading(true);
+    await supabase
+      .from("event_registrations")
+      .delete()
+      .eq("event_id", event.id)
+      .eq("user_id", currentUserId);
+    setUserRegistered(false);
+    setRegistrations((prev) => prev - 1);
+    setSpotsRemaining((prev) => prev + 1);
+    setLoading(false);
+  };
 
   if (!event) return <p>Loading event...</p>;
 
-  const progress = Math.min((registrations / event.capacity) * 100, 100);
+  const progress = Math.min((registrations / (event.capacity || 1)) * 100, 100);
 
   return (
     <div className="p-4 text-stone-600">
@@ -113,25 +153,6 @@ export default function EventPage() {
             {activeTab === "attendees" && (
               <p>{registrations} people registered</p>
             )}
-            {activeTab === "schedule" && (
-              <div className="space-y-6 text-sm">
-                {mockSchedule.map((item, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="flex w-24 items-center text-right font-medium text-gray-700">
-                      {item.time}
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <div className="text-base font-semibold">
-                        {item.title}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {item.location}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -162,33 +183,36 @@ export default function EventPage() {
               />
             </div>
             <span>
-              {registrations}/{event.capacity}
+              {registrations}/{event.capacity || "N/A"}
             </span>
           </div>
           <p className="text-xs text-gray-500">
             {spotsRemaining} spots remaining
           </p>
-          <button
-            onClick={userRegistered ? handleUnregister : handleRegister}
-            disabled={loading}
-            className={`mt-4 w-full rounded-md py-2 text-white ${
-              userRegistered
-                ? "bg-red-500 hover:bg-red-600"
-                : spotsRemaining > 0
-                  ? "bg-blue-500 hover:bg-blue-600"
-                  : "cursor-not-allowed bg-gray-400"
-            }`}
-          >
-            {loading
-              ? userRegistered
-                ? "Unregistering..."
-                : "Registering..."
-              : userRegistered
-                ? "Unregister"
-                : spotsRemaining > 0
-                  ? "Register Now"
-                  : "Full"}
-          </button>
+
+          {userRegistered !== null && (
+            <button
+              onClick={userRegistered ? handleUnregister : handleRegister}
+              disabled={loading || spotsRemaining <= 0}
+              className={`mt-4 w-full rounded-md py-2 text-white ${
+                userRegistered
+                  ? "bg-red-500 hover:bg-red-600"
+                  : spotsRemaining > 0
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "cursor-not-allowed bg-gray-400"
+              }`}
+            >
+              {loading
+                ? userRegistered
+                  ? "Unregistering..."
+                  : "Registering..."
+                : userRegistered
+                  ? "Unregister"
+                  : spotsRemaining > 0
+                    ? "Register Now"
+                    : "Full"}
+            </button>
+          )}
         </div>
       </div>
     </div>
