@@ -87,10 +87,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
   };
 
   return (
-    <div
-      key={event.id}
-      className="w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl"
-    >
+    <div className="flex h-[500px] w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl">
       <div className="relative">
         <img
           src={event.image || "/images/placeholder-card.svg"}
