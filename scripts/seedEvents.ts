@@ -8,9 +8,6 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
-console.log("URL:", process.env.SUPABASE_URL);
-console.log("KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY);
-
 async function seed() {
   try {
     const testEmail = `seeduser-${Date.now()}@example.com`;
@@ -25,7 +22,6 @@ async function seed() {
       throw createUserError || new Error("Failed to create user");
 
     const testUserId = createUserData.user.id;
-    console.log("Created test user:", testUserId);
 
     const sampleEvents = [
       {
