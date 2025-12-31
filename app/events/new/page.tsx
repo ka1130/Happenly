@@ -79,7 +79,6 @@ export default function NewEventPage() {
       toast.success("Event created successfully!");
       setForm(initialForm);
       setFile(null);
-      router.push("/my-events"); // przekierowanie po sukcesie
     } catch (err: any) {
       toast.error(`Unexpected error: ${err.message}`);
       console.error(err);

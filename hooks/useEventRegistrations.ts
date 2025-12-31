@@ -1,96 +1,75 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@lib/supabase";
 import { Event } from "@apptypes/event";
 
 export function useEventRegistrations(event: Event | null) {
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [userRegistered, setUserRegistered] = useState(false);
-  const [localRegistrationsIncrement, setLocalRegistrationsIncrement] =
-    useState(0);
+  const [registrations, setRegistrations] = useState(0);
+  const [userRegistered, setUserRegistered] = useState<boolean | null>(null);
+  const [spotsRemaining, setSpotsRemaining] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // --- fetch current user ---
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) return console.error("Auth error:", error);
-      setCurrentUserId(data?.user?.id ?? null);
+      const { data } = await supabase.auth.getUser();
+      setCurrentUserId(data.user?.id ?? null);
     };
     fetchUser();
   }, []);
 
-  // --- check if user is already registered ---
   useEffect(() => {
     if (!event || !currentUserId) return;
 
-    const checkRegistration = async () => {
-      const { data, error } = await supabase
+    const fetchRegistrations = async () => {
+      const { data } = await supabase
         .from("event_registrations")
         .select("*")
-        .eq("event_id", event.id)
-        .eq("user_id", currentUserId)
-        .maybeSingle();
+        .eq("event_id", event.id);
 
-      if (error && error.code !== "PGRST116") {
-        console.error("Check registration error:", error);
-        return;
-      }
-      if (data) setUserRegistered(true);
+      const total = data?.length ?? 0;
+      setRegistrations(total);
+      setSpotsRemaining(event.capacity - total);
+
+      const isRegistered = data?.some((r: any) => r.user_id === currentUserId);
+      setUserRegistered(isRegistered ?? false);
     };
 
-    checkRegistration();
+    fetchRegistrations();
   }, [event, currentUserId]);
 
   const handleRegister = async () => {
-    if (!event || !currentUserId) {
-      alert("You must be logged in");
-      return;
-    }
-    if (
-      loading ||
-      userRegistered ||
-      event.capacity - (event.registrations + localRegistrationsIncrement) <= 0
-    )
-      return;
-
+    if (!currentUserId || !event) return;
     setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("event_registrations")
-        .insert({ event_id: event.id, user_id: currentUserId })
-        .select()
-        .maybeSingle();
-
-      if (error) {
-        if (error.code === "23505") {
-          // unikalny constraint, czyli już zarejestrowany
-          setUserRegistered(true);
-        } else {
-          throw error;
-        }
-      } else if (data) {
-        setUserRegistered(true);
-        setLocalRegistrationsIncrement((prev) => prev + 1);
-      }
-    } catch (err) {
-      console.error("Registration failed:", err);
-      alert("Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    await supabase.from("event_registrations").insert({
+      event_id: event.id,
+      user_id: currentUserId,
+    });
+    setUserRegistered(true);
+    setRegistrations((prev) => prev + 1);
+    setSpotsRemaining((prev) => prev - 1);
+    setLoading(false);
   };
 
-  const registrations = event
-    ? event.registrations + localRegistrationsIncrement
-    : 0;
-  const spotsRemaining = event ? event.capacity - registrations : 0;
+  const handleUnregister = async () => {
+    if (!currentUserId || !event) return;
+    setLoading(true);
+    await supabase
+      .from("event_registrations")
+      .delete()
+      .eq("event_id", event.id)
+      .eq("user_id", currentUserId);
+    setUserRegistered(false);
+    setRegistrations((prev) => prev - 1);
+    setSpotsRemaining((prev) => prev + 1);
+    setLoading(false);
+  };
 
   return {
-    currentUserId,
-    userRegistered,
     registrations,
+    userRegistered,
     spotsRemaining,
     loading,
     handleRegister,
+    handleUnregister,
   };
 }

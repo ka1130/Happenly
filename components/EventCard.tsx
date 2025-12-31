@@ -111,7 +111,6 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
           </span>
         </div>
       </div>
-      {/* TODO block registrations when full */}
       <div className="flex flex-col p-5">
         <div className="mb-10 flex flex-1 flex-col space-y-2">
           <div>

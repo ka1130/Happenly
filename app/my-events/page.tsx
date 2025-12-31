@@ -45,21 +45,45 @@ export default function EventsPage() {
     if (!user) return;
 
     const fetchEvents = async () => {
-      // created
-      const { data: created } = await supabase
-        .from("events")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("date", { ascending: true });
+      try {
+        // created
+        const { data: created, error: createdError } = await supabase
+          .from("events")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("date", { ascending: true });
+        if (createdError) throw createdError;
 
-      // attending
-      const { data: attending } = await supabase
-        .from("event_registrations")
-        .select("events (*)")
-        .eq("user_id", user.id);
+        // attending
+        const { data: attending, error: attendingError } = await supabase
+          .from("event_registrations")
+          .select(
+            `
+            event:events(
+              id,
+              title,
+              date,
+              image,
+              capacity,
+              registrations,
+              category,
+              location,
+              startAt,
+              endAt,
+              user_id
+            )
+          `,
+          )
+          .eq("user_id", user.id);
+        if (attendingError) throw attendingError;
 
-      setCreatedEvents(created ?? []);
-      setAttendingEvents(attending?.map((r: any) => r.events) ?? []);
+        setCreatedEvents(created ?? []);
+        setAttendingEvents(
+          attending?.map((r: any) => r.event).filter(Boolean) ?? [],
+        );
+      } catch (err: any) {
+        console.error("Failed to fetch user events:", err.message || err);
+      }
     };
 
     fetchEvents();

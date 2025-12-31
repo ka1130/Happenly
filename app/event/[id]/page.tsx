@@ -14,17 +14,7 @@ import { Event } from "@apptypes/event";
 import { status, STATUS_CONFIG } from "@components/EventCard";
 import { formatCategory } from "@utils/formatCategory";
 import { formatTimeRange } from "@utils/formatTimeRange";
-import { useEventRegistrations } from "@hooks/useEventRegistrations";
-
-const mockSchedule = [
-  {
-    time: "9:00 AM",
-    title: "Registration & Breakfast",
-    location: "Main Lobby",
-  },
-  { time: "10:00 AM", title: "Opening Keynote", location: "Main Hall" },
-  { time: "12:00 PM", title: "Networking Lunch", location: "Garden Terrace" },
-];
+import { supabase } from "@lib/supabase";
 
 export default function EventPage() {
   const { events } = useEvents();
@@ -36,22 +26,89 @@ export default function EventPage() {
     "overview" | "attendees" | "schedule"
   >("overview");
 
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [userRegistered, setUserRegistered] = useState<boolean | null>(null);
+  const [registrations, setRegistrations] = useState(0);
+  const [spotsRemaining, setSpotsRemaining] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  // find event
   useEffect(() => {
     const found = events.find((e) => e.id === id);
     setEvent(found ?? null);
   }, [events, id]);
 
-  const {
-    userRegistered,
-    registrations,
-    spotsRemaining,
-    loading,
-    handleRegister,
-  } = useEventRegistrations(event);
+  // get user
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUserId(data.user?.id ?? null);
+    });
+  }, []);
+
+  // fetch registration status (ONLY source of truth)
+  const fetchStatus = async () => {
+    if (!event || !currentUserId) return;
+
+    const res = await fetch("/api/registration-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
+    });
+
+    const data = await res.json();
+
+    setUserRegistered(data.registered);
+    setRegistrations(data.registrations);
+    setSpotsRemaining(event.capacity - data.registrations);
+  };
+
+  // refetch on load / change
+  useEffect(() => {
+    fetchStatus();
+  }, [event, currentUserId]);
+
+  // register
+  const handleRegister = async () => {
+    if (!event || !currentUserId) return;
+    setLoading(true);
+
+    await fetch("/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
+    });
+
+    await fetchStatus();
+    setLoading(false);
+  };
+
+  // unregister
+  const handleUnregister = async () => {
+    if (!event || !currentUserId) return;
+    setLoading(true);
+
+    await fetch("/api/unregister", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventId: event.id,
+        userId: currentUserId,
+      }),
+    });
+
+    await fetchStatus();
+    setLoading(false);
+  };
 
   if (!event) return <p>Loading event...</p>;
 
-  const progress = Math.min((registrations / event.capacity) * 100, 100);
+  const progress = Math.min((registrations / (event.capacity || 1)) * 100, 100);
 
   return (
     <div className="p-4 text-stone-600">
@@ -94,7 +151,7 @@ export default function EventPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as typeof activeTab)}
-                className={`cursor-pointer rounded px-4 py-1 font-medium text-stone-700 transition-colors ${
+                className={`rounded px-4 py-1 font-medium transition-colors ${
                   activeTab === tab
                     ? "bg-white text-stone-900"
                     : "hover:bg-stone-300"
@@ -112,47 +169,28 @@ export default function EventPage() {
             {activeTab === "attendees" && (
               <p>{registrations} people registered</p>
             )}
-            {activeTab === "schedule" && (
-              <div className="space-y-6 text-sm">
-                {mockSchedule.map((item, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="flex w-24 items-center text-right font-medium text-gray-700">
-                      {item.time}
-                    </div>
-                    <div className="flex flex-col justify-center">
-                      <div className="text-base font-semibold">
-                        {item.title}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {item.location}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
         {/* Right Panel */}
         <div className="flex w-full flex-col gap-3 rounded-lg bg-gray-50 p-4 text-sm lg:w-64">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="h-5 w-5" strokeWidth={2} />
+            <CalendarIcon className="h-5 w-5" />
             <span>{event.date}</span>
           </div>
           <div className="flex items-center gap-2">
-            <ClockIcon className="h-5 w-5" strokeWidth={2} />
+            <ClockIcon className="h-5 w-5" />
             {formatTimeRange(event.startAt, event.endAt)}
           </div>
           <div className="flex items-center gap-2">
-            <MapPinIcon className="h-5 w-5" strokeWidth={2} />
+            <MapPinIcon className="h-5 w-5" />
             <span>{event.location}</span>
           </div>
 
-          <hr className="my-2 border-gray-300" />
+          <hr className="my-2" />
 
           <div className="flex items-center gap-2">
-            <UsersIcon className="h-5 w-5" strokeWidth={2} />
+            <UsersIcon className="h-5 w-5" />
             <span>Capacity</span>
             <div className="h-3 flex-1 overflow-hidden rounded-full bg-gray-200">
               <div
@@ -161,30 +199,37 @@ export default function EventPage() {
               />
             </div>
             <span>
-              {registrations}/{event.capacity}
+              {registrations}/{event.capacity || "N/A"}
             </span>
           </div>
+
           <p className="text-xs text-gray-500">
             {spotsRemaining} spots remaining
           </p>
 
-          <button
-            onClick={handleRegister}
-            disabled={spotsRemaining <= 0 || loading || userRegistered}
-            className={`mt-4 w-full rounded-md py-2 text-white ${
-              !userRegistered && spotsRemaining > 0 && !loading
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "cursor-not-allowed bg-gray-400"
-            }`}
-          >
-            {loading
-              ? "Registering..."
-              : userRegistered
-                ? "Registered"
-                : spotsRemaining > 0
-                  ? "Register Now"
-                  : "Full"}
-          </button>
+          {userRegistered !== null && (
+            <button
+              onClick={userRegistered ? handleUnregister : handleRegister}
+              disabled={loading || spotsRemaining <= 0}
+              className={`mt-4 w-full cursor-pointer rounded-md py-2 text-white ${
+                userRegistered
+                  ? "bg-red-500 hover:bg-red-600"
+                  : spotsRemaining > 0
+                    ? "bg-blue-500 hover:bg-blue-600"
+                    : "cursor-not-allowed bg-gray-400"
+              }`}
+            >
+              {loading
+                ? userRegistered
+                  ? "Unregistering..."
+                  : "Registering..."
+                : userRegistered
+                  ? "Unregister"
+                  : spotsRemaining > 0
+                    ? "Register Now"
+                    : "Full"}
+            </button>
+          )}
         </div>
       </div>
     </div>
