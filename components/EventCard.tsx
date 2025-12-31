@@ -93,7 +93,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
     >
       <div className="relative">
         <img
-          src={event.image}
+          src={event.image || "/images/placeholder-card.svg"}
           alt={event.title}
           className="h-[208px] w-full object-cover"
           loading="lazy"

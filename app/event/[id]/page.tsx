@@ -115,7 +115,7 @@ export default function EventPage() {
       {/* Header */}
       <div className="relative">
         <img
-          src={event.image || "/placeholder.png"}
+          src={event.image || "/images/placeholder-page.svg"}
           alt={event.title}
           className="h-[30vh] w-full rounded-lg object-cover"
         />
