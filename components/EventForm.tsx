@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   DocumentPlusIcon,
   CalendarIcon,
@@ -10,8 +12,6 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import Button from "@components/Button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { eventSchema, type EventFormData } from "@schemas/eventSchema.ts";
 
 const EVENT_CATEGORIES = [
@@ -92,7 +92,6 @@ export default function EventForm({
             className="peer sr-only"
           />
           <span className="text-sm font-medium text-stone-700">
-            {/* {form.published ? "Published" : "Draft"} */}
             {watch("published") ? "Published" : "Draft"}
           </span>
           <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
