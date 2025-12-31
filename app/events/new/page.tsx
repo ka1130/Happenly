@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Head from "next/head";
 import { toast } from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import { useCurrentUser } from "@hooks/useCurrentUser";
@@ -92,19 +91,14 @@ export default function NewEventPage() {
   }
 
   return (
-    <>
-      <Head>
-        <title>Add Event – Happenly</title>
-      </Head>
-      <div className="w-full">
-        <h3 className="mb-2 text-2xl font-semibold">Create Event</h3>
-        <p className="mb-10">Fill in the details to create a new event</p>
-        <EventForm
-          submitLabel="Create Event"
-          initialData={form}
-          onSubmitAction={handleSubmitAction}
-        />
-      </div>
-    </>
+    <div className="w-full">
+      <h3 className="mb-2 text-2xl font-semibold">Create Event</h3>
+      <p className="mb-10">Fill in the details to create a new event</p>
+      <EventForm
+        submitLabel="Create Event"
+        initialData={form}
+        onSubmitAction={handleSubmitAction}
+      />
+    </div>
   );
 }
