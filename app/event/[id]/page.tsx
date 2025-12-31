@@ -211,7 +211,7 @@ export default function EventPage() {
             <button
               onClick={userRegistered ? handleUnregister : handleRegister}
               disabled={loading || spotsRemaining <= 0}
-              className={`mt-4 w-full rounded-md py-2 text-white ${
+              className={`mt-4 w-full cursor-pointer rounded-md py-2 text-white ${
                 userRegistered
                   ? "bg-red-500 hover:bg-red-600"
                   : spotsRemaining > 0
