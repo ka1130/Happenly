@@ -2,15 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@lib/supabase";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/outline";
 import { useEvents } from "@hooks/useEvents";
+import { useCurrentUser } from "@hooks/useCurrentUser";
 import EventCard, { EventCardSkeleton } from "@components/EventCard";
 import FiltersPanel from "@components/FiltersPanel";
 import Dashboard from "@components/Dashboard";
-import { supabase } from "@lib/supabase";
 import { Event as AppEvent } from "@apptypes/event";
 import { applyFilters } from "@utils/applyFilters";
 import { type EventCategory } from "@apptypes/event";
@@ -28,6 +29,8 @@ export default function Home() {
   const [selectedStatus, setSelectedStatus] = useState("all");
 
   const router = useRouter();
+
+  const { user } = useCurrentUser();
 
   // Sync local state with fetched events
   useEffect(() => {
@@ -116,7 +119,7 @@ export default function Home() {
               <EventCard
                 event={event}
                 onDeleteAction={() => handleDeleteEvent(event.id)}
-                // currentUserId={user?.id || null}
+                currentUserId={user?.id || null}
               />
             </div>
           ))
