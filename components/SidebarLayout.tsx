@@ -8,8 +8,8 @@ import {
   Cog6ToothIcon,
   PresentationChartLineIcon,
   GlobeAsiaAustraliaIcon,
-  ArrowLeftCircleIcon,
-  ArrowRightCircleIcon,
+  ArrowsPointingInIcon,
+  ArrowsPointingOutIcon,
 } from "@heroicons/react/24/outline";
 import MobileMenu from "@components/MobileMenu";
 import UserFooter from "@components/UserFooter";
@@ -69,9 +69,9 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
             className="hidden cursor-pointer rounded-md p-2 text-stone-400 hover:bg-stone-100 md:flex"
           >
             {sidebarOpen ? (
-              <ArrowLeftCircleIcon className="h-5 w-5" />
+              <ArrowsPointingOutIcon className="h-5 w-5" />
             ) : (
-              <ArrowRightCircleIcon className="h-5 w-5" />
+              <ArrowsPointingInIcon className="h-5 w-5" />
             )}
           </button>
 
