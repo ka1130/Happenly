@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import EventForm, { type EventFormData } from "@components/EventForm";
+import EventForm from "@components/EventForm";
+import { type EventFormData } from "@schemas/eventSchema.ts";
 
 export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);

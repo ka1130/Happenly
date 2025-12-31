@@ -15,7 +15,7 @@
 
 ## Tech Stack
 
-- **Frontend:** React + TypeScript + Vite + Tailwind CSS
+- **Frontend:** React + TypeScript + Vite + Tailwind CSS + React Hook Form / ZOD for validation
 - **Backend:** Next.js + Supabase
 
 ## Usage

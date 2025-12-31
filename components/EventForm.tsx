@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   DocumentPlusIcon,
@@ -10,6 +10,9 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import Button from "@components/Button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { eventSchema, type EventFormData } from "@schemas/eventSchema.ts";
 
 const EVENT_CATEGORIES = [
   { value: "CONCERT", label: "Concert" },
@@ -19,20 +22,6 @@ const EVENT_CATEGORIES = [
   { value: "TECH", label: "Tech" },
   { value: "CULTURE_TECH", label: "Culture-tech" },
 ] as const;
-
-export type EventFormData = {
-  title: string;
-  description: string;
-  date: string;
-  startAt: string;
-  endAt: string;
-  location: string;
-  capacity: number;
-  registrations: number;
-  category: string;
-  published: boolean;
-  image: string;
-};
 
 type EventFormProps = {
   initialData: EventFormData;
@@ -45,24 +34,42 @@ export default function EventForm({
   submitLabel,
   onSubmitAction,
 }: EventFormProps) {
-  const [form, setForm] = useState(initialData);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    setForm(initialData);
-  }, [initialData]);
+  const defaultValues: EventFormData = initialData || {
+    title: "",
+    description: "",
+    date: "",
+    startAt: "",
+    endAt: "",
+    location: "",
+    capacity: 0,
+    category: "",
+    published: false,
+    image: "",
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<EventFormData>({
+    resolver: zodResolver(eventSchema),
+    defaultValues,
+  });
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: EventFormData) => {
     setLoading(true);
     setError("");
 
     try {
-      await onSubmitAction(form, file);
+      await onSubmitAction(data, file);
       router.push("/");
     } catch (err: any) {
       setError(err.message || "Something went wrong");
@@ -73,20 +80,20 @@ export default function EventForm({
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="mx-auto max-w-xl space-y-4 rounded-md border-stone-100 bg-stone-50 p-4 shadow"
     >
       <div className="flex justify-between">
         <h3 className="mb-4 text-xl">{submitLabel}</h3>
         <label className="inline-flex cursor-pointer items-center gap-3">
           <input
+            {...register("published")}
             type="checkbox"
             className="peer sr-only"
-            checked={form.published}
-            onChange={(e) => setForm({ ...form, published: e.target.checked })}
           />
           <span className="text-sm font-medium text-stone-700">
-            {form.published ? "Published" : "Draft"}
+            {/* {form.published ? "Published" : "Draft"} */}
+            {watch("published") ? "Published" : "Draft"}
           </span>
           <div className="relative h-6 w-11 rounded-full bg-stone-300 transition-colors peer-checked:bg-blue-500 after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform after:content-[''] peer-checked:after:translate-x-5" />
         </label>
@@ -96,19 +103,21 @@ export default function EventForm({
         Event Title
       </label>
       <input
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
-        className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        {...register("title")}
+        className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       />
+      {errors.title && <p className="text-red-500">{errors.title.message}</p>}
 
       <label className="mb-0 block text-sm font-medium text-stone-700">
         Description
       </label>
       <input
-        value={form.description}
-        onChange={(e) => setForm({ ...form, description: e.target.value })}
-        className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        {...register("description")}
+        className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       />
+      {errors.description && (
+        <p className="text-red-500">{errors.description.message}</p>
+      )}
 
       <div className="items-center gap-4 md:flex">
         <div className="mb-4 flex-1 md:mb-0">
@@ -118,10 +127,10 @@ export default function EventForm({
           </label>
           <input
             type="date"
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            {...register("date")}
+            className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
+          {errors.date && <p className="text-red-500">{errors.date.message}</p>}
         </div>
 
         <div className="mb-4 flex-1 md:mb-0">
@@ -129,8 +138,7 @@ export default function EventForm({
             Category
           </label>
           <select
-            value={form.category}
-            onChange={(e) => setForm({ ...form, category: e.target.value })}
+            {...register("category")}
             className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           >
             <option value="" disabled>
@@ -142,6 +150,9 @@ export default function EventForm({
               </option>
             ))}
           </select>
+          {errors.category && (
+            <p className="text-red-500">{errors.category.message}</p>
+          )}
         </div>
       </div>
 
@@ -153,10 +164,12 @@ export default function EventForm({
           </label>
           <input
             type="time"
-            value={form.startAt}
-            onChange={(e) => setForm({ ...form, startAt: e.target.value })}
+            {...register("startAt")}
             className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
           />
+          {errors.startAt && (
+            <p className="text-red-500">{errors.startAt.message}</p>
+          )}
         </div>
         <div className="flex-1">
           <label className="flex gap-2 text-sm font-medium text-stone-700">
@@ -165,10 +178,12 @@ export default function EventForm({
           </label>
           <input
             type="time"
-            value={form.endAt}
-            onChange={(e) => setForm({ ...form, endAt: e.target.value })}
-            className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
+            {...register("endAt")}
+            className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2"
           />
+          {errors.endAt && (
+            <p className="text-red-500">{errors.endAt.message}</p>
+          )}
         </div>
       </div>
       <label className="mb-0 flex gap-2 text-sm font-medium text-stone-700">
@@ -177,20 +192,26 @@ export default function EventForm({
       </label>
       <input
         type="text"
-        value={form.location}
-        onChange={(e) => setForm({ ...form, location: e.target.value })}
-        className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        {...register("location")}
+        className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       />
+      {errors.location && (
+        <p className="text-red-500">{errors.location.message}</p>
+      )}
+
       <label className="mb-0 flex gap-2 text-sm font-medium text-stone-700">
         <UsersIcon className="h-5 w-5" />
         <span>Maximum Attendees</span>
       </label>
       <input
         type="number"
-        value={form.capacity}
-        onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
-        className="mt-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        {...register("capacity", { valueAsNumber: true })}
+        className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       />
+      {errors.capacity && (
+        <p className="text-red-500">{errors.capacity.message}</p>
+      )}
+
       <div className="mt-2">
         <label className="block text-sm font-medium text-stone-700">
           Image
