@@ -2,16 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-// import { useUser } from "@supabase/auth-helpers-react";
 import EventForm from "@components/EventForm";
 import { type EventFormData } from "@schemas/eventSchema.ts";
-import { useCurrentUser } from "@hooks/useCurrentUser";
 
 export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);
 
   const { id } = useParams<{ id: string }>();
-  const { user } = useCurrentUser();
 
   useEffect(() => {
     if (!id) return;
@@ -55,8 +52,8 @@ export default function EditEventPage() {
 
     const payload = {
       ...form,
-      startAt: `${form.date} ${form.startAt}`, // form.startAt = "17:42"
-      endAt: `${form.date} ${form.endAt}`, // form.endAt = "20:00"
+      startAt: `${form.date} ${form.startAt}`,
+      endAt: `${form.date} ${form.endAt}`,
       capacity: Number(form.capacity),
       registrations: Number(form.registrations),
       published: Boolean(form.published),
