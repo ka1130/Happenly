@@ -2,27 +2,41 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+// import { useUser } from "@supabase/auth-helpers-react";
 import EventForm from "@components/EventForm";
 import { type EventFormData } from "@schemas/eventSchema.ts";
+import { useCurrentUser } from "@hooks/useCurrentUser";
 
 export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);
 
   const { id } = useParams<{ id: string }>();
+  const { user } = useCurrentUser();
 
   useEffect(() => {
     if (!id) return;
 
     const fetchEvent = async () => {
-      const res = await fetch(`/api/events/${id}`);
+      const res = await fetch(`/api/events/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": "02d96ead-93f7-4342-a2a3-7d8445add5ba", // ID zalogowanego użytkownika
+        },
+        body: JSON.stringify({ title: "Nowy tytuł" }),
+      });
       const data = await res.json();
+
+      console.log("data", data);
+      console.log("data.startAt.split('T')[1]", data.startAt.split("T")[1]);
+      console.log("data.endAt.split('T')[1]", data.endAt.split("T")[1]);
 
       setForm({
         title: data.title,
         description: data.description,
-        date: data.date.split("T")[0],
-        startAt: data.startAt.slice(11, 16),
-        endAt: data.endAt.slice(11, 16),
+        date: data.date,
+        startAt: data.startAt.split("T")[1],
+        endAt: data.endAt.split("T")[1],
         location: data.location,
         capacity: data.capacity,
         registrations: data.registrations,
