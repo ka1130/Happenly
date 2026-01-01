@@ -21,10 +21,6 @@ export default function EditEventPage() {
 
       const data = await res.json();
 
-      console.log("data", data);
-      // console.log("data.startAt.split('T')[1]", data.startAt.split("T")[1]);
-      // console.log("data.endAt.split('T')[1]", data.endAt.split("T")[1]);
-
       setForm({
         title: data.title,
         description: data.description,
