@@ -28,19 +28,29 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  context: { params: Promise<Params> },
+  context: { params: Promise<{ id: string }> }, // jeśli Next.js mówi, że params jest Promise
 ) {
-  const { id } = await context.params;
+  const { id } = await context.params; // <--- trzeba zrobić await
   const data = await req.json();
 
-  const { data: updated, error } = await supabase
+  const payload = {
+    ...data,
+    capacity: Number(data.capacity),
+    registrations: Number(data.registrations),
+    published: Boolean(data.published),
+  };
+
+  const { data: updated, error } = await supabaseAdmin
     .from("events")
-    .update(data)
+    .update(payload)
     .eq("id", id)
     .select();
 
-  if (error)
+  if (error) {
+    console.log("PATCH error:", error);
     return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
   return NextResponse.json({ updated });
 }
 

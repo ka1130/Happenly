@@ -17,19 +17,13 @@ export default function EditEventPage() {
     if (!id) return;
 
     const fetchEvent = async () => {
-      const res = await fetch(`/api/events/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "x-user-id": "02d96ead-93f7-4342-a2a3-7d8445add5ba", // ID zalogowanego użytkownika
-        },
-        body: JSON.stringify({ title: "Nowy tytuł" }),
-      });
+      const res = await fetch(`/api/events/${id}`);
+
       const data = await res.json();
 
       console.log("data", data);
-      console.log("data.startAt.split('T')[1]", data.startAt.split("T")[1]);
-      console.log("data.endAt.split('T')[1]", data.endAt.split("T")[1]);
+      // console.log("data.startAt.split('T')[1]", data.startAt.split("T")[1]);
+      // console.log("data.endAt.split('T')[1]", data.endAt.split("T")[1]);
 
       setForm({
         title: data.title,
@@ -65,8 +59,11 @@ export default function EditEventPage() {
 
     const payload = {
       ...form,
-      startAt: `${form.date} ${form.startAt}:00`,
-      endAt: `${form.date} ${form.endAt}:00`,
+      startAt: `${form.date} ${form.startAt}`, // form.startAt = "17:42"
+      endAt: `${form.date} ${form.endAt}`, // form.endAt = "20:00"
+      capacity: Number(form.capacity),
+      registrations: Number(form.registrations),
+      published: Boolean(form.published),
       image: imageUrl,
     };
 

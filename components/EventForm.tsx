@@ -52,16 +52,6 @@ export default function EventForm({
     image: "",
   };
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  //   setValue,
-  //   watch,
-  // } = useForm<EventFormData>({
-  //   resolver: zodResolver(eventSchema),
-  //   defaultValues,
-  // });
   const {
     register,
     handleSubmit,
