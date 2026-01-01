@@ -4,7 +4,8 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import { useCurrentUser } from "@hooks/useCurrentUser";
-import EventForm, { type EventFormData } from "@components/EventForm";
+import EventForm from "@components/EventForm";
+import { type EventFormData } from "@schemas/eventSchema.ts";
 import SignInPrompt from "@components/SignInPrompt";
 
 const initialForm = {

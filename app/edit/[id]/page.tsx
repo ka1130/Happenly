@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import EventForm, { type EventFormData } from "@components/EventForm";
+import EventForm from "@components/EventForm";
+import { type EventFormData } from "@schemas/eventSchema.ts";
 
 export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);
@@ -14,14 +15,15 @@ export default function EditEventPage() {
 
     const fetchEvent = async () => {
       const res = await fetch(`/api/events/${id}`);
+
       const data = await res.json();
 
       setForm({
         title: data.title,
         description: data.description,
-        date: data.date.split("T")[0],
-        startAt: data.startAt.slice(11, 16),
-        endAt: data.endAt.slice(11, 16),
+        date: data.date,
+        startAt: data.startAt.split("T")[1],
+        endAt: data.endAt.split("T")[1],
         location: data.location,
         capacity: data.capacity,
         registrations: data.registrations,
@@ -50,8 +52,11 @@ export default function EditEventPage() {
 
     const payload = {
       ...form,
-      startAt: `${form.date} ${form.startAt}:00`,
-      endAt: `${form.date} ${form.endAt}:00`,
+      startAt: `${form.date} ${form.startAt}`,
+      endAt: `${form.date} ${form.endAt}`,
+      capacity: Number(form.capacity),
+      registrations: Number(form.registrations),
+      published: Boolean(form.published),
       image: imageUrl,
     };
 

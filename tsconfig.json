@@ -26,7 +26,8 @@
       "@apptypes/*": ["./types/*"],
       "@components/*": ["./components/*"],
       "@utils/*": ["./utils/*"],
-      "@lib/*": ["./lib/*"]
+      "@lib/*": ["./lib/*"],
+      "@schemas/*": ["./schemas/*"]
     }
   },
   "include": [
