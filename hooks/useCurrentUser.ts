@@ -7,22 +7,21 @@ export function useCurrentUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user ?? null);
       setLoading(false);
-    };
-    fetchUser();
+    });
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      },
-    );
-
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  return { user, loading };
+  const refreshUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user ?? null);
+  };
+
+  return { user, loading, refreshUser };
 }

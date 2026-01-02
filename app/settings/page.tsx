@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
@@ -11,49 +12,55 @@ type Profile = {
   avatarUrl: string;
 };
 
+type ProfileForm = {
+  name: string;
+};
+
 export default function SettingsPage() {
-  const { user, loading } = useCurrentUser();
+  const { user, loading, refreshUser } = useCurrentUser();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile>({ name: "", avatarUrl: "" });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>("");
 
+  const { register, handleSubmit, reset } = useForm<ProfileForm>({
+    defaultValues: { name: "" },
+  });
+
+  // redirect if not logged in
   useEffect(() => {
     if (!loading && !user) router.push("/auth?redirect=/settings");
   }, [loading, user, router]);
 
+  // fetch profile
   useEffect(() => {
-    if (user?.id) {
-      supabase
-        .from("profiles")
-        .select("name, avatar_url")
-        .eq("id", user.id)
-        .maybeSingle() // zamiast single() — zwraca null jeśli brak
-        .then(({ data, error }) => {
-          if (error) console.error(error);
-          if (data)
-            setProfile({
-              name: data.name || "",
-              avatarUrl: data.avatar_url || "",
-            });
-        });
-    }
-  }, [user]);
+    if (!user?.id) return;
+
+    supabase
+      .from("profiles")
+      .select("name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (error) console.error(error);
+        if (data) {
+          setProfile({
+            name: data.name || "",
+            avatarUrl: data.avatar_url || "",
+          });
+          reset({ name: data.name || "" });
+        }
+      });
+  }, [user, reset]);
 
   if (loading || !user) return <p>Loading...</p>;
 
-  // const saveName = async () => {
-  //   await supabase
-  //     .from("profiles")
-  //     .update({ name: profile.name })
-  //     .eq("id", user.id);
-  // };
-
-  const saveProfile = async () => {
+  const saveProfile = async (data: ProfileForm) => {
     try {
       if (!user) return;
 
-      // Upload avatar if a new file is selected
       let avatarPath = profile.avatarUrl;
+
       if (avatarFile) {
         const ext = avatarFile.name.split(".").pop();
         avatarPath = `${user.id}/avatar.${ext}`;
@@ -62,44 +69,34 @@ export default function SettingsPage() {
           .upload(avatarPath, avatarFile, { upsert: true });
         if (uploadError) throw uploadError;
 
+        // update profile table with new avatar
         await supabase
           .from("profiles")
           .update({ avatar_url: avatarPath })
           .eq("id", user.id);
+
+        setAvatarFile(null);
+        setAvatarPreview(""); // reset local preview
       }
 
-      // Update name in profiles table
+      // update profile name
       await supabase
         .from("profiles")
-        .update({ name: profile.name })
+        .update({ name: data.name })
         .eq("id", user.id);
 
-      // **Update auth user metadata so sidebar updates**
+      // update auth metadata
       await supabase.auth.updateUser({
-        data: { full_name: profile.name, avatar_url: avatarPath },
+        data: { full_name: data.name, avatar_url: avatarPath },
       });
 
-      setProfile((prev) => ({ ...prev, avatarUrl: avatarPath }));
-      setAvatarFile(null); // reset file input
+      refreshUser();
+      setProfile({ name: data.name, avatarUrl: avatarPath });
       toast.success("Profile updated");
     } catch (error: any) {
       toast.error(error.message || "Failed to save profile");
     }
   };
-
-  // const uploadAvatar = async () => {
-  //   if (!avatarFile) return;
-  //   const ext = avatarFile.name.split(".").pop();
-  //   const path = `${user.id}/avatar.${ext}`;
-  //   await supabase.storage
-  //     .from("avatars")
-  //     .upload(path, avatarFile, { upsert: true });
-  //   await supabase
-  //     .from("profiles")
-  //     .update({ avatar_url: path })
-  //     .eq("id", user.id);
-  //   setProfile((prev) => ({ ...prev, avatarUrl: path }));
-  // };
 
   const changePassword = async () => {
     const newPassword = prompt("New password");
@@ -149,13 +146,16 @@ export default function SettingsPage() {
           <div className="flex items-center gap-4">
             <div className="relative">
               <span className="relative flex h-20 w-20 shrink-0 overflow-hidden rounded-full border border-stone-200">
-                {profile.avatarUrl && (
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile.avatarUrl}`}
-                    alt="Avatar"
-                    className="h-full w-full object-cover"
-                  />
-                )}
+                <img
+                  src={
+                    avatarPreview ||
+                    (profile.avatarUrl
+                      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile.avatarUrl}`
+                      : "/default-avatar.png")
+                  }
+                  alt="Avatar"
+                  className="h-full w-full object-cover"
+                />
               </span>
               <button
                 onClick={() => document.getElementById("avatarInput")?.click()}
@@ -196,27 +196,28 @@ export default function SettingsPage() {
                   }
 
                   setAvatarFile(file);
+                  setAvatarPreview(URL.createObjectURL(file));
                 }}
               />
             </div>
+
             <div className="flex-1 space-y-2">
-              <label className="block text-sm font-medium text-stone-700">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={profile.name}
-                onChange={(e) =>
-                  setProfile((prev) => ({ ...prev, name: e.target.value }))
-                }
-                className="w-full rounded border border-stone-300 px-3 py-2 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              />
-              <button
-                onClick={saveProfile}
-                className="mt-2 inline-block rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
-              >
-                Save Changes
-              </button>
+              <form onSubmit={handleSubmit(saveProfile)}>
+                <label className="block text-sm font-medium text-stone-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  {...register("name")}
+                  className="w-full rounded border border-stone-300 px-3 py-2 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  className="mt-2 inline-block rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
+                >
+                  Save Changes
+                </button>
+              </form>
             </div>
           </div>
         </div>

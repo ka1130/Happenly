@@ -8,6 +8,7 @@ import {
   ArrowLeftEndOnRectangleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
+import InitialsAvatar from "@components/InitialsAvatar";
 import { supabase } from "@lib/supabase";
 import type { User } from "@supabase/supabase-js";
 
@@ -87,12 +88,14 @@ export default function UserFooter({
       > */}
       <div className="flex items-center space-x-3">
         <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
-          {avatar_url && (
+          {avatar_url ? (
             <img
               src={avatar_url}
               alt="User Avatar"
-              className="h-full w-full object-cover"
+              className="h-full w-full rounded-full object-cover"
             />
+          ) : (
+            <InitialsAvatar name={full_name || user.email} />
           )}
         </div>
         <div className="flex flex-col">
