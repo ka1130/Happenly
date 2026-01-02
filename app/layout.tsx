@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import MobileMenu from "@components/MobileMenu";
 import SidebarLayout from "@components/SidebarLayout";
 import "./globals.css";
 

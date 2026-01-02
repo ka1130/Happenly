@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import { useCurrentUser } from "@hooks/useCurrentUser";
 
@@ -40,26 +41,65 @@ export default function SettingsPage() {
 
   if (loading || !user) return <p>Loading...</p>;
 
-  const saveName = async () => {
-    await supabase
-      .from("profiles")
-      .update({ name: profile.name })
-      .eq("id", user.id);
+  // const saveName = async () => {
+  //   await supabase
+  //     .from("profiles")
+  //     .update({ name: profile.name })
+  //     .eq("id", user.id);
+  // };
+
+  const saveProfile = async () => {
+    try {
+      if (!user) return;
+
+      // Upload avatar if a new file is selected
+      let avatarPath = profile.avatarUrl;
+      if (avatarFile) {
+        const ext = avatarFile.name.split(".").pop();
+        avatarPath = `${user.id}/avatar.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("avatars")
+          .upload(avatarPath, avatarFile, { upsert: true });
+        if (uploadError) throw uploadError;
+
+        await supabase
+          .from("profiles")
+          .update({ avatar_url: avatarPath })
+          .eq("id", user.id);
+      }
+
+      // Update name in profiles table
+      await supabase
+        .from("profiles")
+        .update({ name: profile.name })
+        .eq("id", user.id);
+
+      // **Update auth user metadata so sidebar updates**
+      await supabase.auth.updateUser({
+        data: { full_name: profile.name, avatar_url: avatarPath },
+      });
+
+      setProfile((prev) => ({ ...prev, avatarUrl: avatarPath }));
+      setAvatarFile(null); // reset file input
+      toast.success("Profile updated");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save profile");
+    }
   };
 
-  const uploadAvatar = async () => {
-    if (!avatarFile) return;
-    const ext = avatarFile.name.split(".").pop();
-    const path = `${user.id}/avatar.${ext}`;
-    await supabase.storage
-      .from("avatars")
-      .upload(path, avatarFile, { upsert: true });
-    await supabase
-      .from("profiles")
-      .update({ avatar_url: path })
-      .eq("id", user.id);
-    setProfile((prev) => ({ ...prev, avatarUrl: path }));
-  };
+  // const uploadAvatar = async () => {
+  //   if (!avatarFile) return;
+  //   const ext = avatarFile.name.split(".").pop();
+  //   const path = `${user.id}/avatar.${ext}`;
+  //   await supabase.storage
+  //     .from("avatars")
+  //     .upload(path, avatarFile, { upsert: true });
+  //   await supabase
+  //     .from("profiles")
+  //     .update({ avatar_url: path })
+  //     .eq("id", user.id);
+  //   setProfile((prev) => ({ ...prev, avatarUrl: path }));
+  // };
 
   const changePassword = async () => {
     const newPassword = prompt("New password");
@@ -137,9 +177,26 @@ export default function SettingsPage() {
                 type="file"
                 id="avatarInput"
                 className="hidden"
-                onChange={(e) =>
-                  e.target.files && setAvatarFile(e.target.files[0])
-                }
+                accept="image/png,image/jpeg,image/webp"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  const MAX_SIZE_MB = 2;
+                  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                    toast.error(
+                      `File too large. Max size is ${MAX_SIZE_MB} MB`,
+                    );
+                    return;
+                  }
+
+                  if (!["image/png", "image/jpeg"].includes(file.type)) {
+                    toast.error("Invalid file type. Only PNG and JPEG allowed");
+                    return;
+                  }
+
+                  setAvatarFile(file);
+                }}
               />
             </div>
             <div className="flex-1 space-y-2">
@@ -155,7 +212,7 @@ export default function SettingsPage() {
                 className="w-full rounded border border-stone-300 px-3 py-2 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               />
               <button
-                onClick={saveName}
+                onClick={saveProfile}
                 className="mt-2 inline-block rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
               >
                 Save Changes
