@@ -29,9 +29,10 @@
 7. Register for events (from a single event view)
 8. Search events live
 9. Filter events by category/status, sort them by date, attendees count or alphabetically
-10. Collapse/reveal sidebar
+10. Collapsible sidebar
+11. User panel/settings
 
-(Planned): 10. User panel/settings 11. Dedicated dashboard page
+(Planned): 12. Dashboard page
 
 ---
 
