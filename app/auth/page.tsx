@@ -1,9 +1,7 @@
 "use client";
-"use client";
-export const dynamic = "force-dynamic";
 
-import AuthPageComponent from "./AuthPageComponent";
+import AuthPage from "./AuthPageComponent";
 
 export default function Page() {
-  return <AuthPageComponent />;
+  return <AuthPage />;
 }
