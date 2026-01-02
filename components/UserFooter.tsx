@@ -8,9 +8,9 @@ import {
   ArrowLeftEndOnRectangleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
+import type { User } from "@supabase/supabase-js";
 import InitialsAvatar from "@components/InitialsAvatar";
 import { supabase } from "@lib/supabase";
-import type { User } from "@supabase/supabase-js";
 
 export default function UserFooter({
   onLinkClickAction,
@@ -78,6 +78,9 @@ export default function UserFooter({
   }
 
   const { full_name, avatar_url } = user.user_metadata || {};
+  const avatarFullUrl = avatar_url
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatar_url}`
+    : null;
 
   return (
     <div className="mt-auto border-t border-gray-200 px-4 py-4">
@@ -88,9 +91,9 @@ export default function UserFooter({
       > */}
       <div className="flex items-center space-x-3">
         <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
-          {avatar_url ? (
+          {avatarFullUrl ? (
             <img
-              src={avatar_url}
+              src={avatarFullUrl}
               alt="User Avatar"
               className="h-full w-full rounded-full object-cover"
             />

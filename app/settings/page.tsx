@@ -12,6 +12,8 @@ type ProfileForm = { name: string };
 
 export default function SettingsPage() {
   const { user, loading, refreshUser } = useCurrentUser();
+
+  console.log("current user", user);
   const router = useRouter();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
