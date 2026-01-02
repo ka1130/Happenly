@@ -1,4 +1,12 @@
-export default function InitialsAvatar({ name }: { name: string }) {
+export default function InitialsAvatar({
+  name,
+  className,
+  fontSize,
+}: {
+  name: string;
+  className?: string;
+  fontSize?: string;
+}) {
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -8,10 +16,10 @@ export default function InitialsAvatar({ name }: { name: string }) {
   const bgColor = "#0D8ABC";
   return (
     <div
-      className="flex h-10 w-10 items-center justify-center rounded-full text-white"
+      className={`flex items-center justify-center rounded-full text-white ${className} `}
       style={{ backgroundColor: bgColor }}
     >
-      {initials || "U"}
+      <span style={{ fontSize }}>{initials || "U"}</span>
     </div>
   );
 }

@@ -95,7 +95,10 @@ export default function UserFooter({
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
-            <InitialsAvatar name={full_name || user.email} />
+            <InitialsAvatar
+              name={full_name || user.email}
+              className="h-10 w-10"
+            />
           )}
         </div>
         <div className="flex flex-col">

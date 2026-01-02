@@ -6,36 +6,24 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import { useCurrentUser } from "@hooks/useCurrentUser";
+import InitialsAvatar from "@components/InitialsAvatar";
 
-type Profile = {
-  name: string;
-  avatarUrl: string;
-};
-
-type ProfileForm = {
-  name: string;
-};
+type ProfileForm = { name: string };
 
 export default function SettingsPage() {
   const { user, loading, refreshUser } = useCurrentUser();
   const router = useRouter();
-  const [profile, setProfile] = useState<Profile>({ name: "", avatarUrl: "" });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
-  const { register, handleSubmit, reset } = useForm<ProfileForm>({
-    defaultValues: { name: "" },
-  });
+  const { register, handleSubmit, reset } = useForm<ProfileForm>();
 
-  // redirect if not logged in
   useEffect(() => {
     if (!loading && !user) router.push("/auth?redirect=/settings");
   }, [loading, user, router]);
 
-  // fetch profile
   useEffect(() => {
     if (!user?.id) return;
-
     supabase
       .from("profiles")
       .select("name, avatar_url")
@@ -44,11 +32,11 @@ export default function SettingsPage() {
       .then(({ data, error }) => {
         if (error) console.error(error);
         if (data) {
-          setProfile({
-            name: data.name || "",
-            avatarUrl: data.avatar_url || "",
-          });
           reset({ name: data.name || "" });
+          if (data.avatar_url)
+            setAvatarPreview(
+              `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${data.avatar_url}`,
+            );
         }
       });
   }, [user, reset]);
@@ -59,7 +47,7 @@ export default function SettingsPage() {
     try {
       if (!user) return;
 
-      let avatarPath = profile.avatarUrl;
+      let avatarPath = avatarPreview ? avatarPreview.split("/avatars/")[1] : "";
 
       if (avatarFile) {
         const ext = avatarFile.name.split(".").pop();
@@ -69,29 +57,22 @@ export default function SettingsPage() {
           .upload(avatarPath, avatarFile, { upsert: true });
         if (uploadError) throw uploadError;
 
-        // update profile table with new avatar
-        await supabase
-          .from("profiles")
-          .update({ avatar_url: avatarPath })
-          .eq("id", user.id);
-
-        setAvatarFile(null);
-        setAvatarPreview(""); // reset local preview
+        setAvatarPreview(
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarPath}`,
+        );
       }
 
-      // update profile name
-      await supabase
+      const { error } = await supabase
         .from("profiles")
-        .update({ name: data.name })
+        .update({ name: data.name, avatar_url: avatarPath })
         .eq("id", user.id);
+      if (error) throw error;
 
-      // update auth metadata
       await supabase.auth.updateUser({
         data: { full_name: data.name, avatar_url: avatarPath },
       });
-
       refreshUser();
-      setProfile({ name: data.name, avatarUrl: avatarPath });
+      setAvatarFile(null);
       toast.success("Profile updated");
     } catch (error: any) {
       toast.error(error.message || "Failed to save profile");
@@ -146,16 +127,18 @@ export default function SettingsPage() {
           <div className="flex items-center gap-4">
             <div className="relative">
               <span className="relative flex h-20 w-20 shrink-0 overflow-hidden rounded-full border border-stone-200">
-                <img
-                  src={
-                    avatarPreview ||
-                    (profile.avatarUrl
-                      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile.avatarUrl}`
-                      : "/default-avatar.png")
-                  }
-                  alt="Avatar"
-                  className="h-full w-full object-cover"
-                />
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <InitialsAvatar
+                    name={user.user_metadata?.full_name || user.email}
+                    className="h-full w-full object-cover"
+                    fontSize="2rem"
+                  />
+                )}
               </span>
               <button
                 onClick={() => document.getElementById("avatarInput")?.click()}
@@ -177,30 +160,20 @@ export default function SettingsPage() {
                 type="file"
                 id="avatarInput"
                 className="hidden"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/png,image/jpeg"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-
                   const MAX_SIZE_MB = 2;
-                  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-                    toast.error(
+                  if (file.size > MAX_SIZE_MB * 1024 * 1024)
+                    return toast.error(
                       `File too large. Max size is ${MAX_SIZE_MB} MB`,
                     );
-                    return;
-                  }
-
-                  if (!["image/png", "image/jpeg"].includes(file.type)) {
-                    toast.error("Invalid file type. Only PNG and JPEG allowed");
-                    return;
-                  }
-
                   setAvatarFile(file);
                   setAvatarPreview(URL.createObjectURL(file));
                 }}
               />
             </div>
-
             <div className="flex-1 space-y-2">
               <form onSubmit={handleSubmit(saveProfile)}>
                 <label className="block text-sm font-medium text-stone-700">
