@@ -1,8 +1,9 @@
 "use client";
+"use client";
+export const dynamic = "force-dynamic";
 
-import dynamic from "next/dynamic";
+import AuthPageComponent from "./AuthPageComponent";
 
-const AuthPage = dynamic(() => import("./AuthPageComponent.tsx"), {
-  ssr: false,
-});
-export default AuthPage;
+export default function Page() {
+  return <AuthPageComponent />;
+}
