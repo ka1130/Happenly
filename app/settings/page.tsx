@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { supabase } from "@lib/supabase";
 import { useCurrentUser } from "@hooks/useCurrentUser";
+import { useCurrentProfile } from "@/hooks/useCurrentProfile";
 import InitialsAvatar from "@components/InitialsAvatar";
 
 type ProfileForm = { name: string };
 
 export default function SettingsPage() {
-  const { user, loading, refreshUser } = useCurrentUser();
-
-  console.log("current user", user);
+  const { user, loading } = useCurrentUser();
+  const { profile, refreshProfile } = useCurrentProfile(user?.id);
   const router = useRouter();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>("");
@@ -25,59 +25,55 @@ export default function SettingsPage() {
   }, [loading, user, router]);
 
   useEffect(() => {
-    if (!user?.id) return;
-    supabase
-      .from("profiles")
-      .select("name, avatar_url")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data, error }) => {
-        if (error) console.error(error);
-        if (data) {
-          reset({ name: data.name || "" });
-          if (data.avatar_url)
-            setAvatarPreview(
-              `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${data.avatar_url}`,
-            );
-        }
-      });
-  }, [user, reset]);
+    if (!profile) return;
+    reset({ name: profile.name || "" });
+    if (profile.avatar_url)
+      setAvatarPreview(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${profile.avatar_url}?t=${Date.now()}`,
+      );
+  }, [profile, reset]);
 
   if (loading || !user) return <p>Loading...</p>;
 
   const saveProfile = async (data: ProfileForm) => {
+    if (!user) return;
     try {
-      if (!user) return;
-
-      let avatarPath = avatarPreview ? avatarPreview.split("/avatars/")[1] : "";
+      let avatarPath = profile?.avatar_url || "";
 
       if (avatarFile) {
         const ext = avatarFile.name.split(".").pop();
         avatarPath = `${user.id}/avatar.${ext}`;
+
         const { error: uploadError } = await supabase.storage
           .from("avatars")
           .upload(avatarPath, avatarFile, { upsert: true });
         if (uploadError) throw uploadError;
 
+        await supabase
+          .from("profiles")
+          .update({ avatar_url: avatarPath })
+          .eq("id", user.id);
+        await supabase.auth.updateUser({ data: { avatar_url: avatarPath } });
+        await refreshProfile();
+
         setAvatarPreview(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarPath}`,
+          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/avatars/${avatarPath}?t=${Date.now()}`,
         );
       }
 
-      const { error } = await supabase
+      await supabase
         .from("profiles")
         .update({ name: data.name, avatar_url: avatarPath })
         .eq("id", user.id);
-      if (error) throw error;
-
       await supabase.auth.updateUser({
         data: { full_name: data.name, avatar_url: avatarPath },
       });
-      refreshUser();
+      await refreshProfile();
+
       setAvatarFile(null);
       toast.success("Profile updated");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to save profile");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update profile");
     }
   };
 
@@ -89,7 +85,7 @@ export default function SettingsPage() {
 
   const logout = async () => {
     await supabase.auth.signOut();
-    location.href = "/";
+    router.replace("/");
   };
 
   return (
@@ -115,8 +111,8 @@ export default function SettingsPage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
-              ></path>
-              <circle cx="12" cy="7" r="4"></circle>
+              />
+              <circle cx="12" cy="7" r="4" />
             </svg>
             <div className="text-lg font-semibold text-stone-800">Profile</div>
           </div>
@@ -154,8 +150,8 @@ export default function SettingsPage() {
                   stroke="currentColor"
                   strokeWidth={2}
                 >
-                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                  <circle cx="12" cy="13" r="3"></circle>
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3" />
                 </svg>
               </button>
               <input
@@ -166,16 +162,14 @@ export default function SettingsPage() {
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
-                  const MAX_SIZE_MB = 2;
-                  if (file.size > MAX_SIZE_MB * 1024 * 1024)
-                    return toast.error(
-                      `File too large. Max size is ${MAX_SIZE_MB} MB`,
-                    );
+                  if (file.size > 2 * 1024 * 1024)
+                    return toast.error("File too large. Max 2MB");
                   setAvatarFile(file);
                   setAvatarPreview(URL.createObjectURL(file));
                 }}
               />
             </div>
+
             <div className="flex-1 space-y-2">
               <form onSubmit={handleSubmit(saveProfile)}>
                 <label className="block text-sm font-medium text-stone-700">
@@ -188,7 +182,7 @@ export default function SettingsPage() {
                 />
                 <button
                   type="submit"
-                  className="mt-2 inline-block rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
+                  className="mt-2 inline-block cursor-pointer rounded bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600"
                 >
                   Save Changes
                 </button>
@@ -210,8 +204,8 @@ export default function SettingsPage() {
               stroke="currentColor"
               strokeWidth={2}
             >
-              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             <div className="text-lg font-semibold text-stone-800">Security</div>
           </div>
