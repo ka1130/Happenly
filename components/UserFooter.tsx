@@ -80,31 +80,31 @@ export default function UserFooter({
 
   return (
     <div className="mt-auto border-t border-gray-200 px-4 py-4">
-      <Link
+      {/* <Link
         href="/settings"
         onClick={onLinkClickAction}
         className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100"
-      >
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
-            {avatar_url && (
-              <img
-                src={avatar_url}
-                alt="User Avatar"
-                className="h-full w-full object-cover"
-              />
-            )}
-          </div>
-          <div className="flex flex-col">
-            <span className="font-medium">{full_name || "No name"}</span>
-            <span className="max-w-[140px] truncate text-sm text-gray-500">
-              {user.email}
-            </span>
-          </div>
+      > */}
+      <div className="flex items-center space-x-3">
+        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-300">
+          {avatar_url && (
+            <img
+              src={avatar_url}
+              alt="User Avatar"
+              className="h-full w-full object-cover"
+            />
+          )}
         </div>
+        <div className="flex flex-col">
+          <span className="font-medium">{full_name || "No name"}</span>
+          <span className="max-w-[140px] truncate text-sm text-gray-500">
+            {user.email}
+          </span>
+        </div>
+      </div>
 
-        <ChevronRightIcon className="h-5 w-5" />
-      </Link>
+      {/* <ChevronRightIcon className="h-5 w-5" />
+      </Link> */}
 
       <button
         type="button"
