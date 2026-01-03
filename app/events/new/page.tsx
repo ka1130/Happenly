@@ -60,12 +60,7 @@ export default function NewEventPage() {
 
         const { data, error } = await supabase.storage
           .from("event-images")
-          .upload(filePath, file, {
-            contentType: file.type,
-          });
-
-        console.log("UPLOAD DATA:", data);
-        console.log("UPLOAD ERROR:", error);
+          .upload(filePath, file, { contentType: file.type });
 
         if (error) {
           toast.error(error.message);
