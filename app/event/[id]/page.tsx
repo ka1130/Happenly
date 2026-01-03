@@ -169,6 +169,41 @@ export default function EventPage() {
             {activeTab === "attendees" && (
               <p>{registrations} people registered</p>
             )}
+            {activeTab === "schedule" && (
+              <div className="space-y-4 space-x-10 text-sm leading-relaxed">
+                <div className="flex items-start gap-4">
+                  <div className="text-muted-foreground w-20 text-sm">
+                    9:00 AM
+                  </div>
+                  <div>
+                    <p className="mb-1 text-base">Registration & Breakfast</p>
+                    <p className="text-muted-foreground text-sm">Main Lobby</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="text-muted-foreground w-20 text-sm">
+                    10:00 AM
+                  </div>
+                  <div>
+                    <p className="mb-1 text-base">Opening Keynote</p>
+                    <p className="text-muted-foreground text-sm">Main Hall</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="text-muted-foreground w-20 text-sm">
+                    12:00 PM
+                  </div>
+                  <div>
+                    <p className="mb-1 text-base">Networking Lunch</p>
+                    <p className="text-muted-foreground text-sm">
+                      Garden Terrace
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
