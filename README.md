@@ -2,6 +2,8 @@
 
 **Event management website**
 
+Online demo: [see on Vercel](https://happenly-nu.vercel.app/)
+
 ## Features
 
 - **Dashboard** with stats overview and event cards with **search/filter** functionality
@@ -32,7 +34,7 @@
 10. Collapsible sidebar
 11. User panel/settings
 
-(Planned): 12. Dashboard page
+(In progress): 12. Dashboard page
 
 ---
 
