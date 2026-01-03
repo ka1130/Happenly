@@ -26,7 +26,8 @@ async function seed() {
     const sampleEvents = [
       {
         title: "VR Art Exhibition",
-        description: "Explore the cutting edge of creativity...",
+        description:
+          "Step into a fully immersive VR art experience where technology meets creativity. Explore interactive installations crafted by digital artists from around the globe. Learn about the latest VR techniques and tools used to create 3D environments. Network with other tech-savvy art enthusiasts and share your impressions in real time. This event pushes the boundaries of traditional galleries, offering a futuristic way to experience art.",
         date: "2026-01-10T00:00:00Z",
         startAt: "2026-01-10T10:00:00Z",
         endAt: "2026-01-10T18:00:00Z",
@@ -41,7 +42,8 @@ async function seed() {
       },
       {
         title: "React + Next.js Workshop",
-        description: "Join industry leaders for a full day of insights...",
+        description:
+          "Join this hands-on workshop to master React and Next.js in a practical setting. Explore modern web development patterns, performance optimization, and state management techniques. Build real-world projects and gain insight into server-side rendering and API integrations. Collaborate with other developers and receive live feedback from experienced instructors. By the end, you'll have actionable skills to create scalable and maintainable web applications.",
         date: "2026-01-15T00:00:00Z",
         startAt: "2026-01-15T14:00:00Z",
         endAt: "2026-01-15T17:00:00Z",
@@ -56,7 +58,8 @@ async function seed() {
       },
       {
         title: "Digital Art Expo",
-        description: "Digital Art Expo is a vibrant showcase...",
+        description:
+          "Digital Art Expo is a vibrant showcase of innovation at the intersection of art and technology. Discover generative art, interactive installations, and AI-driven creations from leading digital artists. Attend talks and panels explaining the techniques and software behind each piece. Engage with creators and explore emerging trends in digital and NFT art. This expo highlights how technology is transforming visual storytelling in the 21st century.",
         date: "2026-02-05T00:00:00Z",
         startAt: "2026-02-05T10:00:00Z",
         endAt: "2026-02-05T18:00:00Z",
