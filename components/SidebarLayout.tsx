@@ -30,7 +30,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="flex flex-1 flex-col space-y-3 p-6">
-            <Link href="/dashboard" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <PresentationChartLineIcon className="h-5 w-5" />
               Dashboard
             </Link>
