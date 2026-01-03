@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "node scripts/seedEvents.ts"
+    "seed": "node scripts/seedEvents.ts",
+    "deploy": "curl -X POST $VERCEL_DEPLOY_HOOK"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
