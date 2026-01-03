@@ -34,26 +34,46 @@ export default function NewEventPage() {
       return;
     }
 
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+    const ALLOWED_TYPES = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+    ];
+
+    if (file && file.size > MAX_FILE_SIZE) {
+      toast.error("Image too large (max 2MB)");
+      return;
+    }
+
+    if (file && !ALLOWED_TYPES.includes(file.type)) {
+      toast.error("Invalid file type. Only JPEG, PNG, WEBP and AVIF allowed.");
+      return;
+    }
+
     try {
       let imageUrl = form.image;
 
       if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
+        const filePath = `events/${crypto.randomUUID()}`;
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
+        const { data, error } = await supabase.storage
+          .from("event-images")
+          .upload(filePath, file, {
+            contentType: file.type,
+          });
 
-        if (!res.ok) {
-          const text = await res.text();
-          toast.error(`Image upload failed: ${text}`);
+        if (error) {
+          toast.error(error.message);
           return;
         }
 
-        const data = await res.json();
-        imageUrl = data.url;
+        const { data: publicUrl } = supabase.storage
+          .from("event-images")
+          .getPublicUrl(data.path);
+
+        imageUrl = publicUrl.publicUrl;
       }
 
       const startTimestamp = `${form.date} ${form.startAt}:00`;
