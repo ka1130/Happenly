@@ -64,6 +64,9 @@ export default function NewEventPage() {
             contentType: file.type,
           });
 
+        console.log("UPLOAD DATA:", data);
+        console.log("UPLOAD ERROR:", error);
+
         if (error) {
           toast.error(error.message);
           return;
