@@ -161,8 +161,8 @@ export default function EventForm({
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="flex-1">
+      <div className="flex items-start gap-4">
+        <div className="flex flex-1 flex-col">
           <label className="flex gap-2 text-sm font-medium text-stone-700">
             <ClockIcon className="h-5 w-5" />
             <span>Start Time</span>
@@ -172,11 +172,10 @@ export default function EventForm({
             {...register("startAt")}
             className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
           />
-          {errors.startAt && (
-            <p className="text-red-500">{errors.startAt.message}</p>
-          )}
+          <p className="h-5 text-red-500">{errors.startAt?.message}</p>
         </div>
-        <div className="flex-1">
+
+        <div className="flex flex-1 flex-col">
           <label className="flex gap-2 text-sm font-medium text-stone-700">
             <ClockIcon className="h-5 w-5" />
             <span>End Time</span>
@@ -184,13 +183,12 @@ export default function EventForm({
           <input
             type="time"
             {...register("endAt")}
-            className="mt-1 mb-1 block w-full rounded border border-stone-300 px-3 py-2"
+            className="mt-1 block w-full rounded border border-stone-300 px-3 py-2"
           />
-          {errors.endAt && (
-            <p className="text-red-500">{errors.endAt.message}</p>
-          )}
+          <p className="h-5 text-red-500">{errors.endAt?.message}</p>
         </div>
       </div>
+
       <label className="mb-0 flex gap-2 text-sm font-medium text-stone-700">
         <MapPinIcon className="h-5 w-5" />
         <span>Location</span>
