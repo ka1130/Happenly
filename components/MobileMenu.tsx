@@ -14,7 +14,7 @@ import {
 import UserFooter from "@components/UserFooter";
 
 const links = [
-  { href: "/dashboard", label: "Dashboard", Icon: PresentationChartLineIcon },
+  { href: "/", label: "Dashboard", Icon: PresentationChartLineIcon },
   { href: "/events/new", label: "Create Event", Icon: PlusIcon },
   { href: "/my-events", label: "My Events", Icon: BookmarkSquareIcon },
   { href: "/", label: "Browse Events", Icon: GlobeAsiaAustraliaIcon },
@@ -68,7 +68,7 @@ export default function MobileMenu() {
         <nav className="flex flex-col space-y-6">
           {links.map(({ href, label, Icon }) => (
             <Link
-              key={href}
+              key={`${href}-${label}`}
               href={href}
               onClick={close}
               className="flex items-center space-x-2 text-stone-700 hover:text-blue-600"
