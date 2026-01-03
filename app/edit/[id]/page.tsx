@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import EventForm from "@components/EventForm";
 import { type EventFormData } from "@schemas/eventSchema.ts";
+import { supabase } from "@lib/supabase";
 
 export default function EditEventPage() {
   const [form, setForm] = useState<EventFormData | null>(null);
@@ -40,14 +41,20 @@ export default function EditEventPage() {
     let imageUrl = form.image;
 
     if (file) {
-      const fd = new FormData();
-      fd.append("image", file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: fd,
-      });
-      const data = await res.json();
-      imageUrl = data.url;
+      const filePath = `events/${crypto.randomUUID()}`;
+      const { data, error } = await supabase.storage
+        .from("event-images")
+        .upload(filePath, file, { contentType: file.type });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const { data: publicUrl } = supabase.storage
+        .from("event-images")
+        .getPublicUrl(data.path);
+
+      imageUrl = publicUrl.publicUrl;
     }
 
     const payload = {
