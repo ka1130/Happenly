@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer components {
+  .btn {
+    @apply rounded-md px-4 py-2 transition-colors text-shadow-amber-100;
+  }
+
+  .btn-blue {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+
+  .btn-red {
+    @apply bg-red-500 hover:bg-red-600;
+  }
+
+  .btn-outline-grey {
+    @apply border border-stone-400 text-stone-600 hover:bg-stone-50;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-2 rounded px-1 py-1 transition duration-300 hover:bg-stone-200;
+  }
+}

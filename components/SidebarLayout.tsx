@@ -30,23 +30,23 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="flex flex-1 flex-col space-y-3 p-6">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="sidebar-link">
               <PresentationChartLineIcon className="h-5 w-5" />
               Dashboard
             </Link>
-            <Link href="/events/new" className="flex items-center gap-2">
+            <Link href="/events/new" className="sidebar-link">
               <PlusIcon className="h-5 w-5" />
               Create Event
             </Link>
-            <Link href="/my-events" className="flex items-center gap-2">
+            <Link href="/my-events" className="sidebar-link">
               <BookmarkSquareIcon className="h-5 w-5" />
               My Events
             </Link>
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="sidebar-link">
               <GlobeAsiaAustraliaIcon className="h-5 w-5" />
               Browse Events
             </Link>
-            <Link href="/settings" className="flex items-center gap-2">
+            <Link href="/settings" className="sidebar-link">
               <Cog6ToothIcon className="h-5 w-5" />
               Settings
             </Link>

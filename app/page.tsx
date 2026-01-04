@@ -74,12 +74,12 @@ export default function Home() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search events..."
-              className="w-full rounded-md border border-stone-400 px-10 py-2"
+              className="btn btn-outline-grey w-full px-10 py-2"
             />
             <MagnifyingGlassIcon className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-stone-400" />
           </div>
           <button
-            className="flex cursor-pointer items-center gap-2 rounded-md border border-stone-400 px-4 py-2 text-sm text-stone-600 hover:bg-stone-50"
+            className="btn btn-outline-grey flex items-center gap-2"
             onClick={() => setFiltersOpen(!filtersOpen)}
           >
             <AdjustmentsHorizontalIcon className="h-5 w-5 text-stone-400" />{" "}
