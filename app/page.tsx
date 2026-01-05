@@ -76,7 +76,7 @@ export default function Home() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search events..."
-              className="w-full rounded-md border border-stone-400"
+              className="w-full rounded-md border border-stone-400 px-10 py-2"
             />
             <MagnifyingGlassIcon className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-stone-400" />
           </div>
