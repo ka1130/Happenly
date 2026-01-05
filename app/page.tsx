@@ -67,7 +67,9 @@ export default function Home() {
       )}
 
       <div className="mt-10 mb-4 space-y-4">
-        <h2 className="font-heading text-xl font-semibold">Recent Events</h2>
+        <h2 className="font-heading text-xl font-medium text-gray-700">
+          Recent Events
+        </h2>
         <div className="flex gap-3">
           <div className="relative flex-1">
             <input

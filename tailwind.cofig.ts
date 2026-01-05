@@ -1,16 +1,14 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    './app/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './pages/**/*.{ts,tsx}',
-  ],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-        heading: ['Inter', 'ui-sans-serif', 'system-ui'],
+        sans: ["var(--font-sans)"], // Inter
+        geistSans: ["var(--font-geist-sans)"],
+        geistMono: ["var(--font-geist-mono)"],
+        heading: ["var(--font-heading)"], // Space Grotesk
       },
     },
   },

@@ -111,15 +111,15 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
       <div className="flex flex-col p-5">
         <div className="mb-10 flex flex-1 flex-col space-y-2">
           <div>
-            <h3 className="truncate font-sans text-xl font-bold text-stone-900">
+            <h3 className="font-heading mb-4 truncate text-xl font-semibold text-stone-800">
               {event.title}
             </h3>
-            <p className="mt-1 mb-4 truncate text-stone-500">
+            <p className="mt-1 mb-4 truncate text-sm text-stone-600">
               {event.description}
             </p>
           </div>
 
-          <p className="flex gap-2 text-sm text-stone-500">
+          <p className="flex gap-2 text-sm text-stone-600">
             <CalendarIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
@@ -127,7 +127,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
             <span>{event.date}</span>
           </p>
 
-          <p className="flex gap-2 text-sm text-stone-500">
+          <p className="flex gap-2 text-sm text-stone-600">
             <ClockIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
@@ -135,7 +135,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
             <span>{formatTimeRange(event.startAt, event.endAt)}</span>
           </p>
 
-          <p className="flex gap-2 text-sm text-stone-500">
+          <p className="flex gap-2 text-sm text-stone-600">
             <MapPinIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
@@ -143,7 +143,7 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
             <span>{event.location}</span>
           </p>
 
-          <p className="flex gap-2 text-sm text-stone-500">
+          <p className="flex gap-2 text-sm text-stone-600">
             <UsersIcon
               className="relative top-[px] h-4.5 w-4.5"
               strokeWidth={2}
