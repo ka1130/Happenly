@@ -90,7 +90,7 @@ export default function Dashboard() {
         {user && (
           <Button
             onClick={() => router.push("/events/new")}
-            className="btn btn-blue"
+            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
           >
             <PlusIcon className="h-4 w-4" /> <span>Create Event</span>
           </Button>
