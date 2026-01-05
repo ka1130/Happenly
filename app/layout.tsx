@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="relative min-h-screen bg-gray-50">
+      <body className="font-space-grotesk relative min-h-screen bg-gray-50">
         <SidebarLayout>{children}</SidebarLayout>
         <Toaster position="top-right" />
       </body>
