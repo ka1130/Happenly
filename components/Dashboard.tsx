@@ -83,7 +83,7 @@ export default function Dashboard() {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 font-sans text-gray-500">
             Manage your events and track registrations
           </p>
         </div>
