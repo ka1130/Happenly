@@ -8,6 +8,7 @@ export async function GET(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  // This example fetches 1 event just to keep the database awake.
   const { data, error } = await supabase.from("events").select("id").limit(1);
 
   if (error) {
