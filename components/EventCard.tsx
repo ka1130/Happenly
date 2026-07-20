@@ -11,6 +11,7 @@ import {
   XCircleIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { Event } from "@apptypes/event";
 import ConfirmDialog from "@components/ConfirmDialog";
 import { formatCategory } from "@utils/formatCategory";
@@ -42,9 +43,15 @@ type EventCardProps = {
   event: Event;
   onDeleteAction?: (id: string) => void;
   currentUserId?: string | null;
+  priority?: boolean;
 };
 
-function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
+function EventCard({
+  event,
+  onDeleteAction,
+  currentUserId,
+  priority = false,
+}: EventCardProps) {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -77,23 +84,27 @@ function EventCard({ event, onDeleteAction, currentUserId }: EventCardProps) {
 
       console.log("Removed event:", event.title);
       if (onDeleteAction) onDeleteAction(event.id);
-    } catch (err: any) {
-      setDeleteError(
-        err.message || "There was a problem with removing this event",
-      );
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "There was a problem with removing this event";
+      setDeleteError(message);
     } finally {
       setLoadingDelete(false);
     }
   };
 
   return (
-    <div className="flex h-[500px] w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl">
-      <div className="relative">
-        <img
+    <div className="flex h-125 w-full cursor-pointer flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-all hover:bg-stone-50 hover:shadow-xl">
+      <div className="relative h-52 w-full">
+        <Image
           src={event.image || "/images/placeholder-card.svg"}
           alt={event.title}
-          className="h-[208px] w-full object-cover"
-          loading="lazy"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+          priority={priority}
         />
         <div className="absolute top-3 left-3">
           <span
