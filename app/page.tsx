@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@lib/supabase";
 import {
@@ -12,13 +12,12 @@ import { useCurrentUser } from "@hooks/useCurrentUser";
 import EventCard, { EventCardSkeleton } from "@components/EventCard";
 import FiltersPanel from "@components/FiltersPanel";
 import Dashboard from "@components/Dashboard";
-import { Event as AppEvent } from "@apptypes/event";
 import { applyFilters } from "@utils/applyFilters";
 import { type EventCategory } from "@apptypes/event";
 
 export default function Home() {
   const { events: fetchedEvents, loading, error } = useEvents();
-  const [events, setEvents] = useState<AppEvent[] | null>(null);
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -29,15 +28,12 @@ export default function Home() {
   const [selectedStatus, setSelectedStatus] = useState("all");
 
   const router = useRouter();
-
   const { user } = useCurrentUser();
 
-  // Sync local state with fetched events
-  useEffect(() => {
-    if (!loading) {
-      setEvents(fetchedEvents);
-    }
-  }, [fetchedEvents, loading]);
+  // Derived, not stored — no effect needed
+  const events = fetchedEvents
+    ? fetchedEvents.filter((event) => !deletedIds.has(event.id))
+    : null;
 
   const handleDeleteEvent = async (id: string) => {
     const { error } = await supabase.from("events").delete().eq("id", id);
@@ -45,7 +41,7 @@ export default function Home() {
       console.error("Failed to delete event:", error);
       return;
     }
-    setEvents((prev) => prev?.filter((event) => event.id !== id) || []);
+    setDeletedIds((prev) => new Set(prev).add(id));
   };
 
   const filteredEvents = applyFilters(
